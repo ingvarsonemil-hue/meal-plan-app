@@ -1,10 +1,10 @@
-const path = require("path");
 const express = require("express");
 const cors = require("cors");
 const bcrypt = require("bcrypt");
 const session = require("express-session");
 const Stripe = require("stripe");
 const { Pool } = require("pg");
+const path = require("path");
 
 const app = express();
 
@@ -22,8 +22,12 @@ app.use(session({
   saveUninitialized: true
 }));
 
-// ================= STRIPE =================
+// ================= SERVE FRONTEND =================
+app.use(express.static("public"));
+
+// ================= ENV =================
 const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
+const API_KEY = process.env.API_KEY;
 
 // ================= DATABASE =================
 const db = new Pool({
@@ -34,7 +38,6 @@ const db = new Pool({
 // ================= SETTINGS =================
 const FREE_LIMIT = 10;
 const DAY = 24 * 60 * 60 * 1000;
-const API_KEY = process.env.API_KEY;
 
 // ================= INIT DB (RUN ONCE) =================
 app.get("/init-db", async (req, res) => {
@@ -50,6 +53,11 @@ app.get("/init-db", async (req, res) => {
   `);
 
   res.send("DB ready ✔");
+});
+
+// ================= HOME =================
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 
 // ================= REGISTER =================
@@ -97,9 +105,7 @@ app.post("/login", async (req, res) => {
 app.post("/generate", async (req, res) => {
   const email = req.session.user;
 
-  if (!email) {
-    return res.json({ error: "Not logged in" });
-  }
+  if (!email) return res.json({ error: "Not logged in" });
 
   const result = await db.query(
     "SELECT * FROM users WHERE email = $1",
@@ -117,7 +123,6 @@ app.post("/generate", async (req, res) => {
     user.usage = 0;
   }
 
-  // limit check
   if (!user.premium && user.usage >= FREE_LIMIT) {
     return res.json({ error: "Upgrade to Premium" });
   }
@@ -159,9 +164,7 @@ app.post("/generate", async (req, res) => {
 app.post("/create-checkout-session", async (req, res) => {
   const email = req.session.user;
 
-  if (!email) {
-    return res.json({ error: "Not logged in" });
-  }
+  if (!email) return res.json({ error: "Not logged in" });
 
   const session = await stripe.checkout.sessions.create({
     payment_method_types: ["card"],
@@ -202,19 +205,9 @@ app.post("/stripe-webhook", express.raw({ type: "application/json" }), async (re
   res.sendStatus(200);
 });
 
-// ================= SUCCESS PAGE =================
-app.get("/success", (req, res) => {
-  res.send("Payment successful ✔ You are now Premium!");
-});
-
-// ================= HOME =================
-app.get("/", (req, res) => {
-  res.send("SaaS Server is running ✔");
-});
-
-// ================= START =================
+// ================= START SERVER =================
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
-  console.log("Server running on port", PORT);
+  console.log("SaaS server running on port", PORT);
 });
