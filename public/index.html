@@ -54,4 +54,350 @@
       margin-bottom: 24px;
     }
     .section-label {
-      font-f
+      font-family: 'Syne', sans-serif;
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--border);
+    }
+    .field { margin-bottom: 20px; }
+    .field label {
+      display: block;
+      font-size: 12px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+    .field input[type="number"] {
+      width: 100%;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-family: 'DM Mono', monospace;
+      font-size: 20px;
+      padding: 12px 16px;
+      border-radius: var(--radius);
+      outline: none;
+      transition: border-color 0.15s;
+    }
+    .field input[type="number"]:focus { border-color: var(--accent); }
+    .field input[type="number"]::-webkit-inner-spin-button,
+    .field input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; }
+    .pills { display: flex; flex-wrap: wrap; gap: 8px; }
+    .pill {
+      cursor: pointer;
+      padding: 8px 16px;
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      font-family: 'DM Mono', monospace;
+      font-size: 13px;
+      color: var(--muted);
+      background: var(--bg);
+      transition: all 0.15s;
+      user-select: none;
+    }
+    .pill:hover { border-color: var(--accent); color: var(--text); }
+    .pill.selected { background: var(--accent); border-color: var(--accent); color: var(--bg); font-weight: 500; }
+    #generateBtn {
+      width: 100%;
+      padding: 16px;
+      background: var(--accent);
+      color: var(--bg);
+      border: none;
+      border-radius: var(--radius);
+      font-family: 'Syne', sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      cursor: pointer;
+      transition: opacity 0.15s, transform 0.1s;
+    }
+    #generateBtn:hover:not(:disabled) { opacity: 0.88; }
+    #generateBtn:active:not(:disabled) { transform: scale(0.99); }
+    #generateBtn:disabled { opacity: 0.4; cursor: not-allowed; }
+    #status { text-align: center; padding: 16px; font-size: 13px; color: var(--muted); display: none; }
+    #error {
+      background: #2a1515;
+      border: 1px solid #7a2020;
+      color: #f08080;
+      padding: 14px 18px;
+      border-radius: var(--radius);
+      font-size: 13px;
+      margin-bottom: 20px;
+      display: none;
+    }
+    #results { display: none; }
+    .results-header { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 20px; }
+    .results-header h2 { font-family: 'Syne', sans-serif; font-size: 20px; font-weight: 700; }
+    .cost-badge { font-family: 'Syne', sans-serif; font-size: 22px; font-weight: 800; color: var(--accent); }
+    .meal-block { border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 12px; overflow: hidden; }
+    .meal-block-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 12px 18px;
+      background: rgba(255,255,255,0.03);
+      border-bottom: 1px solid var(--border);
+    }
+    .meal-name { font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
+    .meal-cost { font-size: 12px; color: var(--accent2); }
+    .meal-block-body { padding: 14px 18px; }
+    .meal-title { font-size: 15px; color: var(--text); margin-bottom: 6px; font-family: 'Syne', sans-serif; font-weight: 600; }
+    .meal-desc { font-size: 13px; color: var(--muted); line-height: 1.6; }
+    .shopping-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 8px; margin-top: 4px; }
+    .shopping-item {
+      background: var(--bg); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 10px 14px;
+      font-size: 13px; display: flex; align-items: center; gap: 8px;
+    }
+    .shopping-item::before { content: '○'; color: var(--accent); font-size: 10px; flex-shrink: 0; }
+    .tip-box {
+      border-left: 3px solid var(--accent2);
+      padding: 12px 16px;
+      background: rgba(196, 92, 42, 0.08);
+      border-radius: 0 var(--radius) var(--radius) 0;
+      font-size: 13px; color: var(--muted); line-height: 1.6; margin-top: 4px;
+    }
+    footer { margin-top: 60px; text-align: center; font-size: 12px; color: var(--border); }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .spinner {
+      display: inline-block; width: 14px; height: 14px;
+      border: 2px solid var(--border); border-top-color: var(--accent);
+      border-radius: 50%; animation: spin 0.7s linear infinite;
+      vertical-align: middle; margin-right: 8px;
+    }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+    .fade-in { animation: fadeUp 0.4s ease forwards; }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <header>
+    <div class="tag">Free Tool</div>
+    <h1>Cheap Meal<br/><span>Plan Generator</span></h1>
+    <p class="subtitle">Enter your budget and preferences.<br/>Get a realistic, affordable 1-day meal plan in seconds.</p>
+  </header>
+
+  <div class="card">
+    <div class="section-label">Your Preferences</div>
+
+    <div class="field">
+      <label>Daily Budget (€)</label>
+      <input type="number" id="budget" value="10" min="3" max="50" />
+    </div>
+
+    <div class="field">
+      <label>Diet Type</label>
+      <div class="pills" id="diet-pills">
+        <span class="pill selected" data-value="none">No restriction</span>
+        <span class="pill" data-value="vegetarian">Vegetarian</span>
+        <span class="pill" data-value="high-protein">High Protein</span>
+        <span class="pill" data-value="vegan">Vegan</span>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Goal</label>
+      <div class="pills" id="goal-pills">
+        <span class="pill selected" data-value="maintain">Maintain weight</span>
+        <span class="pill" data-value="lose">Lose weight</span>
+        <span class="pill" data-value="gain">Gain muscle</span>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Meals per day</label>
+      <div class="pills" id="meals-pills">
+        <span class="pill" data-value="2">2 meals</span>
+        <span class="pill selected" data-value="3">3 meals</span>
+        <span class="pill" data-value="4">4 meals</span>
+      </div>
+    </div>
+  </div>
+
+  <button id="generateBtn" onclick="generatePlan()">Generate My Meal Plan →</button>
+  <div id="status"></div>
+  <div id="error"></div>
+  <div id="results"></div>
+
+</div>
+
+<footer>Cheap Meal Plan Generator · Powered by Claude AI</footer>
+
+<script>
+  // Pill selection
+  document.querySelectorAll('.pills').forEach(group => {
+    group.addEventListener('click', e => {
+      const pill = e.target.closest('.pill');
+      if (!pill) return;
+      group.querySelectorAll('.pill').forEach(p => p.classList.remove('selected'));
+      pill.classList.add('selected');
+    });
+  });
+
+  function getSelected(groupId) {
+    const selected = document.querySelector(`#${groupId} .pill.selected`);
+    return selected ? selected.dataset.value : null;
+  }
+
+  async function generatePlan() {
+    const budget = document.getElementById('budget').value || 10;
+    const diet   = getSelected('diet-pills')  || 'none';
+    const goal   = getSelected('goal-pills')  || 'maintain';
+    const meals  = getSelected('meals-pills') || '3';
+
+    setLoading(true);
+    hideError();
+    hideResults();
+
+    try {
+      const prompt = buildPrompt(budget, diet, goal, meals);
+
+      // Calls your own server — no API key needed in the browser
+      const response = await fetch("/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ prompt })
+      });
+
+      if (!response.ok) {
+        const err = await response.json();
+        throw new Error(err.error || `Server error: ${response.status}`);
+      }
+
+      const data = await response.json();
+      const plan = parseJSON(data.result);
+      displayResults(plan, budget);
+
+    } catch (err) {
+      showError(`Something went wrong: ${err.message}`);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  function buildPrompt(budget, diet, goal, meals) {
+    const dietMap = {
+      'none':         'no dietary restrictions (omnivore)',
+      'vegetarian':   'vegetarian (no meat or fish)',
+      'high-protein': 'high protein (focus on meat, eggs, legumes)',
+      'vegan':        'vegan (no animal products)'
+    };
+    const goalMap = {
+      'maintain': 'maintain current weight',
+      'lose':     'lose weight (lower calories, filling foods)',
+      'gain':     'gain muscle (higher calories and protein)'
+    };
+
+    return `You are a budget meal planning assistant. Generate a realistic, affordable 1-day meal plan.
+
+USER INPUTS:
+- Daily budget: €${budget}
+- Diet: ${dietMap[diet] || diet}
+- Goal: ${goalMap[goal] || goal}
+- Meals per day: ${meals}
+
+RULES:
+- Keep meals simple, fast to cook, and made from widely available supermarket ingredients
+- Use cheap staple ingredients (eggs, oats, pasta, rice, lentils, canned beans, frozen veg, bread)
+- Prices should be realistic European supermarket prices in euros
+- Total estimated cost must be under €${budget}
+- Each meal should be filling and nutritious
+- If the goal is weight loss, keep calories moderate (~1600–1800 kcal)
+- If the goal is muscle gain, add more protein and calories (~2200–2500 kcal)
+
+Respond ONLY with a valid JSON object. No explanation, no markdown, just the JSON.
+
+JSON format:
+{
+  "totalCost": "€X.XX",
+  "calories": "~XXXX kcal",
+  "meals": [
+    {
+      "type": "Breakfast",
+      "name": "Meal name here",
+      "description": "Short 1-2 sentence description of how to make it",
+      "cost": "€X.XX"
+    }
+  ],
+  "shoppingList": ["item 1", "item 2", "item 3"],
+  "tip": "One practical money-saving tip for this meal plan"
+}`;
+  }
+
+  function parseJSON(text) {
+    const cleaned = text.replace(/```json|```/g, '').trim();
+    return JSON.parse(cleaned);
+  }
+
+  function displayResults(plan, budget) {
+    const el = document.getElementById('results');
+    el.style.display = 'block';
+    el.classList.add('fade-in');
+
+    const mealsHTML = plan.meals.map(meal => `
+      <div class="meal-block">
+        <div class="meal-block-header">
+          <span class="meal-name">${meal.type}</span>
+          <span class="meal-cost">${meal.cost}</span>
+        </div>
+        <div class="meal-block-body">
+          <div class="meal-title">${meal.name}</div>
+          <div class="meal-desc">${meal.description}</div>
+        </div>
+      </div>
+    `).join('');
+
+    const shoppingHTML = plan.shoppingList.map(item => `
+      <div class="shopping-item">${item}</div>
+    `).join('');
+
+    el.innerHTML = `
+      <div class="card fade-in">
+        <div class="results-header">
+          <h2>Your Meal Plan</h2>
+          <span class="cost-badge">${plan.totalCost} / day</span>
+        </div>
+        <div style="font-size:12px;color:var(--muted);margin-bottom:20px;">${plan.calories} · Budget: €${budget}</div>
+        ${mealsHTML}
+      </div>
+      <div class="card fade-in" style="animation-delay:0.1s">
+        <div class="section-label">Shopping List</div>
+        <div class="shopping-grid">${shoppingHTML}</div>
+      </div>
+      <div class="card fade-in" style="animation-delay:0.2s">
+        <div class="section-label">Money-Saving Tip</div>
+        <div class="tip-box">💡 ${plan.tip}</div>
+      </div>
+    `;
+  }
+
+  function setLoading(isLoading) {
+    const btn = document.getElementById('generateBtn');
+    const status = document.getElementById('status');
+    if (isLoading) {
+      btn.disabled = true;
+      btn.textContent = 'Generating...';
+      status.style.display = 'block';
+      status.innerHTML = '<span class="spinner"></span> Asking Claude for a meal plan...';
+    } else {
+      btn.disabled = false;
+      btn.textContent = 'Generate My Meal Plan →';
+      status.style.display = 'none';
+    }
+  }
+
+  function showError(msg) {
+    const el = document.getElementById('error');
+    el.style.display = 'block';
+    el.textContent = msg;
+  }
+
+  function hideError() { document.getElementById('error').style.display = 'none'; }
+  function hideResults() { document.getElementById('results').style.display = 'none'; }
+</script>
+</body>
+</html>
