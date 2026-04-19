@@ -20,10 +20,14 @@ app.use(session({
 
 const API_KEY = process.env.API_KEY;
 
-// 🧠 Simple in-memory database (temporary)
+// ================= SETTINGS =================
+const FREE_LIMIT = 10;
+const DAY = 24 * 60 * 60 * 1000;
+
+// ================= FAKE DB =================
 const users = {};
 
-// ---------------- REGISTER ----------------
+// ================= REGISTER =================
 app.post("/register", async (req, res) => {
   const { email, password } = req.body;
 
@@ -36,13 +40,14 @@ app.post("/register", async (req, res) => {
   users[email] = {
     email,
     password: hashedPassword,
-    usage: 0
+    usage: 0,
+    lastReset: Date.now()
   };
 
   res.json({ success: true });
 });
 
-// ---------------- LOGIN ----------------
+// ================= LOGIN =================
 app.post("/login", async (req, res) => {
   const { email, password } = req.body;
 
@@ -59,7 +64,7 @@ app.post("/login", async (req, res) => {
   res.json({ success: true });
 });
 
-// ---------------- GENERATE ----------------
+// ================= GENERATE =================
 app.post("/generate", async (req, res) => {
   const email = req.session.user;
 
@@ -69,9 +74,15 @@ app.post("/generate", async (req, res) => {
 
   const user = users[email];
 
-  // 3 free requests per user
-  if (user.usage >= 3) {
-    return res.json({ error: "Free limit reached. Upgrade required." });
+  // reset daily usage
+  if (Date.now() - user.lastReset > DAY) {
+    user.usage = 0;
+    user.lastReset = Date.now();
+  }
+
+  // limit check
+  if (user.usage >= FREE_LIMIT) {
+    return res.json({ error: "Free limit reached. Try again tomorrow." });
   }
 
   const { prompt } = req.body;
@@ -108,10 +119,12 @@ app.post("/generate", async (req, res) => {
   }
 });
 
+// ================= HOME =================
 app.get("/", (req, res) => {
   res.send("SaaS Server is running ✔");
 });
 
+// ================= START =================
 app.listen(3000, () => {
   console.log("SaaS server running");
 });
