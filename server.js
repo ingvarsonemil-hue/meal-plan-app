@@ -6,17 +6,13 @@ import { fileURLToPath } from "url";
 const app = express();
 const PORT = process.env.PORT || 3000;
 const API_KEY = process.env.API_KEY;
-console.log("API KEY loaded:", API_KEY ? API_KEY.slice(0, 10) + "..." : "MISSING");
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 app.use(cors());
 app.use(express.json());
-
-// Serves your index.html from the "public" folder
 app.use(express.static(path.join(__dirname, "public")));
 
-// ── The only route you need ──────────────────────────────────────
 app.post("/generate", async (req, res) => {
   const { prompt } = req.body;
 
@@ -33,7 +29,7 @@ app.post("/generate", async (req, res) => {
         "anthropic-version": "2023-06-01"
       },
       body: JSON.stringify({
-        model: "claude-sonnet-4-20250514",
+        model: "claude-sonnet-4-5",
         max_tokens: 1500,
         messages: [{ role: "user", content: prompt }]
       })
@@ -41,17 +37,16 @@ app.post("/generate", async (req, res) => {
 
     const data = await response.json();
 
-// If Claude returns an error, send it so we can see it
-if (data.error) {
-  return res.status(500).json({ error: `Claude error: ${data.error.message}` });
-}
+    if (data.error) {
+      return res.status(500).json({ error: `Claude error: ${data.error.message}` });
+    }
 
-const text = data.content?.[0]?.text;
-if (!text) {
-  return res.status(500).json({ error: `Unexpected Claude response: ${JSON.stringify(data)}` });
-}
+    const text = data.content?.[0]?.text;
+    if (!text) {
+      return res.status(500).json({ error: `Unexpected response: ${JSON.stringify(data)}` });
+    }
 
-res.json({ result: text });
+    res.json({ result: text });
 
   } catch (err) {
     res.status(500).json({ error: "Something went wrong: " + err.message });
