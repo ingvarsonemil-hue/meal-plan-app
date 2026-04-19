@@ -39,8 +39,18 @@ app.post("/generate", async (req, res) => {
     });
 
     const data = await response.json();
-    const text = data.content?.[0]?.text || "No response";
-    res.json({ result: text });
+
+// If Claude returns an error, send it so we can see it
+if (data.error) {
+  return res.status(500).json({ error: `Claude error: ${data.error.message}` });
+}
+
+const text = data.content?.[0]?.text;
+if (!text) {
+  return res.status(500).json({ error: `Unexpected Claude response: ${JSON.stringify(data)}` });
+}
+
+res.json({ result: text });
 
   } catch (err) {
     res.status(500).json({ error: "Something went wrong: " + err.message });
