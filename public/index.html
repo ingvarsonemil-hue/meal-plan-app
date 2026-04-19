@@ -22,7 +22,7 @@
 <textarea id="prompt" placeholder="Write your prompt"></textarea>
 <br>
 <button onclick="generate(async function generate() {
-  const res = await fetch("/generate", {
+  const response = await fetch("/generate", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
