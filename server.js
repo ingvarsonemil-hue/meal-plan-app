@@ -5,7 +5,8 @@ import { fileURLToPath } from "url";
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-const API_KEY = process.env.API_KEY; // Set this in Render's environment variables
+const API_KEY = process.env.API_KEY;
+console.log("API KEY loaded:", API_KEY ? API_KEY.slice(0, 10) + "..." : "MISSING");
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
