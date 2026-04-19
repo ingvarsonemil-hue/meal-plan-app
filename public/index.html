@@ -21,7 +21,22 @@
 
 <textarea id="prompt" placeholder="Write your prompt"></textarea>
 <br>
-<button onclick="generate()">Generate</button>
+<button onclick="generate(async function generate() {
+  const res = await fetch("/generate", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer " + token
+    },
+    body: JSON.stringify({
+      prompt: prompt.value
+    })
+  });
+
+  const data = await res.json();
+
+  output.innerText = data.result || "No response from server";
+})">Generate</button>
 
 <pre id="output"></pre>
 
