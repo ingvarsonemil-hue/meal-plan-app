@@ -4,9 +4,19 @@ const bcrypt = require("bcrypt");
 const session = require("express-session");
 const Stripe = require("stripe");
 const { Pool } = require("pg");
-const path = require("path");
 
 const app = express();
+
+// ================= ENV =================
+const PORT = process.env.PORT || 3000;
+const API_KEY = process.env.API_KEY;
+const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
+
+// ================= DB =================
+const db = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: { rejectUnauthorized: false }
+});
 
 // ================= MIDDLEWARE =================
 app.use(cors({
@@ -19,27 +29,17 @@ app.use(express.json());
 app.use(session({
   secret: "supersecretkey123",
   resave: false,
-  saveUninitialized: true
+  saveUninitialized: false
 }));
 
-// ================= SERVE FRONTEND =================
+// ================= STATIC FRONTEND =================
 app.use(express.static("public"));
-
-// ================= ENV =================
-const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
-const API_KEY = process.env.API_KEY;
-
-// ================= DATABASE =================
-const db = new Pool({
-  connectionString: process.env.DATABASE_URL,
-  ssl: { rejectUnauthorized: false }
-});
 
 // ================= SETTINGS =================
 const FREE_LIMIT = 10;
 const DAY = 24 * 60 * 60 * 1000;
 
-// ================= INIT DB (RUN ONCE) =================
+// ================= INIT DB =================
 app.get("/init-db", async (req, res) => {
   await db.query(`
     CREATE TABLE IF NOT EXISTS users (
@@ -55,26 +55,20 @@ app.get("/init-db", async (req, res) => {
   res.send("DB ready ✔");
 });
 
-// ================= HOME =================
-app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "public", "index.html"));
-});
-
 // ================= REGISTER =================
 app.post("/register", async (req, res) => {
   const { email, password } = req.body;
 
-  const hashedPassword = await bcrypt.hash(password, 10);
+  const hashed = await bcrypt.hash(password, 10);
 
   try {
     await db.query(
       "INSERT INTO users (email, password) VALUES ($1, $2)",
-      [email, hashedPassword]
+      [email, hashed]
     );
 
     res.json({ success: true });
-
-  } catch (err) {
+  } catch {
     res.json({ error: "User already exists" });
   }
 });
@@ -124,7 +118,7 @@ app.post("/generate", async (req, res) => {
   }
 
   if (!user.premium && user.usage >= FREE_LIMIT) {
-    return res.json({ error: "Upgrade to Premium" });
+    return res.json({ error: "Upgrade to premium" });
   }
 
   const { prompt } = req.body;
@@ -182,7 +176,7 @@ app.post("/create-checkout-session", async (req, res) => {
         quantity: 1
       }
     ],
-    success_url: "https://meal-plan-app-2nn3.onrender.com/success",
+    success_url: "https://meal-plan-app-2nn3.onrender.com/",
     cancel_url: "https://meal-plan-app-2nn3.onrender.com/"
   });
 
@@ -206,8 +200,6 @@ app.post("/stripe-webhook", express.raw({ type: "application/json" }), async (re
 });
 
 // ================= START SERVER =================
-const PORT = process.env.PORT || 3000;
-
 app.listen(PORT, () => {
   console.log("SaaS server running on port", PORT);
 });
