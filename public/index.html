@@ -3,232 +3,333 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Cheap Meal Plan Generator</title>
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+  <title>Mealzy — Cheap Meal Plan Generator</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet"/>
   <style>
-    :root {
-      --bg:       #0f0e0c;
-      --surface:  #1a1915;
-      --border:   #2e2c27;
-      --accent:   #e8c547;
-      --accent2:  #c45c2a;
-      --text:     #f0ece0;
-      --muted:    #8a856e;
-      --radius:   6px;
-    }
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
     body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: 'DM Mono', monospace;
-      font-size: 14px;
+      font-family: 'Nunito', sans-serif;
+      background: #FDF6EE;
       min-height: 100vh;
-      padding: 40px 20px 80px;
+      padding: 32px 16px 80px;
+      color: #2D1F0E;
     }
-    .container { max-width: 680px; margin: 0 auto; }
-    header { margin-bottom: 48px; }
-    .tag {
-      display: inline-block;
-      font-size: 11px;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--accent);
-      border: 1px solid var(--accent);
-      padding: 3px 10px;
-      border-radius: 2px;
-      margin-bottom: 16px;
-    }
-    h1 {
-      font-family: 'Syne', sans-serif;
-      font-size: clamp(28px, 6vw, 48px);
-      font-weight: 800;
-      line-height: 1.05;
-    }
-    h1 span { color: var(--accent); }
-    .subtitle { margin-top: 12px; color: var(--muted); font-size: 13px; line-height: 1.6; }
-    .card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
+
+    .container { max-width: 620px; margin: 0 auto; }
+
+    .hero {
+      background: #FFF8F0;
+      border: 1.5px solid #FFE5C8;
+      border-radius: 20px;
       padding: 28px;
-      margin-bottom: 24px;
+      margin-bottom: 14px;
     }
-    .section-label {
-      font-family: 'Syne', sans-serif;
-      font-size: 11px;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--muted);
-      margin-bottom: 20px;
-      padding-bottom: 10px;
-      border-bottom: 1px solid var(--border);
-    }
-    .field { margin-bottom: 20px; }
-    .field label {
-      display: block;
-      font-size: 12px;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      color: var(--muted);
+
+    .hero-emoji { font-size: 38px; display: block; margin-bottom: 12px; }
+
+    .hero h1 {
+      font-size: clamp(22px, 5vw, 28px);
+      font-weight: 800;
+      line-height: 1.2;
       margin-bottom: 8px;
     }
-    .field input[type="number"] {
-      width: 100%;
-      background: var(--bg);
-      border: 1px solid var(--border);
-      color: var(--text);
-      font-family: 'DM Mono', monospace;
-      font-size: 20px;
-      padding: 12px 16px;
-      border-radius: var(--radius);
-      outline: none;
-      transition: border-color 0.15s;
+
+    .hero h1 span { color: #E07B39; }
+    .hero p { font-size: 14px; color: #8C6A4A; line-height: 1.6; }
+
+    .card {
+      background: #FFFFFF;
+      border: 1.5px solid #F0E6DA;
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 12px;
     }
-    .field input[type="number"]:focus { border-color: var(--accent); }
-    .field input[type="number"]::-webkit-inner-spin-button,
-    .field input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; }
-    .pills { display: flex; flex-wrap: wrap; gap: 8px; }
-    .pill {
-      cursor: pointer;
-      padding: 8px 16px;
-      border: 1px solid var(--border);
-      border-radius: 100px;
-      font-family: 'DM Mono', monospace;
+
+    .card-label {
       font-size: 13px;
-      color: var(--muted);
-      background: var(--bg);
+      font-weight: 700;
+      color: #8C6A4A;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .budget-row { display: flex; align-items: center; gap: 4px; }
+    .budget-sym { font-size: 26px; font-weight: 800; color: #C9855A; }
+
+    .budget-input {
+      font-family: 'Nunito', sans-serif;
+      font-size: 42px;
+      font-weight: 800;
+      color: #2D1F0E;
+      border: none;
+      background: transparent;
+      width: 120px;
+      outline: none;
+      line-height: 1;
+    }
+
+    .budget-input::-webkit-inner-spin-button,
+    .budget-input::-webkit-outer-spin-button { -webkit-appearance: none; }
+
+    .budget-sub {
+      font-size: 14px;
+      color: #8C6A4A;
+      align-self: flex-end;
+      padding-bottom: 8px;
+      margin-left: 4px;
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .two-col .card { margin-bottom: 0; }
+
+    .pills { display: flex; flex-wrap: wrap; gap: 8px; }
+    .pills.vertical { flex-direction: column; }
+
+    .pill {
+      font-family: 'Nunito', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      padding: 8px 16px;
+      border-radius: 100px;
+      border: 1.5px solid #F0E6DA;
+      color: #8C6A4A;
+      background: #FAFAF8;
+      cursor: pointer;
       transition: all 0.15s;
       user-select: none;
     }
-    .pill:hover { border-color: var(--accent); color: var(--text); }
-    .pill.selected { background: var(--accent); border-color: var(--accent); color: var(--bg); font-weight: 500; }
+
+    .pill:hover { border-color: #E07B39; color: #E07B39; }
+    .pill.selected { background: #E07B39; border-color: #E07B39; color: #fff; }
+
     #generateBtn {
       width: 100%;
-      padding: 16px;
-      background: var(--accent);
-      color: var(--bg);
+      padding: 18px;
+      background: #E07B39;
+      color: #fff;
       border: none;
-      border-radius: var(--radius);
-      font-family: 'Syne', sans-serif;
-      font-size: 16px;
-      font-weight: 700;
-      letter-spacing: 0.05em;
+      border-radius: 16px;
+      font-family: 'Nunito', sans-serif;
+      font-size: 17px;
+      font-weight: 800;
       cursor: pointer;
+      margin-bottom: 28px;
       transition: opacity 0.15s, transform 0.1s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
     }
-    #generateBtn:hover:not(:disabled) { opacity: 0.88; }
+
+    #generateBtn:hover:not(:disabled) { opacity: 0.9; }
     #generateBtn:active:not(:disabled) { transform: scale(0.99); }
-    #generateBtn:disabled { opacity: 0.4; cursor: not-allowed; }
-    #status { text-align: center; padding: 16px; font-size: 13px; color: var(--muted); display: none; }
+    #generateBtn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    #status { text-align: center; padding: 14px; font-size: 14px; color: #8C6A4A; display: none; }
+
     #error {
-      background: #2a1515;
-      border: 1px solid #7a2020;
-      color: #f08080;
+      background: #FFF0F0;
+      border: 1.5px solid #FFCDD2;
+      color: #C62828;
       padding: 14px 18px;
-      border-radius: var(--radius);
-      font-size: 13px;
-      margin-bottom: 20px;
+      border-radius: 14px;
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 16px;
       display: none;
     }
+
     #results { display: none; }
-    .results-header { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 20px; }
-    .results-header h2 { font-family: 'Syne', sans-serif; font-size: 20px; font-weight: 700; }
-    .cost-badge { font-family: 'Syne', sans-serif; font-size: 22px; font-weight: 800; color: var(--accent); }
-    .meal-block { border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 12px; overflow: hidden; }
-    .meal-block-header {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 12px 18px;
-      background: rgba(255,255,255,0.03);
-      border-bottom: 1px solid var(--border);
+
+    .result-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
+    .result-title { font-size: 20px; font-weight: 800; color: #2D1F0E; }
+
+    .cost-badge {
+      background: #FFF0E4;
+      border: 1.5px solid #FFD4A8;
+      border-radius: 100px;
+      padding: 6px 16px;
+      font-size: 16px;
+      font-weight: 800;
+      color: #C9550A;
     }
-    .meal-name { font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
-    .meal-cost { font-size: 12px; color: var(--accent2); }
-    .meal-block-body { padding: 14px 18px; }
-    .meal-title { font-size: 15px; color: var(--text); margin-bottom: 6px; font-family: 'Syne', sans-serif; font-weight: 600; }
-    .meal-desc { font-size: 13px; color: var(--muted); line-height: 1.6; }
-    .shopping-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 8px; margin-top: 4px; }
-    .shopping-item {
-      background: var(--bg); border: 1px solid var(--border);
-      border-radius: var(--radius); padding: 10px 14px;
-      font-size: 13px; display: flex; align-items: center; gap: 8px;
+
+    .result-meta { font-size: 13px; color: #8C6A4A; margin-bottom: 16px; }
+
+    .meals { display: flex; flex-direction: column; gap: 10px; margin-bottom: 14px; }
+
+    .meal-card {
+      background: #FDFAF7;
+      border: 1.5px solid #F0E6DA;
+      border-radius: 14px;
+      padding: 16px;
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
     }
-    .shopping-item::before { content: '○'; color: var(--accent); font-size: 10px; flex-shrink: 0; }
+
+    .meal-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+
+    .meal-body { flex: 1; min-width: 0; }
+
+    .meal-type {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #8C6A4A;
+      margin-bottom: 3px;
+    }
+
+    .meal-name { font-size: 15px; font-weight: 800; color: #2D1F0E; margin-bottom: 5px; }
+    .meal-desc { font-size: 13px; color: #8C6A4A; line-height: 1.5; }
+    .meal-cost { font-size: 14px; font-weight: 700; color: #C9550A; white-space: nowrap; padding-top: 2px; }
+
+    .shop-card {
+      background: #F7FBF4;
+      border: 1.5px solid #C8E6C9;
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 12px;
+    }
+
+    .shop-title { font-size: 15px; font-weight: 800; color: #2D5A27; margin-bottom: 14px; }
+
+    .shop-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 8px;
+    }
+
+    .shop-item {
+      font-size: 13px;
+      font-weight: 600;
+      padding: 9px 13px;
+      background: #fff;
+      border: 1.5px solid #C8E6C9;
+      border-radius: 10px;
+      color: #2D5A27;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .shop-dot { width: 7px; height: 7px; border-radius: 50%; background: #4CAF50; flex-shrink: 0; }
+
     .tip-box {
-      border-left: 3px solid var(--accent2);
-      padding: 12px 16px;
-      background: rgba(196, 92, 42, 0.08);
-      border-radius: 0 var(--radius) var(--radius) 0;
-      font-size: 13px; color: var(--muted); line-height: 1.6; margin-top: 4px;
+      background: #FFF8E1;
+      border: 1.5px solid #FFE082;
+      border-radius: 14px;
+      padding: 16px 18px;
+      font-size: 14px;
+      font-weight: 600;
+      color: #7A5C00;
+      line-height: 1.6;
     }
-    footer { margin-top: 60px; text-align: center; font-size: 12px; color: var(--border); }
+
     @keyframes spin { to { transform: rotate(360deg); } }
     .spinner {
-      display: inline-block; width: 14px; height: 14px;
-      border: 2px solid var(--border); border-top-color: var(--accent);
-      border-radius: 50%; animation: spin 0.7s linear infinite;
-      vertical-align: middle; margin-right: 8px;
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      border: 2px solid rgba(255,255,255,0.4);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      vertical-align: middle;
+      margin-right: 6px;
     }
-    @keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
-    .fade-in { animation: fadeUp 0.4s ease forwards; }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .fade-in { animation: fadeUp 0.35s ease forwards; }
+
+    footer { margin-top: 48px; text-align: center; font-size: 12px; color: #C9A882; }
+
+    @media (max-width: 480px) {
+      .two-col { grid-template-columns: 1fr; }
+    }
   </style>
 </head>
 <body>
+
 <div class="container">
 
-  <header>
-    <div class="tag">Free Tool</div>
-    <h1>Cheap Meal<br/><span>Plan Generator</span></h1>
-    <p class="subtitle">Enter your budget and preferences.<br/>Get a realistic, affordable 1-day meal plan in seconds.</p>
-  </header>
+  <div class="hero">
+    <span class="hero-emoji">🥗</span>
+    <h1>What's for dinner?<br/><span>Let's plan it cheap.</span></h1>
+    <p>Tell us your budget and we'll build a full day of simple, affordable meals — in seconds.</p>
+  </div>
 
   <div class="card">
-    <div class="section-label">Your Preferences</div>
-
-    <div class="field">
-      <label>Daily Budget (€)</label>
-      <input type="number" id="budget" value="10" min="3" max="50" />
+    <div class="card-label">💰 Daily budget</div>
+    <div class="budget-row">
+      <span class="budget-sym">€</span>
+      <input class="budget-input" type="number" id="budget" value="10" min="3" max="50"/>
+      <span class="budget-sub">per day</span>
     </div>
+  </div>
 
-    <div class="field">
-      <label>Diet Type</label>
-      <div class="pills" id="diet-pills">
-        <span class="pill selected" data-value="none">No restriction</span>
-        <span class="pill" data-value="vegetarian">Vegetarian</span>
-        <span class="pill" data-value="high-protein">High Protein</span>
-        <span class="pill" data-value="vegan">Vegan</span>
+  <div class="two-col">
+    <div class="card">
+      <div class="card-label">🍽 Meals per day</div>
+      <div class="pills" id="meals-pills">
+        <span class="pill" data-value="2">2</span>
+        <span class="pill selected" data-value="3">3</span>
+        <span class="pill" data-value="4">4</span>
       </div>
     </div>
-
-    <div class="field">
-      <label>Goal</label>
-      <div class="pills" id="goal-pills">
-        <span class="pill selected" data-value="maintain">Maintain weight</span>
+    <div class="card">
+      <div class="card-label">🎯 Goal</div>
+      <div class="pills vertical" id="goal-pills">
+        <span class="pill selected" data-value="maintain">Maintain</span>
         <span class="pill" data-value="lose">Lose weight</span>
         <span class="pill" data-value="gain">Gain muscle</span>
       </div>
     </div>
+  </div>
 
-    <div class="field">
-      <label>Meals per day</label>
-      <div class="pills" id="meals-pills">
-        <span class="pill" data-value="2">2 meals</span>
-        <span class="pill selected" data-value="3">3 meals</span>
-        <span class="pill" data-value="4">4 meals</span>
-      </div>
+  <div class="card">
+    <div class="card-label">🥦 Diet type</div>
+    <div class="pills" id="diet-pills">
+      <span class="pill selected" data-value="none">No restriction</span>
+      <span class="pill" data-value="vegetarian">Vegetarian</span>
+      <span class="pill" data-value="high-protein">High protein</span>
+      <span class="pill" data-value="vegan">Vegan</span>
     </div>
   </div>
 
-  <button id="generateBtn" onclick="generatePlan()">Generate My Meal Plan →</button>
+  <button id="generateBtn" onclick="generatePlan()">✨ Generate my meal plan</button>
+
   <div id="status"></div>
   <div id="error"></div>
   <div id="results"></div>
 
 </div>
 
-<footer>Cheap Meal Plan Generator · Powered by Claude AI</footer>
+<footer>Mealzy · Powered by Claude AI · Free to use</footer>
 
 <script>
-  // Pill selection
   document.querySelectorAll('.pills').forEach(group => {
     group.addEventListener('click', e => {
       const pill = e.target.closest('.pill');
@@ -239,8 +340,17 @@
   });
 
   function getSelected(groupId) {
-    const selected = document.querySelector(`#${groupId} .pill.selected`);
-    return selected ? selected.dataset.value : null;
+    const el = document.querySelector(`#${groupId} .pill.selected`);
+    return el ? el.dataset.value : null;
+  }
+
+  function getMealIcon(type) {
+    const t = type.toLowerCase();
+    if (t.includes('breakfast')) return { emoji: '🌅', bg: '#FFF3CD' };
+    if (t.includes('lunch'))     return { emoji: '☀️',  bg: '#D4EDDA' };
+    if (t.includes('dinner'))    return { emoji: '🌙', bg: '#D1ECF1' };
+    if (t.includes('snack'))     return { emoji: '🍎', bg: '#F8D7DA' };
+    return { emoji: '🍴', bg: '#E2E3E5' };
   }
 
   async function generatePlan() {
@@ -256,10 +366,9 @@
     try {
       const prompt = buildPrompt(budget, diet, goal, meals);
 
-      // Calls your own server — no API key needed in the browser
-      const response = await fetch("/generate", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+      const response = await fetch('/generate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ prompt })
       });
 
@@ -306,8 +415,9 @@ RULES:
 - Prices should be realistic European supermarket prices in euros
 - Total estimated cost must be under €${budget}
 - Each meal should be filling and nutritious
-- If the goal is weight loss, keep calories moderate (~1600–1800 kcal)
-- If the goal is muscle gain, add more protein and calories (~2200–2500 kcal)
+- If the goal is weight loss, keep calories moderate (~1600-1800 kcal)
+- If the goal is muscle gain, add more protein and calories (~2200-2500 kcal)
+- If the budget is very low (under €5), use only the cheapest possible ingredients
 
 Respond ONLY with a valid JSON object. No explanation, no markdown, just the JSON.
 
@@ -336,56 +446,54 @@ JSON format:
   function displayResults(plan, budget) {
     const el = document.getElementById('results');
     el.style.display = 'block';
-    el.classList.add('fade-in');
 
-    const mealsHTML = plan.meals.map(meal => `
-      <div class="meal-block">
-        <div class="meal-block-header">
-          <span class="meal-name">${meal.type}</span>
-          <span class="meal-cost">${meal.cost}</span>
+    const mealsHTML = plan.meals.map(meal => {
+      const icon = getMealIcon(meal.type);
+      return `
+        <div class="meal-card">
+          <div class="meal-icon" style="background:${icon.bg}">${icon.emoji}</div>
+          <div class="meal-body">
+            <div class="meal-type">${meal.type}</div>
+            <div class="meal-name">${meal.name}</div>
+            <div class="meal-desc">${meal.description}</div>
+          </div>
+          <div class="meal-cost">${meal.cost}</div>
         </div>
-        <div class="meal-block-body">
-          <div class="meal-title">${meal.name}</div>
-          <div class="meal-desc">${meal.description}</div>
-        </div>
-      </div>
-    `).join('');
+      `;
+    }).join('');
 
-    const shoppingHTML = plan.shoppingList.map(item => `
-      <div class="shopping-item">${item}</div>
+    const shopHTML = plan.shoppingList.map(item => `
+      <div class="shop-item"><div class="shop-dot"></div>${item}</div>
     `).join('');
 
     el.innerHTML = `
-      <div class="card fade-in">
-        <div class="results-header">
-          <h2>Your Meal Plan</h2>
-          <span class="cost-badge">${plan.totalCost} / day</span>
+      <div class="fade-in">
+        <div class="result-header">
+          <div class="result-title">Your meal plan</div>
+          <div class="cost-badge">${plan.totalCost} / day</div>
         </div>
-        <div style="font-size:12px;color:var(--muted);margin-bottom:20px;">${plan.calories} · Budget: €${budget}</div>
-        ${mealsHTML}
-      </div>
-      <div class="card fade-in" style="animation-delay:0.1s">
-        <div class="section-label">Shopping List</div>
-        <div class="shopping-grid">${shoppingHTML}</div>
-      </div>
-      <div class="card fade-in" style="animation-delay:0.2s">
-        <div class="section-label">Money-Saving Tip</div>
+        <div class="result-meta">${plan.calories} · Budget: €${budget}</div>
+        <div class="meals">${mealsHTML}</div>
+        <div class="shop-card">
+          <div class="shop-title">🛒 Shopping list</div>
+          <div class="shop-grid">${shopHTML}</div>
+        </div>
         <div class="tip-box">💡 ${plan.tip}</div>
       </div>
     `;
   }
 
-  function setLoading(isLoading) {
+  function setLoading(on) {
     const btn = document.getElementById('generateBtn');
     const status = document.getElementById('status');
-    if (isLoading) {
+    if (on) {
       btn.disabled = true;
-      btn.textContent = 'Generating...';
+      btn.innerHTML = '<span class="spinner"></span> Generating...';
       status.style.display = 'block';
-      status.innerHTML = '<span class="spinner"></span> Asking Claude for a meal plan...';
+      status.innerHTML = 'Asking Claude for a meal plan...';
     } else {
       btn.disabled = false;
-      btn.textContent = 'Generate My Meal Plan →';
+      btn.innerHTML = '✨ Generate my meal plan';
       status.style.display = 'none';
     }
   }
@@ -396,7 +504,7 @@ JSON format:
     el.textContent = msg;
   }
 
-  function hideError() { document.getElementById('error').style.display = 'none'; }
+  function hideError()   { document.getElementById('error').style.display = 'none'; }
   function hideResults() { document.getElementById('results').style.display = 'none'; }
 </script>
 </body>
