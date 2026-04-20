@@ -56,6 +56,7 @@
       gap: 6px;
     }
 
+    /* ── Budget ───────────────────────────────────────────────────── */
     .budget-row { display: flex; align-items: center; gap: 4px; }
     .budget-sym { font-size: 26px; font-weight: 800; color: #C9855A; }
 
@@ -82,6 +83,25 @@
       margin-left: 4px;
     }
 
+    /* ── Country input ────────────────────────────────────────────── */
+    .country-input {
+      font-family: 'Nunito', sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      color: #2D1F0E;
+      border: 1.5px solid #F0E6DA;
+      background: #FAFAF8;
+      border-radius: 12px;
+      padding: 12px 16px;
+      width: 100%;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+
+    .country-input:focus { border-color: #E07B39; }
+    .country-input::placeholder { color: #C9A882; font-weight: 600; }
+
+    /* ── Two column grid ──────────────────────────────────────────── */
     .two-col {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -91,6 +111,7 @@
 
     .two-col .card { margin-bottom: 0; }
 
+    /* ── Pills ────────────────────────────────────────────────────── */
     .pills { display: flex; flex-wrap: wrap; gap: 8px; }
     .pills.vertical { flex-direction: column; }
 
@@ -111,6 +132,11 @@
     .pill:hover { border-color: #E07B39; color: #E07B39; }
     .pill.selected { background: #E07B39; border-color: #E07B39; color: #fff; }
 
+    /* Multi-select pills use a different selected color so user knows they can pick many */
+    .pill.multi.selected { background: #2D5A27; border-color: #2D5A27; color: #fff; }
+    .pill.multi:hover { border-color: #2D5A27; color: #2D5A27; }
+
+    /* ── Generate button ──────────────────────────────────────────── */
     #generateBtn {
       width: 100%;
       padding: 18px;
@@ -134,6 +160,7 @@
     #generateBtn:active:not(:disabled) { transform: scale(0.99); }
     #generateBtn:disabled { opacity: 0.5; cursor: not-allowed; }
 
+    /* ── Status / Error ───────────────────────────────────────────── */
     #status { text-align: center; padding: 14px; font-size: 14px; color: #8C6A4A; display: none; }
 
     #error {
@@ -204,12 +231,7 @@
     .meal-name { font-size: 15px; font-weight: 800; color: #2D1F0E; margin-bottom: 6px; }
     .meal-desc { font-size: 13px; color: #8C6A4A; line-height: 1.5; margin-bottom: 10px; }
 
-    /* New: meal meta pills (prep time, portion, calories) */
-    .meal-meta {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-    }
+    .meal-meta { display: flex; flex-wrap: wrap; gap: 6px; }
 
     .meal-meta-pill {
       font-size: 12px;
@@ -234,7 +256,6 @@
 
     .shop-title { font-size: 15px; font-weight: 800; color: #2D5A27; margin-bottom: 16px; }
 
-    /* Each category group */
     .shop-category { margin-bottom: 14px; }
     .shop-category:last-child { margin-bottom: 0; }
 
@@ -328,6 +349,12 @@
     </div>
   </div>
 
+  <!-- ── COUNTRY ────────────────────────────────────────────────── -->
+  <div class="card">
+    <div class="card-label">🌍 Your country</div>
+    <input class="country-input" type="text" id="country" placeholder="e.g. Sweden, Germany, Spain..." />
+  </div>
+
   <!-- ── MEALS + GOAL ───────────────────────────────────────────── -->
   <div class="two-col">
     <div class="card">
@@ -359,6 +386,28 @@
     </div>
   </div>
 
+  <!-- ── APPLIANCES (multi-select) ─────────────────────────────── -->
+  <div class="card">
+    <div class="card-label">🔌 Appliances you have <span style="font-weight:400;color:#C9A882;">(pick all that apply)</span></div>
+    <div class="pills" id="appliance-pills">
+      <span class="pill multi selected" data-value="stovetop">🍳 Stovetop</span>
+      <span class="pill multi selected" data-value="microwave">📡 Microwave</span>
+      <span class="pill multi" data-value="oven">🔥 Oven</span>
+      <span class="pill multi" data-value="kettle">☕ Kettle</span>
+      <span class="pill multi" data-value="blender">🥤 Blender</span>
+      <span class="pill multi" data-value="air fryer">💨 Air fryer</span>
+    </div>
+  </div>
+
+  <!-- ── COOKING SKILL ──────────────────────────────────────────── -->
+  <div class="card">
+    <div class="card-label">👨‍🍳 Cooking skill level</div>
+    <div class="pills" id="skill-pills">
+      <span class="pill selected" data-value="beginner">Beginner</span>
+      <span class="pill" data-value="intermediate">Intermediate</span>
+    </div>
+  </div>
+
   <!-- ── BUTTON ─────────────────────────────────────────────────── -->
   <button id="generateBtn" onclick="generatePlan()">✨ Generate my meal plan</button>
 
@@ -374,19 +423,33 @@
 <footer>Mealzy · Powered by Claude AI · Free to use</footer>
 
 <script>
-  // ── Pill selection ───────────────────────────────────────────────
-  document.querySelectorAll('.pills').forEach(group => {
-    group.addEventListener('click', e => {
+  // ── Single-select pill groups ────────────────────────────────────
+  ['meals-pills', 'goal-pills', 'diet-pills', 'skill-pills'].forEach(groupId => {
+    document.getElementById(groupId).addEventListener('click', e => {
       const pill = e.target.closest('.pill');
       if (!pill) return;
-      group.querySelectorAll('.pill').forEach(p => p.classList.remove('selected'));
+      document.querySelectorAll(`#${groupId} .pill`).forEach(p => p.classList.remove('selected'));
       pill.classList.add('selected');
     });
   });
 
+  // ── Multi-select appliance pills (toggle on/off) ─────────────────
+  document.getElementById('appliance-pills').addEventListener('click', e => {
+    const pill = e.target.closest('.pill');
+    if (!pill) return;
+    pill.classList.toggle('selected');
+  });
+
+  // ── Get selected value from a single-select group ────────────────
   function getSelected(groupId) {
     const el = document.querySelector(`#${groupId} .pill.selected`);
     return el ? el.dataset.value : null;
+  }
+
+  // ── Get all selected values from the appliance multi-select ──────
+  function getAppliances() {
+    const selected = document.querySelectorAll('#appliance-pills .pill.selected');
+    return Array.from(selected).map(p => p.dataset.value);
   }
 
   // ── Meal icon by type ────────────────────────────────────────────
@@ -399,7 +462,7 @@
     return { emoji: '🍴', bg: '#E2E3E5' };
   }
 
-  // ── Shopping list category icons ─────────────────────────────────
+  // ── Shopping category icons ──────────────────────────────────────
   function getCategoryIcon(cat) {
     const map = {
       produce: '🥬', dairy: '🥛', grains: '🌾',
@@ -411,17 +474,25 @@
 
   // ── Main generate function ───────────────────────────────────────
   async function generatePlan() {
-    const budget = document.getElementById('budget').value || 10;
-    const diet   = getSelected('diet-pills')  || 'none';
-    const goal   = getSelected('goal-pills')  || 'maintain';
-    const meals  = getSelected('meals-pills') || '3';
+    const budget     = document.getElementById('budget').value || 10;
+    const country    = document.getElementById('country').value.trim() || 'Europe';
+    const diet       = getSelected('diet-pills')  || 'none';
+    const goal       = getSelected('goal-pills')  || 'maintain';
+    const meals      = getSelected('meals-pills') || '3';
+    const skill      = getSelected('skill-pills') || 'beginner';
+    const appliances = getAppliances();
+
+    if (appliances.length === 0) {
+      showError('Please select at least one appliance you have access to.');
+      return;
+    }
 
     setLoading(true);
     hideError();
     hideResults();
 
     try {
-      const prompt = buildPrompt(budget, diet, goal, meals);
+      const prompt = buildPrompt(budget, country, diet, goal, meals, skill, appliances);
 
       const response = await fetch('/generate', {
         method: 'POST',
@@ -445,8 +516,8 @@
     }
   }
 
-  // ── Prompt ───────────────────────────────────────────────────────
-  function buildPrompt(budget, diet, goal, meals) {
+  // ── Prompt builder ───────────────────────────────────────────────
+  function buildPrompt(budget, country, diet, goal, meals, skill, appliances) {
     const dietMap = {
       'none':         'no dietary restrictions (omnivore)',
       'vegetarian':   'vegetarian (no meat or fish)',
@@ -461,6 +532,8 @@
 
     return `You are a budget-conscious meal planner. When generating a meal plan, always include: meal name, estimated cost per meal, prep time in minutes, exact portion sizes, a calorie estimate, and a consolidated shopping list at the end grouped by category (produce, dairy, grains, protein, other). Keep language simple and practical.
 
+The user is based in ${country}. Use locally available, affordable ingredients typical to that region. Assume they have: ${appliances.join(', ')}. Their cooking skill level is ${skill}. Adjust recipe complexity accordingly.
+
 USER INPUTS:
 - Daily budget: €${budget}
 - Diet: ${dietMap[diet] || diet}
@@ -468,9 +541,10 @@ USER INPUTS:
 - Meals per day: ${meals}
 
 RULES:
-- Keep meals simple, fast to cook, and made from widely available supermarket ingredients
-- Use cheap staple ingredients (eggs, oats, pasta, rice, lentils, canned beans, frozen veg, bread)
-- Prices should be realistic European supermarket prices in euros
+- Only suggest meals that can be made using the appliances listed above
+- Keep meals simple if skill is beginner, slightly more involved if intermediate
+- Use ingredients readily available in ${country} supermarkets
+- Prices should reflect local costs in ${country}
 - Total estimated cost must stay under €${budget}
 - If the goal is weight loss, keep calories moderate (~1600-1800 kcal total)
 - If the goal is muscle gain, add more protein and calories (~2200-2500 kcal total)
@@ -515,7 +589,6 @@ JSON format:
     const el = document.getElementById('results');
     el.style.display = 'block';
 
-    // Build meal cards
     const mealsHTML = plan.meals.map(meal => {
       const icon = getMealIcon(meal.type);
       return `
@@ -536,12 +609,11 @@ JSON format:
       `;
     }).join('');
 
-    // Build grouped shopping list
+    // Grouped shopping list
     let shopHTML = '';
     const list = plan.shoppingList;
 
     if (typeof list === 'object' && !Array.isArray(list)) {
-      // Grouped object (new format)
       Object.entries(list).forEach(([category, items]) => {
         if (!items || items.length === 0) return;
         const icon = getCategoryIcon(category);
@@ -555,7 +627,6 @@ JSON format:
         `;
       });
     } else {
-      // Fallback: flat array
       shopHTML = `<div class="shop-grid">
         ${list.map(item => `<div class="shop-item"><div class="shop-dot"></div>${item}</div>`).join('')}
       </div>`;
@@ -568,14 +639,11 @@ JSON format:
           <div class="cost-badge">${plan.totalCost} / day</div>
         </div>
         <div class="result-meta">${plan.calories} · Budget: €${budget}</div>
-
         <div class="meals">${mealsHTML}</div>
-
         <div class="shop-card">
           <div class="shop-title">🛒 Shopping list</div>
           ${shopHTML}
         </div>
-
         <div class="tip-box">💡 ${plan.tip}</div>
       </div>
     `;
