@@ -150,6 +150,7 @@
 
     #results { display: none; }
 
+    /* ── Results header ───────────────────────────────────────────── */
     .result-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
     .result-title { font-size: 20px; font-weight: 800; color: #2D1F0E; }
 
@@ -165,6 +166,7 @@
 
     .result-meta { font-size: 13px; color: #8C6A4A; margin-bottom: 16px; }
 
+    /* ── Meal cards ───────────────────────────────────────────────── */
     .meals { display: flex; flex-direction: column; gap: 10px; margin-bottom: 14px; }
 
     .meal-card {
@@ -199,10 +201,29 @@
       margin-bottom: 3px;
     }
 
-    .meal-name { font-size: 15px; font-weight: 800; color: #2D1F0E; margin-bottom: 5px; }
-    .meal-desc { font-size: 13px; color: #8C6A4A; line-height: 1.5; }
+    .meal-name { font-size: 15px; font-weight: 800; color: #2D1F0E; margin-bottom: 6px; }
+    .meal-desc { font-size: 13px; color: #8C6A4A; line-height: 1.5; margin-bottom: 10px; }
+
+    /* New: meal meta pills (prep time, portion, calories) */
+    .meal-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .meal-meta-pill {
+      font-size: 12px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 100px;
+      background: #FFF3E8;
+      border: 1px solid #FFD4A8;
+      color: #C9550A;
+    }
+
     .meal-cost { font-size: 14px; font-weight: 700; color: #C9550A; white-space: nowrap; padding-top: 2px; }
 
+    /* ── Shopping list ────────────────────────────────────────────── */
     .shop-card {
       background: #F7FBF4;
       border: 1.5px solid #C8E6C9;
@@ -211,7 +232,20 @@
       margin-bottom: 12px;
     }
 
-    .shop-title { font-size: 15px; font-weight: 800; color: #2D5A27; margin-bottom: 14px; }
+    .shop-title { font-size: 15px; font-weight: 800; color: #2D5A27; margin-bottom: 16px; }
+
+    /* Each category group */
+    .shop-category { margin-bottom: 14px; }
+    .shop-category:last-child { margin-bottom: 0; }
+
+    .shop-category-label {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #4CAF50;
+      margin-bottom: 8px;
+    }
 
     .shop-grid {
       display: grid;
@@ -234,6 +268,7 @@
 
     .shop-dot { width: 7px; height: 7px; border-radius: 50%; background: #4CAF50; flex-shrink: 0; }
 
+    /* ── Tip box ──────────────────────────────────────────────────── */
     .tip-box {
       background: #FFF8E1;
       border: 1.5px solid #FFE082;
@@ -245,6 +280,7 @@
       line-height: 1.6;
     }
 
+    /* ── Spinner ──────────────────────────────────────────────────── */
     @keyframes spin { to { transform: rotate(360deg); } }
     .spinner {
       display: inline-block;
@@ -275,12 +311,14 @@
 
 <div class="container">
 
+  <!-- ── HERO ───────────────────────────────────────────────────── -->
   <div class="hero">
     <span class="hero-emoji">🥗</span>
     <h1>What's for dinner?<br/><span>Let's plan it cheap.</span></h1>
-    <p>Tell us your budget and we'll build a full day of simple, affordable meals — in seconds.</p>
+    <p>Tell us your budget and we'll build a full day of simple, affordable meals in seconds.</p>
   </div>
 
+  <!-- ── BUDGET ─────────────────────────────────────────────────── -->
   <div class="card">
     <div class="card-label">💰 Daily budget</div>
     <div class="budget-row">
@@ -290,6 +328,7 @@
     </div>
   </div>
 
+  <!-- ── MEALS + GOAL ───────────────────────────────────────────── -->
   <div class="two-col">
     <div class="card">
       <div class="card-label">🍽 Meals per day</div>
@@ -309,6 +348,7 @@
     </div>
   </div>
 
+  <!-- ── DIET ───────────────────────────────────────────────────── -->
   <div class="card">
     <div class="card-label">🥦 Diet type</div>
     <div class="pills" id="diet-pills">
@@ -319,10 +359,14 @@
     </div>
   </div>
 
+  <!-- ── BUTTON ─────────────────────────────────────────────────── -->
   <button id="generateBtn" onclick="generatePlan()">✨ Generate my meal plan</button>
 
+  <!-- ── STATUS / ERROR ─────────────────────────────────────────── -->
   <div id="status"></div>
   <div id="error"></div>
+
+  <!-- ── RESULTS ────────────────────────────────────────────────── -->
   <div id="results"></div>
 
 </div>
@@ -330,6 +374,7 @@
 <footer>Mealzy · Powered by Claude AI · Free to use</footer>
 
 <script>
+  // ── Pill selection ───────────────────────────────────────────────
   document.querySelectorAll('.pills').forEach(group => {
     group.addEventListener('click', e => {
       const pill = e.target.closest('.pill');
@@ -344,6 +389,7 @@
     return el ? el.dataset.value : null;
   }
 
+  // ── Meal icon by type ────────────────────────────────────────────
   function getMealIcon(type) {
     const t = type.toLowerCase();
     if (t.includes('breakfast')) return { emoji: '🌅', bg: '#FFF3CD' };
@@ -353,6 +399,17 @@
     return { emoji: '🍴', bg: '#E2E3E5' };
   }
 
+  // ── Shopping list category icons ─────────────────────────────────
+  function getCategoryIcon(cat) {
+    const map = {
+      produce: '🥬', dairy: '🥛', grains: '🌾',
+      protein: '🥩', other: '🛒', pantry: '🫙',
+      frozen: '🧊', bakery: '🍞', beverages: '🧃'
+    };
+    return map[cat.toLowerCase()] || '🛒';
+  }
+
+  // ── Main generate function ───────────────────────────────────────
   async function generatePlan() {
     const budget = document.getElementById('budget').value || 10;
     const diet   = getSelected('diet-pills')  || 'none';
@@ -388,6 +445,7 @@
     }
   }
 
+  // ── Prompt ───────────────────────────────────────────────────────
   function buildPrompt(budget, diet, goal, meals) {
     const dietMap = {
       'none':         'no dietary restrictions (omnivore)',
@@ -401,7 +459,7 @@
       'gain':     'gain muscle (higher calories and protein)'
     };
 
-    return `You are a budget meal planning assistant. Generate a realistic, affordable 1-day meal plan.
+    return `You are a budget-conscious meal planner. When generating a meal plan, always include: meal name, estimated cost per meal, prep time in minutes, exact portion sizes, a calorie estimate, and a consolidated shopping list at the end grouped by category (produce, dairy, grains, protein, other). Keep language simple and practical.
 
 USER INPUTS:
 - Daily budget: €${budget}
@@ -413,10 +471,9 @@ RULES:
 - Keep meals simple, fast to cook, and made from widely available supermarket ingredients
 - Use cheap staple ingredients (eggs, oats, pasta, rice, lentils, canned beans, frozen veg, bread)
 - Prices should be realistic European supermarket prices in euros
-- Total estimated cost must be under €${budget}
-- Each meal should be filling and nutritious
-- If the goal is weight loss, keep calories moderate (~1600-1800 kcal)
-- If the goal is muscle gain, add more protein and calories (~2200-2500 kcal)
+- Total estimated cost must stay under €${budget}
+- If the goal is weight loss, keep calories moderate (~1600-1800 kcal total)
+- If the goal is muscle gain, add more protein and calories (~2200-2500 kcal total)
 - If the budget is very low (under €5), use only the cheapest possible ingredients
 
 Respond ONLY with a valid JSON object. No explanation, no markdown, just the JSON.
@@ -430,23 +487,35 @@ JSON format:
       "type": "Breakfast",
       "name": "Meal name here",
       "description": "Short 1-2 sentence description of how to make it",
-      "cost": "€X.XX"
+      "cost": "€X.XX",
+      "prepTime": "X mins",
+      "portion": "e.g. 300g / 1 bowl",
+      "calories": "~XXX kcal"
     }
   ],
-  "shoppingList": ["item 1", "item 2", "item 3"],
+  "shoppingList": {
+    "produce": ["item 1", "item 2"],
+    "dairy": ["item 1"],
+    "grains": ["item 1"],
+    "protein": ["item 1"],
+    "other": ["item 1"]
+  },
   "tip": "One practical money-saving tip for this meal plan"
 }`;
   }
 
+  // ── Parse JSON safely ────────────────────────────────────────────
   function parseJSON(text) {
     const cleaned = text.replace(/```json|```/g, '').trim();
     return JSON.parse(cleaned);
   }
 
+  // ── Display results ──────────────────────────────────────────────
   function displayResults(plan, budget) {
     const el = document.getElementById('results');
     el.style.display = 'block';
 
+    // Build meal cards
     const mealsHTML = plan.meals.map(meal => {
       const icon = getMealIcon(meal.type);
       return `
@@ -456,15 +525,41 @@ JSON format:
             <div class="meal-type">${meal.type}</div>
             <div class="meal-name">${meal.name}</div>
             <div class="meal-desc">${meal.description}</div>
+            <div class="meal-meta">
+              ${meal.prepTime ? `<span class="meal-meta-pill">⏱ ${meal.prepTime}</span>` : ''}
+              ${meal.portion  ? `<span class="meal-meta-pill">⚖️ ${meal.portion}</span>` : ''}
+              ${meal.calories ? `<span class="meal-meta-pill">🔥 ${meal.calories}</span>` : ''}
+            </div>
           </div>
           <div class="meal-cost">${meal.cost}</div>
         </div>
       `;
     }).join('');
 
-    const shopHTML = plan.shoppingList.map(item => `
-      <div class="shop-item"><div class="shop-dot"></div>${item}</div>
-    `).join('');
+    // Build grouped shopping list
+    let shopHTML = '';
+    const list = plan.shoppingList;
+
+    if (typeof list === 'object' && !Array.isArray(list)) {
+      // Grouped object (new format)
+      Object.entries(list).forEach(([category, items]) => {
+        if (!items || items.length === 0) return;
+        const icon = getCategoryIcon(category);
+        shopHTML += `
+          <div class="shop-category">
+            <div class="shop-category-label">${icon} ${category}</div>
+            <div class="shop-grid">
+              ${items.map(item => `<div class="shop-item"><div class="shop-dot"></div>${item}</div>`).join('')}
+            </div>
+          </div>
+        `;
+      });
+    } else {
+      // Fallback: flat array
+      shopHTML = `<div class="shop-grid">
+        ${list.map(item => `<div class="shop-item"><div class="shop-dot"></div>${item}</div>`).join('')}
+      </div>`;
+    }
 
     el.innerHTML = `
       <div class="fade-in">
@@ -473,16 +568,20 @@ JSON format:
           <div class="cost-badge">${plan.totalCost} / day</div>
         </div>
         <div class="result-meta">${plan.calories} · Budget: €${budget}</div>
+
         <div class="meals">${mealsHTML}</div>
+
         <div class="shop-card">
           <div class="shop-title">🛒 Shopping list</div>
-          <div class="shop-grid">${shopHTML}</div>
+          ${shopHTML}
         </div>
+
         <div class="tip-box">💡 ${plan.tip}</div>
       </div>
     `;
   }
 
+  // ── UI helpers ───────────────────────────────────────────────────
   function setLoading(on) {
     const btn = document.getElementById('generateBtn');
     const status = document.getElementById('status');
