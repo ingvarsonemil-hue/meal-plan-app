@@ -213,7 +213,6 @@
       overflow: hidden;
     }
 
-    /* Top section: icon + name + cost */
     .meal-top {
       display: flex;
       gap: 14px;
@@ -233,7 +232,6 @@
     }
 
     .meal-body { flex: 1; min-width: 0; }
-
     .meal-type {
       font-size: 11px;
       font-weight: 700;
@@ -265,6 +263,38 @@
     }
 
     .meal-cost { font-size: 14px; font-weight: 700; color: #C9550A; white-space: nowrap; padding-top: 2px; }
+
+    /* ── Ingredients section ──────────────────────────────────────── */
+    .meal-ingredients {
+      border-top: 1.5px solid #F0E6DA;
+      padding: 14px 16px;
+      background: #FFF8F2;
+    }
+
+    .meal-ingredients-title {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #C9855A;
+      margin-bottom: 10px;
+    }
+
+    .ingredients-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .ingredient-pill {
+      font-size: 12px;
+      font-weight: 600;
+      padding: 5px 11px;
+      background: #fff;
+      border: 1.5px solid #FFD4A8;
+      border-radius: 100px;
+      color: #7A4A20;
+    }
 
     /* ── Cooking steps section ────────────────────────────────────── */
     .meal-steps {
@@ -544,12 +574,11 @@
     const limit = parseFloat(budget);
     const fits  = spent <= limit;
     const diff  = Math.abs(limit - spent).toFixed(2);
-
     return `
       <div class="budget-confirm ${fits ? 'fits' : 'over'}">
         ${fits
           ? `✅ Fits your €${budget} budget — €${diff} to spare`
-          : `⚠️ Slightly over your €${budget} budget by €${diff} — consider swapping one ingredient for something cheaper`
+          : `⚠️ Slightly over your €${budget} budget by €${diff} — consider swapping one ingredient`
         }
       </div>
     `;
@@ -623,20 +652,19 @@ USER INPUTS:
 - Goal: ${goalMap[goal] || goal}
 - Meals per day: ${meals}
 
-COOKING STEPS RULES — very important:
-- For each meal, include 3 to 5 numbered cooking steps.
-- Each step must be under 20 words.
-- Write steps for a complete beginner — assume they know nothing.
-- Focus on speed and simplicity. No fancy techniques.
-- Steps should be in the correct cooking order.
-
 BUDGET RULES:
 - Show the estimated cost in euros for each meal.
-- Total daily cost must stay under €${budget}. If it doesn't fit, adjust ingredients before responding.
+- Total daily cost must stay under €${budget}. If it does not fit, adjust ingredients before responding.
 
 VARIETY RULES:
 - Do NOT repeat any ingredient as a main component across more than one meal.
 - Vary protein sources, cooking methods, and flavor profiles across meals.
+
+COOKING STEPS RULES:
+- For each meal, include 3 to 5 numbered cooking steps.
+- Each step must be under 20 words.
+- Write for a complete beginner. Assume they know nothing.
+- Focus on speed and simplicity. No fancy techniques.
 
 OTHER RULES:
 - Only use appliances from this list: ${appliances.join(', ')}
@@ -645,9 +673,8 @@ OTHER RULES:
 - If the goal is weight loss, keep calories ~1600-1800 kcal total
 - If the goal is muscle gain, aim for ~2200-2500 kcal total
 
-Respond ONLY with a valid JSON object. No explanation, no markdown, just the JSON.
+Always respond in valid JSON with this exact structure. Never return plain text outside this structure.
 
-JSON format:
 {
   "totalCost": "€X.XX",
   "calories": "~XXXX kcal",
@@ -662,10 +689,11 @@ JSON format:
       "portion": "e.g. 300g / 1 bowl",
       "calories": "~XXX kcal",
       "cookingMethod": "e.g. Pan-fried",
+      "ingredients": ["100g oats", "1 banana", "200ml water"],
       "steps": [
-        "Step one instruction here, under 20 words.",
-        "Step two instruction here, under 20 words.",
-        "Step three instruction here, under 20 words."
+        "Step one instruction, under 20 words.",
+        "Step two instruction, under 20 words.",
+        "Step three instruction, under 20 words."
       ]
     }
   ],
@@ -691,11 +719,20 @@ JSON format:
     const el = document.getElementById('results');
     el.style.display = 'block';
 
-    // Build meal cards
     const mealsHTML = plan.meals.map(meal => {
       const icon = getMealIcon(meal.type);
 
-      // Build numbered steps HTML
+      // Ingredients pills
+      const ingredientsHTML = meal.ingredients && meal.ingredients.length > 0
+        ? `<div class="meal-ingredients">
+            <div class="meal-ingredients-title">🧺 Ingredients</div>
+            <div class="ingredients-grid">
+              ${meal.ingredients.map(ing => `<span class="ingredient-pill">${ing}</span>`).join('')}
+            </div>
+          </div>`
+        : '';
+
+      // Numbered steps
       const stepsHTML = meal.steps && meal.steps.length > 0
         ? `<div class="meal-steps">
             <div class="meal-steps-title">📋 How to make it</div>
@@ -725,12 +762,13 @@ JSON format:
             </div>
             <div class="meal-cost">${meal.cost}</div>
           </div>
+          ${ingredientsHTML}
           ${stepsHTML}
         </div>
       `;
     }).join('');
 
-    // Build grouped shopping list
+    // Grouped shopping list
     let shopHTML = '';
     const list = plan.shoppingList;
 
