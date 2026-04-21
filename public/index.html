@@ -18,6 +18,7 @@
 
     .container { max-width: 620px; margin: 0 auto; }
 
+    /* ── Hero ─────────────────────────────────────────────────────── */
     .hero {
       background: #FFF8F0;
       border: 1.5px solid #FFE5C8;
@@ -38,6 +39,188 @@
     .hero h1 span { color: #E07B39; }
     .hero p { font-size: 14px; color: #8C6A4A; line-height: 1.6; }
 
+    /* ── How it works ─────────────────────────────────────────────── */
+    .how-it-works {
+      background: #fff;
+      border: 1.5px solid #F0E6DA;
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 14px;
+    }
+
+    .how-title {
+      font-size: 13px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #8C6A4A;
+      margin-bottom: 16px;
+    }
+
+    .how-steps {
+      display: flex;
+      gap: 0;
+      align-items: flex-start;
+    }
+
+    .how-step {
+      flex: 1;
+      text-align: center;
+      position: relative;
+    }
+
+    /* Connector line between steps */
+    .how-step:not(:last-child)::after {
+      content: '';
+      position: absolute;
+      top: 20px;
+      right: -4px;
+      width: calc(100% - 32px);
+      height: 2px;
+      background: #FFE5C8;
+      left: calc(50% + 20px);
+    }
+
+    .how-step-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: #FFF3E8;
+      border: 2px solid #FFD4A8;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      margin: 0 auto 10px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .how-step-num {
+      position: absolute;
+      top: -4px;
+      right: -4px;
+      width: 16px;
+      height: 16px;
+      background: #E07B39;
+      color: #fff;
+      border-radius: 50%;
+      font-size: 9px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .how-step-label {
+      font-size: 12px;
+      font-weight: 700;
+      color: #2D1F0E;
+      line-height: 1.3;
+    }
+
+    .how-step-sub {
+      font-size: 11px;
+      color: #8C6A4A;
+      margin-top: 3px;
+      line-height: 1.3;
+    }
+
+    /* ── Sample plan banner ───────────────────────────────────────── */
+    .sample-banner {
+      background: linear-gradient(135deg, #FFF8F0 0%, #FFF3E8 100%);
+      border: 1.5px dashed #FFD4A8;
+      border-radius: 16px;
+      padding: 18px 20px;
+      margin-bottom: 14px;
+      cursor: pointer;
+      transition: border-color 0.15s;
+    }
+
+    .sample-banner:hover { border-color: #E07B39; }
+
+    .sample-banner-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+
+    .sample-banner-title {
+      font-size: 13px;
+      font-weight: 800;
+      color: #E07B39;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .sample-toggle {
+      font-size: 12px;
+      font-weight: 700;
+      color: #8C6A4A;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+    }
+
+    .sample-meals {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .sample-meal {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: #fff;
+      border: 1px solid #F0E6DA;
+      border-radius: 10px;
+      padding: 10px 14px;
+    }
+
+    .sample-meal-icon {
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+
+    .sample-meal-info { flex: 1; }
+
+    .sample-meal-type {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #8C6A4A;
+    }
+
+    .sample-meal-name {
+      font-size: 13px;
+      font-weight: 800;
+      color: #2D1F0E;
+    }
+
+    .sample-meal-meta {
+      font-size: 11px;
+      color: #8C6A4A;
+    }
+
+    .sample-meal-cost {
+      font-size: 13px;
+      font-weight: 800;
+      color: #C9550A;
+    }
+
+    .sample-note {
+      font-size: 12px;
+      color: #8C6A4A;
+      text-align: center;
+      margin-top: 12px;
+      font-weight: 600;
+    }
+
+    /* ── Cards ────────────────────────────────────────────────────── */
     .card {
       background: #FFFFFF;
       border: 1.5px solid #F0E6DA;
@@ -58,7 +241,13 @@
 
     /* ── Budget ───────────────────────────────────────────────────── */
     .budget-row { display: flex; align-items: center; gap: 4px; }
-    .budget-sym { font-size: 26px; font-weight: 800; color: #C9855A; }
+
+    .budget-sym {
+      font-size: 26px;
+      font-weight: 800;
+      color: #C9855A;
+      min-width: 24px;
+    }
 
     .budget-input {
       font-family: 'Nunito', sans-serif;
@@ -100,6 +289,13 @@
 
     .country-input:focus { border-color: #E07B39; }
     .country-input::placeholder { color: #C9A882; font-weight: 600; }
+
+    .country-hint {
+      font-size: 12px;
+      color: #8C6A4A;
+      margin-top: 8px;
+      font-weight: 600;
+    }
 
     /* ── Two column grid ──────────────────────────────────────────── */
     .two-col {
@@ -173,7 +369,6 @@
       display: none;
     }
 
-    /* ── Appliance warning ────────────────────────────────────────── */
     .appliance-warning {
       background: #FFF7ED;
       border: 1.5px solid #FED7AA;
@@ -204,6 +399,39 @@
 
     .result-meta { font-size: 13px; color: #8C6A4A; margin-bottom: 10px; }
 
+    /* ── Copy/Print action buttons ────────────────────────────────── */
+    .action-buttons {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .action-btn {
+      flex: 1;
+      padding: 11px;
+      border-radius: 12px;
+      font-family: 'Nunito', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: all 0.15s;
+      border: 1.5px solid #F0E6DA;
+      background: #fff;
+      color: #8C6A4A;
+    }
+
+    .action-btn:hover { border-color: #E07B39; color: #E07B39; background: #FFF8F0; }
+
+    .action-btn.copied {
+      background: #F0FDF4;
+      border-color: #86EFAC;
+      color: #166534;
+    }
+
     /* ── Budget confirmation ──────────────────────────────────────── */
     .budget-confirm {
       margin-bottom: 16px;
@@ -216,7 +444,7 @@
     .budget-confirm.fits { background: #F0FDF4; border: 1.5px solid #86EFAC; color: #166534; }
     .budget-confirm.over { background: #FFF7ED; border: 1.5px solid #FED7AA; color: #92400E; }
 
-    /* ── Day block (7-day) ────────────────────────────────────────── */
+    /* ── Day block ────────────────────────────────────────────────── */
     .day-block { margin-bottom: 20px; }
 
     .day-label {
@@ -276,7 +504,7 @@
       margin-bottom: 3px;
     }
 
-    .meal-name { font-size: 15px; font-weight: 800; color: #2D1F0E; margin-bottom: 6px; }
+    .meal-name { font-size: 15px; font-weight: 800; color: #2D1F0E; margin-bottom: 4px; }
     .meal-desc { font-size: 13px; color: #8C6A4A; line-height: 1.5; margin-bottom: 10px; }
 
     .meal-meta { display: flex; flex-wrap: wrap; gap: 6px; }
@@ -291,18 +519,8 @@
       color: #C9550A;
     }
 
-    .meal-meta-pill.method {
-      background: #EEF6FF;
-      border-color: #BFDBFE;
-      color: #1D4ED8;
-    }
-
-    /* Warning pill — shown when a forbidden appliance is detected */
-    .meal-meta-pill.warning {
-      background: #FFF7ED;
-      border-color: #FED7AA;
-      color: #92400E;
-    }
+    .meal-meta-pill.method { background: #EEF6FF; border-color: #BFDBFE; color: #1D4ED8; }
+    .meal-meta-pill.warning { background: #FFF7ED; border-color: #FED7AA; color: #92400E; }
 
     .meal-cost { font-size: 14px; font-weight: 700; color: #C9550A; white-space: nowrap; padding-top: 2px; }
 
@@ -313,13 +531,16 @@
       background: #FFF8F2;
     }
 
-    .meal-ingredients-title {
+    .meal-section-title {
       font-size: 11px;
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 0.08em;
       color: #C9855A;
       margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
     }
 
     .ingredients-grid { display: flex; flex-wrap: wrap; gap: 6px; }
@@ -334,41 +555,65 @@
       color: #7A4A20;
     }
 
-    /* ── Cooking steps ────────────────────────────────────────────── */
+    /* ── Cooking steps — IMPROVED ─────────────────────────────────── */
     .meal-steps {
       border-top: 1.5px solid #F0E6DA;
-      padding: 14px 16px;
+      padding: 16px;
       background: #FFFBF7;
     }
 
-    .meal-steps-title {
-      font-size: 11px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: #C9855A;
-      margin-bottom: 10px;
+    .step {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      margin-bottom: 12px;
+      position: relative;
     }
 
-    .step { display: flex; gap: 10px; align-items: flex-start; margin-bottom: 8px; }
+    /* Vertical connector line between steps */
+    .step:not(:last-child)::after {
+      content: '';
+      position: absolute;
+      left: 14px;
+      top: 30px;
+      width: 2px;
+      height: calc(100% - 6px);
+      background: #FFE5C8;
+    }
+
     .step:last-child { margin-bottom: 0; }
 
     .step-number {
-      width: 22px;
-      height: 22px;
+      width: 28px;
+      height: 28px;
       border-radius: 50%;
       background: #E07B39;
       color: #fff;
-      font-size: 11px;
+      font-size: 12px;
       font-weight: 800;
       display: flex;
       align-items: center;
       justify-content: center;
       flex-shrink: 0;
-      margin-top: 1px;
+      position: relative;
+      z-index: 1;
     }
 
-    .step-text { font-size: 13px; font-weight: 600; color: #4A3728; line-height: 1.5; }
+    .step-content { flex: 1; padding-top: 4px; }
+
+    .step-text {
+      font-size: 14px;
+      font-weight: 700;
+      color: #2D1F0E;
+      line-height: 1.5;
+    }
+
+    .step-tip {
+      font-size: 12px;
+      color: #8C6A4A;
+      margin-top: 3px;
+      font-weight: 600;
+    }
 
     /* ── Shopping list ────────────────────────────────────────────── */
     .shop-card {
@@ -424,6 +669,14 @@
       font-weight: 600;
       color: #7A5C00;
       line-height: 1.6;
+      margin-bottom: 16px;
+    }
+
+    /* ── Bottom action buttons ────────────────────────────────────── */
+    .bottom-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 8px;
     }
 
     /* ── Spinner ──────────────────────────────────────────────────── */
@@ -450,6 +703,8 @@
 
     @media (max-width: 480px) {
       .two-col { grid-template-columns: 1fr; }
+      .how-steps { flex-direction: column; gap: 12px; }
+      .how-step::after { display: none; }
     }
   </style>
 </head>
@@ -460,24 +715,94 @@
   <!-- ── HERO ───────────────────────────────────────────────────── -->
   <div class="hero">
     <span class="hero-emoji">🥗</span>
-    <h1>What's for dinner?<br/><span>Let's plan it cheap.</span></h1>
-    <p>Tell us your budget and we'll build a simple, affordable meal plan in seconds.</p>
+    <h1>Generate Your<br/><span>Personalised Meal Plan</span></h1>
+    <p>Tell us your budget and preferences — get a full meal plan with recipes, ingredients, and a shopping list in seconds.</p>
+  </div>
+
+  <!-- ── HOW IT WORKS ───────────────────────────────────────────── -->
+  <div class="how-it-works">
+    <div class="how-title">How it works</div>
+    <div class="how-steps">
+      <div class="how-step">
+        <div class="how-step-icon">
+          📝
+          <div class="how-step-num">1</div>
+        </div>
+        <div class="how-step-label">Fill in your details</div>
+        <div class="how-step-sub">Budget, diet & appliances</div>
+      </div>
+      <div class="how-step">
+        <div class="how-step-icon">
+          ✨
+          <div class="how-step-num">2</div>
+        </div>
+        <div class="how-step-label">Generate your plan</div>
+        <div class="how-step-sub">AI builds it in seconds</div>
+      </div>
+      <div class="how-step">
+        <div class="how-step-icon">
+          🛒
+          <div class="how-step-num">3</div>
+        </div>
+        <div class="how-step-label">Shop & cook</div>
+        <div class="how-step-sub">Follow the steps & save money</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── SAMPLE MEAL PLAN ───────────────────────────────────────── -->
+  <div class="sample-banner" onclick="toggleSample()">
+    <div class="sample-banner-header">
+      <span class="sample-banner-title">👀 See an example plan</span>
+      <button class="sample-toggle" id="sampleToggleBtn">Show ▼</button>
+    </div>
+    <div class="sample-meals" id="sampleMeals" style="display:none;">
+      <div class="sample-meal">
+        <span class="sample-meal-icon">🌅</span>
+        <div class="sample-meal-info">
+          <div class="sample-meal-type">Breakfast</div>
+          <div class="sample-meal-name">Oat porridge with banana</div>
+          <div class="sample-meal-meta">⏱ 5 mins · 🔥 ~380 kcal · ⚖️ 1 bowl</div>
+        </div>
+        <div class="sample-meal-cost">€1.20</div>
+      </div>
+      <div class="sample-meal">
+        <span class="sample-meal-icon">☀️</span>
+        <div class="sample-meal-info">
+          <div class="sample-meal-type">Lunch</div>
+          <div class="sample-meal-name">Lentil soup with bread</div>
+          <div class="sample-meal-meta">⏱ 15 mins · 🔥 ~520 kcal · ⚖️ 1 bowl</div>
+        </div>
+        <div class="sample-meal-cost">€2.40</div>
+      </div>
+      <div class="sample-meal">
+        <span class="sample-meal-icon">🌙</span>
+        <div class="sample-meal-info">
+          <div class="sample-meal-type">Dinner</div>
+          <div class="sample-meal-name">Pasta with tomato sauce & egg</div>
+          <div class="sample-meal-meta">⏱ 20 mins · 🔥 ~680 kcal · ⚖️ 1 plate</div>
+        </div>
+        <div class="sample-meal-cost">€3.10</div>
+      </div>
+      <div class="sample-note">👆 This is just an example. Your real plan will be based on your country, budget and preferences.</div>
+    </div>
   </div>
 
   <!-- ── BUDGET ─────────────────────────────────────────────────── -->
   <div class="card">
     <div class="card-label">💰 Daily budget</div>
     <div class="budget-row">
-      <span class="budget-sym">€</span>
-      <input class="budget-input" type="number" id="budget" value="10" min="3" max="50"/>
-      <span class="budget-sub">per day</span>
+      <span class="budget-sym" id="currencySymbol">€</span>
+      <input class="budget-input" type="number" id="budget" value="10" min="1" max="200"/>
+      <span class="budget-sub" id="currencyLabel">per day</span>
     </div>
   </div>
 
   <!-- ── COUNTRY ────────────────────────────────────────────────── -->
   <div class="card">
     <div class="card-label">🌍 Your country</div>
-    <input class="country-input" type="text" id="country" placeholder="e.g. Sweden, Germany, Spain..."/>
+    <input class="country-input" type="text" id="country" placeholder="e.g. Sweden, Germany, USA..." oninput="updateCurrency()"/>
+    <div class="country-hint" id="countryHint">🌍 Enter your country — we'll use local prices and currency</div>
   </div>
 
   <!-- ── PLAN DURATION + MEALS ──────────────────────────────────── -->
@@ -520,10 +845,9 @@
     </div>
   </div>
 
-  <!-- ── APPLIANCES (multi-select) ──────────────────────────────── -->
+  <!-- ── APPLIANCES ─────────────────────────────────────────────── -->
   <div class="card">
     <div class="card-label">🔌 Appliances you have <span style="font-weight:400;color:#C9A882;">(pick all that apply)</span></div>
-    <!-- Appliance warning shown if Claude ignores the restriction -->
     <div class="appliance-warning" id="applianceWarning"></div>
     <div class="pills" id="appliance-pills">
       <span class="pill multi" data-value="stovetop" data-methods="boiled,pan-fried,fried,sauteed,sautéed,simmered,steamed,poached">🍳 Stovetop</span>
@@ -534,11 +858,11 @@
       <span class="pill multi" data-value="air fryer" data-methods="air-fried,air fried,air fryer">💨 Air fryer</span>
     </div>
     <p style="font-size:12px;color:#C9A882;margin-top:10px;font-weight:600;">
-      💡 Only select what you actually have — meals will be built around your appliances.
+      💡 Only select what you actually have — meals will be built around your appliances only.
     </p>
   </div>
 
-  <!-- ── COOKING SKILL ──────────────────────────────────────────── -->
+  <!-- ── SKILL ──────────────────────────────────────────────────── -->
   <div class="card">
     <div class="card-label">👨‍🍳 Cooking skill level</div>
     <div class="pills" id="skill-pills">
@@ -548,7 +872,7 @@
   </div>
 
   <!-- ── BUTTON ─────────────────────────────────────────────────── -->
-  <button id="generateBtn" onclick="generatePlan()">✨ Generate my meal plan</button>
+  <button id="generateBtn" onclick="generatePlan()">✨ Generate My Meal Plan</button>
 
   <!-- ── STATUS / ERROR ─────────────────────────────────────────── -->
   <div id="status"></div>
@@ -562,8 +886,70 @@
 <footer>Mealzy · Powered by Claude AI · Free to use</footer>
 
 <script>
+  // ── Country → currency map ───────────────────────────────────────
+  // Maps country keywords to currency symbol, code, and name
+  const CURRENCY_MAP = [
+    { keywords: ['sweden','sverige'],         symbol: 'kr', code: 'SEK', name: 'Swedish Krona' },
+    { keywords: ['norway','norge'],           symbol: 'kr', code: 'NOK', name: 'Norwegian Krone' },
+    { keywords: ['denmark','danmark'],        symbol: 'kr', code: 'DKK', name: 'Danish Krone' },
+    { keywords: ['uk','united kingdom','england','britain','scotland','wales'], symbol: '£', code: 'GBP', name: 'British Pound' },
+    { keywords: ['usa','united states','america','us'],   symbol: '$', code: 'USD', name: 'US Dollar' },
+    { keywords: ['canada'],                   symbol: 'CA$', code: 'CAD', name: 'Canadian Dollar' },
+    { keywords: ['australia'],                symbol: 'A$', code: 'AUD', name: 'Australian Dollar' },
+    { keywords: ['japan'],                    symbol: '¥', code: 'JPY', name: 'Japanese Yen' },
+    { keywords: ['china'],                    symbol: '¥', code: 'CNY', name: 'Chinese Yuan' },
+    { keywords: ['india'],                    symbol: '₹', code: 'INR', name: 'Indian Rupee' },
+    { keywords: ['brazil'],                   symbol: 'R$', code: 'BRL', name: 'Brazilian Real' },
+    { keywords: ['mexico'],                   symbol: 'MX$', code: 'MXN', name: 'Mexican Peso' },
+    { keywords: ['switzerland'],              symbol: 'CHF', code: 'CHF', name: 'Swiss Franc' },
+    { keywords: ['poland'],                   symbol: 'zł', code: 'PLN', name: 'Polish Zloty' },
+    { keywords: ['czechia','czech republic'], symbol: 'Kč', code: 'CZK', name: 'Czech Koruna' },
+    { keywords: ['hungary'],                  symbol: 'Ft', code: 'HUF', name: 'Hungarian Forint' },
+    { keywords: ['romania'],                  symbol: 'lei', code: 'RON', name: 'Romanian Leu' },
+    { keywords: ['turkey','türkiye'],         symbol: '₺', code: 'TRY', name: 'Turkish Lira' },
+    { keywords: ['south korea','korea'],      symbol: '₩', code: 'KRW', name: 'South Korean Won' },
+    { keywords: ['singapore'],               symbol: 'S$', code: 'SGD', name: 'Singapore Dollar' },
+    { keywords: ['new zealand'],              symbol: 'NZ$', code: 'NZD', name: 'New Zealand Dollar' },
+    { keywords: ['south africa'],             symbol: 'R', code: 'ZAR', name: 'South African Rand' },
+    // Eurozone countries — default
+    { keywords: ['germany','france','spain','italy','netherlands','belgium','portugal',
+                 'austria','finland','ireland','greece','croatia','slovakia','slovenia',
+                 'estonia','latvia','lithuania','luxembourg','malta','cyprus'],
+      symbol: '€', code: 'EUR', name: 'Euro' },
+  ];
+
+  // Returns the currency info for the typed country, defaults to EUR
+  function getCurrency(countryText) {
+    const lower = countryText.toLowerCase().trim();
+    if (!lower) return { symbol: '€', code: 'EUR', name: 'Euro' };
+    for (const entry of CURRENCY_MAP) {
+      if (entry.keywords.some(k => lower.includes(k))) return entry;
+    }
+    return { symbol: '€', code: 'EUR', name: 'Euro' };
+  }
+
+  // Updates the currency symbol and hint when the user types a country
+  function updateCurrency() {
+    const country  = document.getElementById('country').value;
+    const currency = getCurrency(country);
+    document.getElementById('currencySymbol').textContent = currency.symbol;
+    document.getElementById('countryHint').textContent =
+      country.trim()
+        ? `💱 Using ${currency.name} (${currency.code}) for pricing`
+        : '🌍 Enter your country — we\'ll use local prices and currency';
+  }
+
+  // ── Sample plan toggle ───────────────────────────────────────────
+  function toggleSample() {
+    const meals = document.getElementById('sampleMeals');
+    const btn   = document.getElementById('sampleToggleBtn');
+    const shown = meals.style.display !== 'none';
+    meals.style.display = shown ? 'none' : 'flex';
+    btn.textContent = shown ? 'Show ▼' : 'Hide ▲';
+  }
+
   // ── Single-select pill groups ────────────────────────────────────
-  ['duration-pills', 'meals-pills', 'goal-pills', 'diet-pills', 'skill-pills'].forEach(groupId => {
+  ['duration-pills','meals-pills','goal-pills','diet-pills','skill-pills'].forEach(groupId => {
     document.getElementById(groupId).addEventListener('click', e => {
       const pill = e.target.closest('.pill');
       if (!pill) return;
@@ -589,38 +975,25 @@
       .map(p => p.dataset.value);
   }
 
-  // ── Build the allowed cooking methods list from selected appliances
-  // Each appliance pill has a data-methods attribute listing what
-  // cooking methods it supports. We use this to validate Claude's output.
   function getAllowedMethods() {
     const selected = document.querySelectorAll('#appliance-pills .pill.selected');
-    const methods = new Set(['no-cook', 'no cook', 'raw', 'assembled', 'mixed', 'cold']);
+    const methods  = new Set(['no-cook','no cook','raw','assembled','mixed','cold']);
     selected.forEach(pill => {
-      const appMethods = pill.dataset.methods || '';
-      appMethods.split(',').forEach(m => methods.add(m.trim().toLowerCase()));
+      (pill.dataset.methods || '').split(',').forEach(m => methods.add(m.trim().toLowerCase()));
     });
     return methods;
   }
 
-  // ── Check if a cooking method is allowed ────────────────────────
-  // Returns true if the method matches any allowed method keyword
   function isMethodAllowed(method, allowedMethods) {
-    if (!method) return true; // no method specified — skip check
+    if (!method) return true;
     const m = method.toLowerCase();
-    for (const allowed of allowedMethods) {
-      if (m.includes(allowed)) return true;
-    }
+    for (const a of allowedMethods) { if (m.includes(a)) return true; }
     return false;
   }
 
-  // ── Validate all meals in a plan against allowed appliances ──────
-  // Returns array of meal names that use forbidden methods
   function findForbiddenMeals(plan, allowedMethods) {
     const forbidden = [];
-    const mealsToCheck = plan.days
-      ? plan.days.flatMap(d => d.meals)  // 7-day
-      : plan.meals;                       // 1-day
-
+    const mealsToCheck = plan.days ? plan.days.flatMap(d => d.meals) : plan.meals;
     mealsToCheck.forEach(meal => {
       if (meal.cookingMethod && !isMethodAllowed(meal.cookingMethod, allowedMethods)) {
         forbidden.push(`"${meal.name}" uses ${meal.cookingMethod}`);
@@ -629,38 +1002,30 @@
     return forbidden;
   }
 
-  // ── Build the human-readable appliance instructions for the prompt
   function buildAppliancePromptSection(appliances) {
-    // Maps each appliance to what it can and cannot do
-    const applianceDetails = {
-      'stovetop':   'stovetop/hob (boiling, frying, sautéing, simmering, steaming)',
-      'microwave':  'microwave (microwaving, reheating)',
-      'oven':       'oven (baking, roasting, grilling)',
-      'kettle':     'kettle (boiling water only — for instant noodles, porridge, couscous)',
-      'blender':    'blender (blending, smoothies)',
-      'air fryer':  'air fryer (air-frying — like a dry oven with a fan, great for chips, chicken, vegetables)'
+    const details = {
+      'stovetop':  'stovetop/hob (boiling, frying, sautéing, simmering, steaming)',
+      'microwave': 'microwave (microwaving, reheating)',
+      'oven':      'oven (baking, roasting, grilling)',
+      'kettle':    'kettle (boiling water only — for instant noodles, porridge, couscous)',
+      'blender':   'blender (blending, smoothies)',
+      'air fryer': 'air fryer (air-frying — great for chips, chicken, vegetables)'
     };
-
-    const selected = appliances.map(a => applianceDetails[a] || a);
-    const forbidden = Object.keys(applianceDetails).filter(a => !appliances.includes(a));
-    const forbiddenDetails = forbidden.map(a => applianceDetails[a] || a);
-
-    return `APPLIANCE RULES — THIS IS THE MOST IMPORTANT RULE. READ CAREFULLY:
-The user ONLY has these appliances: ${selected.join(', ')}.
-They do NOT have: ${forbiddenDetails.length > 0 ? forbiddenDetails.join(', ') : 'nothing else'}.
-
-STRICT RULES:
-- Every single meal MUST be cookable using ONLY the appliances listed above.
-- DO NOT suggest any meal that requires an appliance not listed above.
-- If the user only has an air fryer, every meal must be air-fryer friendly or no-cook.
-- If the user only has a kettle, every meal must use only boiling water or be no-cook.
-- Check every single meal before including it. If it needs a forbidden appliance, replace it.
-- The cookingMethod field for every meal must match one of the available appliances.
-- NEVER suggest boiling, frying, or sautéing if the user has no stovetop.
-- NEVER suggest baking or roasting if the user has no oven.`;
+    const selected  = appliances.map(a => details[a] || a);
+    const forbidden = Object.keys(details).filter(a => !appliances.includes(a)).map(a => details[a] || a);
+    return `APPLIANCE RULES — MOST IMPORTANT:
+The user ONLY has: ${selected.join(', ')}.
+They do NOT have: ${forbidden.length > 0 ? forbidden.join(', ') : 'nothing else'}.
+- Every meal MUST be cookable with ONLY the listed appliances.
+- NEVER suggest a meal that needs an appliance not listed.
+- If only air fryer: all meals must be air-fryer friendly or no-cook.
+- If only kettle: all meals must use boiling water or be no-cook.
+- NEVER suggest boiling/frying/sautéing without a stovetop.
+- NEVER suggest baking/roasting without an oven.
+- cookingMethod for every meal must match an available appliance.`;
   }
 
-  // ── Meal icon by type ────────────────────────────────────────────
+  // ── Meal icon ────────────────────────────────────────────────────
   function getMealIcon(type) {
     const t = type.toLowerCase();
     if (t.includes('breakfast')) return { emoji: '🌅', bg: '#FFF3CD' };
@@ -670,54 +1035,50 @@ STRICT RULES:
     return { emoji: '🍴', bg: '#E2E3E5' };
   }
 
-  // ── Shopping category icons ──────────────────────────────────────
   function getCategoryIcon(cat) {
-    const map = {
-      produce: '🥬', dairy: '🥛', grains: '🌾',
-      protein: '🥩', other: '🛒', pantry: '🫙',
-      frozen: '🧊', bakery: '🍞', beverages: '🧃'
-    };
+    const map = { produce:'🥬',dairy:'🥛',grains:'🌾',protein:'🥩',other:'🛒',pantry:'🫙',frozen:'🧊',bakery:'🍞',beverages:'🧃' };
     return map[cat.toLowerCase()] || '🛒';
   }
 
-  // ── Budget confirmation banner ───────────────────────────────────
-  function getBudgetConfirmation(totalCost, budget, days) {
+  function getBudgetConfirmation(totalCost, budget, days, symbol) {
     const spent = parseFloat(totalCost.replace(/[^0-9.]/g, ''));
     const limit = parseFloat(budget) * days;
     const fits  = spent <= limit;
     const diff  = Math.abs(limit - spent).toFixed(2);
-    const label = days === 7 ? `€${budget}/day × 7 = €${limit.toFixed(2)}` : `€${budget}`;
+    const label = days === 7 ? `${symbol}${budget}/day × 7 = ${symbol}${limit.toFixed(2)}` : `${symbol}${budget}`;
     return `
       <div class="budget-confirm ${fits ? 'fits' : 'over'}">
         ${fits
-          ? `✅ Fits your budget (${label}) — €${diff} to spare`
-          : `⚠️ Slightly over budget (${label}) by €${diff} — consider swapping one ingredient`
+          ? `✅ Fits your budget (${label}) — ${symbol}${diff} to spare`
+          : `⚠️ Slightly over budget (${label}) by ${symbol}${diff}`
         }
-      </div>
-    `;
+      </div>`;
   }
 
-  // ── Build a single meal card ─────────────────────────────────────
+  // ── Build meal card ──────────────────────────────────────────────
   function buildMealCard(meal, allowedMethods) {
-    const icon = getMealIcon(meal.type);
+    const icon           = getMealIcon(meal.type);
     const methodForbidden = meal.cookingMethod && !isMethodAllowed(meal.cookingMethod, allowedMethods);
 
-    const ingredientsHTML = meal.ingredients && meal.ingredients.length > 0
+    const ingredientsHTML = meal.ingredients?.length
       ? `<div class="meal-ingredients">
-          <div class="meal-ingredients-title">🧺 Ingredients</div>
+          <div class="meal-section-title">🧺 Ingredients</div>
           <div class="ingredients-grid">
-            ${meal.ingredients.map(ing => `<span class="ingredient-pill">${ing}</span>`).join('')}
+            ${meal.ingredients.map(i => `<span class="ingredient-pill">${i}</span>`).join('')}
           </div>
         </div>`
       : '';
 
-    const stepsHTML = meal.steps && meal.steps.length > 0
+    // Improved steps — numbered with vertical connector line
+    const stepsHTML = meal.steps?.length
       ? `<div class="meal-steps">
-          <div class="meal-steps-title">📋 How to make it</div>
+          <div class="meal-section-title">📋 How to make it</div>
           ${meal.steps.map((step, i) => `
             <div class="step">
               <div class="step-number">${i + 1}</div>
-              <div class="step-text">${step}</div>
+              <div class="step-content">
+                <div class="step-text">${step}</div>
+              </div>
             </div>
           `).join('')}
         </div>`
@@ -732,11 +1093,7 @@ STRICT RULES:
             <div class="meal-name">${meal.name}</div>
             <div class="meal-desc">${meal.description}</div>
             <div class="meal-meta">
-              ${meal.cookingMethod
-                ? `<span class="meal-meta-pill method ${methodForbidden ? 'warning' : ''}">
-                     ${methodForbidden ? '⚠️' : '🍳'} ${meal.cookingMethod}
-                   </span>`
-                : ''}
+              ${meal.cookingMethod ? `<span class="meal-meta-pill method ${methodForbidden ? 'warning' : ''}">${methodForbidden ? '⚠️' : '🍳'} ${meal.cookingMethod}</span>` : ''}
               ${meal.prepTime  ? `<span class="meal-meta-pill">⏱ ${meal.prepTime}</span>` : ''}
               ${meal.portion   ? `<span class="meal-meta-pill">⚖️ ${meal.portion}</span>` : ''}
               ${meal.calories  ? `<span class="meal-meta-pill">🔥 ${meal.calories}</span>` : ''}
@@ -746,44 +1103,55 @@ STRICT RULES:
         </div>
         ${ingredientsHTML}
         ${stepsHTML}
-      </div>
-    `;
+      </div>`;
   }
 
-  // ── Build shopping list HTML ─────────────────────────────────────
   function buildShopHTML(list) {
     if (!list) return '';
     if (typeof list === 'object' && !Array.isArray(list)) {
-      return Object.entries(list).map(([category, items]) => {
-        if (!items || items.length === 0) return '';
-        const icon = getCategoryIcon(category);
-        return `
-          <div class="shop-category">
-            <div class="shop-category-label">${icon} ${category}</div>
-            <div class="shop-grid">
-              ${items.map(item => `<div class="shop-item"><div class="shop-dot"></div>${item}</div>`).join('')}
-            </div>
-          </div>
-        `;
+      return Object.entries(list).map(([cat, items]) => {
+        if (!items?.length) return '';
+        return `<div class="shop-category">
+          <div class="shop-category-label">${getCategoryIcon(cat)} ${cat}</div>
+          <div class="shop-grid">${items.map(i => `<div class="shop-item"><div class="shop-dot"></div>${i}</div>`).join('')}</div>
+        </div>`;
       }).join('');
     }
-    return `<div class="shop-grid">
-      ${list.map(item => `<div class="shop-item"><div class="shop-dot"></div>${item}</div>`).join('')}
-    </div>`;
+    return `<div class="shop-grid">${list.map(i => `<div class="shop-item"><div class="shop-dot"></div>${i}</div>`).join('')}</div>`;
   }
 
-  // ── Main generate function ───────────────────────────────────────
+  // ── Copy plan to clipboard ───────────────────────────────────────
+  function copyPlan() {
+    const results = document.getElementById('results');
+    const text    = results.innerText;
+    navigator.clipboard.writeText(text).then(() => {
+      const btn = document.getElementById('copyBtn');
+      btn.textContent = '✅ Copied!';
+      btn.classList.add('copied');
+      setTimeout(() => {
+        btn.textContent = '📋 Copy plan';
+        btn.classList.remove('copied');
+      }, 2000);
+    });
+  }
+
+  // ── Print plan ───────────────────────────────────────────────────
+  function printPlan() {
+    window.print();
+  }
+
+  // ── Main generate ────────────────────────────────────────────────
   async function generatePlan() {
     const budget     = document.getElementById('budget').value || 10;
-    const country    = document.getElementById('country').value.trim() || 'Europe';
-    const diet       = getSelected('diet-pills')      || 'none';
-    const goal       = getSelected('goal-pills')      || 'maintain';
-    const meals      = getSelected('meals-pills')     || '3';
+    const countryVal = document.getElementById('country').value.trim() || 'Europe';
+    const currency   = getCurrency(countryVal);
+    const diet       = getSelected('diet-pills')     || 'none';
+    const goal       = getSelected('goal-pills')     || 'maintain';
+    const meals      = getSelected('meals-pills')    || '3';
     const duration   = parseInt(getSelected('duration-pills') || '1');
-    const skill      = getSelected('skill-pills')     || 'beginner';
+    const skill      = getSelected('skill-pills')    || 'beginner';
     const appliances = getAppliances();
 
-    // Require at least one appliance selected
     if (appliances.length === 0) {
       showError('Please select at least one appliance you have access to.');
       return;
@@ -795,7 +1163,7 @@ STRICT RULES:
     hideApplianceWarning();
 
     try {
-      const prompt = buildPrompt(budget, country, diet, goal, meals, skill, appliances, duration);
+      const prompt = buildPrompt(budget, countryVal, currency, diet, goal, meals, skill, appliances, duration);
 
       const response = await fetch('/generate', {
         method: 'POST',
@@ -808,23 +1176,18 @@ STRICT RULES:
         throw new Error(err.error || `Server error: ${response.status}`);
       }
 
-      const data     = await response.json();
-      const plan     = parseJSON(data.result);
+      const data           = await response.json();
+      const plan           = parseJSON(data.result);
+      const allowedMethods = getAllowedMethods();
+      const forbidden      = findForbiddenMeals(plan, allowedMethods);
 
-      // ── Validate appliances in response ─────────────────────────
-      const allowedMethods  = getAllowedMethods();
-      const forbiddenMeals  = findForbiddenMeals(plan, allowedMethods);
-
-      if (forbiddenMeals.length > 0) {
-        showApplianceWarning(
-          `⚠️ Some meals may need appliances you don't have: ${forbiddenMeals.join(', ')}. ` +
-          `These are marked in orange below. Try regenerating for a better result.`
-        );
+      if (forbidden.length > 0) {
+        showApplianceWarning(`⚠️ Some meals may need appliances you don't have: ${forbidden.join(', ')}. Marked in orange below. Try regenerating.`);
       }
 
       duration === 7
-        ? displayWeekResults(plan, budget, allowedMethods)
-        : displayDayResults(plan, budget, allowedMethods);
+        ? displayWeekResults(plan, budget, currency, allowedMethods)
+        : displayDayResults(plan, budget, currency, allowedMethods);
 
     } catch (err) {
       showError(`Something went wrong: ${err.message}`);
@@ -833,8 +1196,8 @@ STRICT RULES:
     }
   }
 
-  // ── Prompt builder ───────────────────────────────────────────────
-  function buildPrompt(budget, country, diet, goal, meals, skill, appliances, duration) {
+  // ── Prompt ───────────────────────────────────────────────────────
+  function buildPrompt(budget, country, currency, diet, goal, meals, skill, appliances, duration) {
     const dietMap = {
       'none':         'no dietary restrictions (omnivore)',
       'vegetarian':   'vegetarian (no meat or fish)',
@@ -852,18 +1215,20 @@ STRICT RULES:
     const durationInstructions = duration === 7
       ? `Generate a 7-day meal plan labelled Day 1 through Day 7.
 - No meal name repeats across the full 7 days.
-- Total cost across all 7 days must stay within €${weeklyBudget} (€${budget}/day × 7).
+- Total cost across all 7 days must stay within ${currency.symbol}${weeklyBudget}.
 - Each day must have its own dailyCost field.
 - The shoppingList covers the entire week.
-- For 7-day plans: keep steps to max 3 per meal and ingredients to max 4 per meal to save space.`
-      : `Generate a 1-day meal plan. Total cost must stay under €${budget}.`;
+- For 7-day plans: keep steps to max 3 per meal and ingredients to max 4 per meal.`
+      : `Generate a 1-day meal plan. Total cost must stay under ${currency.symbol}${budget}.`;
 
     return `You are a budget-conscious meal planner. Generate a practical, affordable meal plan with full cooking instructions. Keep all language simple and beginner-friendly.
 
-The user is based in ${country}. Use locally available ingredients. Cooking skill level: ${skill}.
+The user is based in ${country}. Use locally available, affordable ingredients typical to that country.
+IMPORTANT: All prices must be in ${currency.name} (${currency.code}), using the symbol "${currency.symbol}". Use realistic local supermarket prices for ${country}.
+Cooking skill level: ${skill}.
 
 USER INPUTS:
-- Daily budget: €${budget}
+- Daily budget: ${currency.symbol}${budget} ${currency.code}
 - Diet: ${dietMap[diet] || diet}
 - Goal: ${goalMap[goal] || goal}
 - Meals per day: ${meals}
@@ -874,7 +1239,7 @@ DURATION:
 ${durationInstructions}
 
 BUDGET RULES:
-- Show cost in euros for each meal.
+- Show cost in ${currency.symbol} for each meal.
 - Never exceed the total budget. Adjust ingredients if needed.
 
 VARIETY RULES:
@@ -884,13 +1249,15 @@ VARIETY RULES:
 COOKING STEPS RULES:
 - 3 to 5 numbered steps per meal (max 3 for 7-day plans).
 - Each step under 20 words.
-- Write for a complete beginner.
+- Write clearly for a complete beginner — be direct and specific.
+- Start each step with an action verb (e.g. "Boil", "Chop", "Mix", "Heat").
+- Focus on speed and simplicity.
 
 Always respond in valid JSON. Never return plain text outside this structure.
 
 For a 1-DAY plan:
 {
-  "totalCost": "€X.XX",
+  "totalCost": "${currency.symbol}X.XX",
   "calories": "~XXXX kcal",
   "budgetConfirmed": true,
   "meals": [
@@ -898,13 +1265,13 @@ For a 1-DAY plan:
       "type": "Breakfast",
       "name": "Meal name",
       "description": "One sentence.",
-      "cost": "€X.XX",
+      "cost": "${currency.symbol}X.XX",
       "prepTime": "X mins",
       "portion": "e.g. 300g",
       "calories": "~XXX kcal",
-      "cookingMethod": "Air-fried",
+      "cookingMethod": "e.g. Pan-fried",
       "ingredients": ["item 1", "item 2"],
-      "steps": ["Step 1.", "Step 2.", "Step 3."]
+      "steps": ["Verb + action under 20 words.", "Verb + action under 20 words."]
     }
   ],
   "shoppingList": { "produce": [], "dairy": [], "grains": [], "protein": [], "other": [] },
@@ -913,25 +1280,25 @@ For a 1-DAY plan:
 
 For a 7-DAY plan:
 {
-  "totalCost": "€XX.XX",
+  "totalCost": "${currency.symbol}XX.XX",
   "budgetConfirmed": true,
   "days": [
     {
       "day": "Day 1",
-      "dailyCost": "€X.XX",
+      "dailyCost": "${currency.symbol}X.XX",
       "calories": "~XXXX kcal",
       "meals": [
         {
           "type": "Breakfast",
           "name": "Meal name",
           "description": "One sentence.",
-          "cost": "€X.XX",
+          "cost": "${currency.symbol}X.XX",
           "prepTime": "X mins",
           "portion": "e.g. 300g",
           "calories": "~XXX kcal",
-          "cookingMethod": "Air-fried",
+          "cookingMethod": "e.g. Air-fried",
           "ingredients": ["item 1", "item 2"],
-          "steps": ["Step 1.", "Step 2.", "Step 3."]
+          "steps": ["Verb + action.", "Verb + action.", "Verb + action."]
         }
       ]
     }
@@ -941,37 +1308,48 @@ For a 7-DAY plan:
 }`;
   }
 
-  // ── Parse JSON safely ────────────────────────────────────────────
   function parseJSON(text) {
     const cleaned = text.replace(/```json|```/g, '').trim();
     return JSON.parse(cleaned);
   }
 
-  // ── Display 1-day results ────────────────────────────────────────
-  function displayDayResults(plan, budget, allowedMethods) {
+  // ── Action buttons HTML ──────────────────────────────────────────
+  function actionButtonsHTML() {
+    return `
+      <div class="action-buttons">
+        <button class="action-btn" id="copyBtn" onclick="copyPlan()">📋 Copy plan</button>
+        <button class="action-btn" onclick="printPlan()">🖨️ Print</button>
+      </div>`;
+  }
+
+  // ── Display 1-day ────────────────────────────────────────────────
+  function displayDayResults(plan, budget, currency, allowedMethods) {
     const el = document.getElementById('results');
     el.style.display = 'block';
-
     el.innerHTML = `
       <div class="fade-in">
         <div class="result-header">
           <div class="result-title">Your meal plan</div>
           <div class="cost-badge">${plan.totalCost} / day</div>
         </div>
-        <div class="result-meta">${plan.calories} · Budget: €${budget}</div>
-        ${getBudgetConfirmation(plan.totalCost, budget, 1)}
+        <div class="result-meta">${plan.calories} · Budget: ${currency.symbol}${budget}</div>
+        ${getBudgetConfirmation(plan.totalCost, budget, 1, currency.symbol)}
+        ${actionButtonsHTML()}
         <div class="meals">${plan.meals.map(m => buildMealCard(m, allowedMethods)).join('')}</div>
         <div class="shop-card">
           <div class="shop-title">🛒 Shopping list</div>
           ${buildShopHTML(plan.shoppingList)}
         </div>
         <div class="tip-box">💡 ${plan.tip}</div>
-      </div>
-    `;
+        <div class="bottom-actions">
+          <button class="action-btn" id="copyBtn2" onclick="copyPlan()">📋 Copy plan</button>
+          <button class="action-btn" onclick="printPlan()">🖨️ Print</button>
+        </div>
+      </div>`;
   }
 
-  // ── Display 7-day results ────────────────────────────────────────
-  function displayWeekResults(plan, budget, allowedMethods) {
+  // ── Display 7-day ────────────────────────────────────────────────
+  function displayWeekResults(plan, budget, currency, allowedMethods) {
     const el = document.getElementById('results');
     el.style.display = 'block';
 
@@ -982,8 +1360,7 @@ For a 7-DAY plan:
           <span class="day-cost">${day.dailyCost} · ${day.calories || ''}</span>
         </div>
         <div class="meals">${day.meals.map(m => buildMealCard(m, allowedMethods)).join('')}</div>
-      </div>
-    `).join('');
+      </div>`).join('');
 
     el.innerHTML = `
       <div class="fade-in">
@@ -991,16 +1368,20 @@ For a 7-DAY plan:
           <div class="result-title">Your 7-day plan</div>
           <div class="cost-badge">${plan.totalCost} total</div>
         </div>
-        <div class="result-meta">Budget: €${budget}/day · €${(parseFloat(budget) * 7).toFixed(2)} for the week</div>
-        ${getBudgetConfirmation(plan.totalCost, budget, 7)}
+        <div class="result-meta">Budget: ${currency.symbol}${budget}/day · ${currency.symbol}${(parseFloat(budget)*7).toFixed(2)} for the week</div>
+        ${getBudgetConfirmation(plan.totalCost, budget, 7, currency.symbol)}
+        ${actionButtonsHTML()}
         ${daysHTML}
         <div class="shop-card">
           <div class="shop-title">🛒 Weekly shopping list</div>
           ${buildShopHTML(plan.shoppingList)}
         </div>
         <div class="tip-box">💡 ${plan.tip}</div>
-      </div>
-    `;
+        <div class="bottom-actions">
+          <button class="action-btn" id="copyBtn2" onclick="copyPlan()">📋 Copy plan</button>
+          <button class="action-btn" onclick="printPlan()">🖨️ Print</button>
+        </div>
+      </div>`;
   }
 
   // ── UI helpers ───────────────────────────────────────────────────
@@ -1008,15 +1389,15 @@ For a 7-DAY plan:
     const btn    = document.getElementById('generateBtn');
     const status = document.getElementById('status');
     if (on) {
-      btn.disabled = true;
-      btn.innerHTML = '<span class="spinner"></span> Generating...';
+      btn.disabled     = true;
+      btn.innerHTML    = '<span class="spinner"></span> Generating...';
       status.style.display = 'block';
       status.innerHTML = duration === 7
-        ? 'Building your 7-day plan — this takes about 20 seconds...'
-        : 'Asking Claude for a meal plan...';
+        ? '🧠 Building your 7-day plan — this takes about 20 seconds...'
+        : '🧠 Building your meal plan...';
     } else {
-      btn.disabled = false;
-      btn.innerHTML = '✨ Generate my meal plan';
+      btn.disabled  = false;
+      btn.innerHTML = '✨ Generate My Meal Plan';
       status.style.display = 'none';
     }
   }
@@ -1033,10 +1414,7 @@ For a 7-DAY plan:
     el.textContent = msg;
   }
 
-  function hideApplianceWarning() {
-    document.getElementById('applianceWarning').style.display = 'none';
-  }
-
+  function hideApplianceWarning() { document.getElementById('applianceWarning').style.display = 'none'; }
   function hideError()   { document.getElementById('error').style.display = 'none'; }
   function hideResults() { document.getElementById('results').style.display = 'none'; }
 </script>
