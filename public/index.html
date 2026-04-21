@@ -173,6 +173,19 @@
       display: none;
     }
 
+    /* ── Appliance warning ────────────────────────────────────────── */
+    .appliance-warning {
+      background: #FFF7ED;
+      border: 1.5px solid #FED7AA;
+      border-radius: 12px;
+      padding: 12px 16px;
+      font-size: 13px;
+      font-weight: 700;
+      color: #92400E;
+      margin-bottom: 14px;
+      display: none;
+    }
+
     #results { display: none; }
 
     /* ── Results header ───────────────────────────────────────────── */
@@ -191,7 +204,7 @@
 
     .result-meta { font-size: 13px; color: #8C6A4A; margin-bottom: 10px; }
 
-    /* ── Budget confirmation banner ───────────────────────────────── */
+    /* ── Budget confirmation ──────────────────────────────────────── */
     .budget-confirm {
       margin-bottom: 16px;
       padding: 12px 16px;
@@ -203,7 +216,7 @@
     .budget-confirm.fits { background: #F0FDF4; border: 1.5px solid #86EFAC; color: #166534; }
     .budget-confirm.over { background: #FFF7ED; border: 1.5px solid #FED7AA; color: #92400E; }
 
-    /* ── 7-day: Day label ─────────────────────────────────────────── */
+    /* ── Day block (7-day) ────────────────────────────────────────── */
     .day-block { margin-bottom: 20px; }
 
     .day-label {
@@ -222,11 +235,7 @@
       justify-content: space-between;
     }
 
-    .day-cost {
-      font-size: 13px;
-      font-weight: 700;
-      color: #C9550A;
-    }
+    .day-cost { font-size: 13px; font-weight: 700; color: #C9550A; }
 
     /* ── Meal cards ───────────────────────────────────────────────── */
     .meals { display: flex; flex-direction: column; gap: 12px; margin-bottom: 14px; }
@@ -286,6 +295,13 @@
       background: #EEF6FF;
       border-color: #BFDBFE;
       color: #1D4ED8;
+    }
+
+    /* Warning pill — shown when a forbidden appliance is detected */
+    .meal-meta-pill.warning {
+      background: #FFF7ED;
+      border-color: #FED7AA;
+      color: #92400E;
     }
 
     .meal-cost { font-size: 14px; font-weight: 700; color: #C9550A; white-space: nowrap; padding-top: 2px; }
@@ -507,14 +523,19 @@
   <!-- ── APPLIANCES (multi-select) ──────────────────────────────── -->
   <div class="card">
     <div class="card-label">🔌 Appliances you have <span style="font-weight:400;color:#C9A882;">(pick all that apply)</span></div>
+    <!-- Appliance warning shown if Claude ignores the restriction -->
+    <div class="appliance-warning" id="applianceWarning"></div>
     <div class="pills" id="appliance-pills">
-      <span class="pill multi selected" data-value="stovetop">🍳 Stovetop</span>
-      <span class="pill multi selected" data-value="microwave">📡 Microwave</span>
-      <span class="pill multi" data-value="oven">🔥 Oven</span>
-      <span class="pill multi" data-value="kettle">☕ Kettle</span>
-      <span class="pill multi" data-value="blender">🥤 Blender</span>
-      <span class="pill multi" data-value="air fryer">💨 Air fryer</span>
+      <span class="pill multi" data-value="stovetop" data-methods="boiled,pan-fried,fried,sauteed,sautéed,simmered,steamed,poached">🍳 Stovetop</span>
+      <span class="pill multi" data-value="microwave" data-methods="microwaved,microwave">📡 Microwave</span>
+      <span class="pill multi" data-value="oven" data-methods="baked,roasted,grilled,broiled">🔥 Oven</span>
+      <span class="pill multi" data-value="kettle" data-methods="kettle,hot water">☕ Kettle</span>
+      <span class="pill multi" data-value="blender" data-methods="blended,blender">🥤 Blender</span>
+      <span class="pill multi" data-value="air fryer" data-methods="air-fried,air fried,air fryer">💨 Air fryer</span>
     </div>
+    <p style="font-size:12px;color:#C9A882;margin-top:10px;font-weight:600;">
+      💡 Only select what you actually have — meals will be built around your appliances.
+    </p>
   </div>
 
   <!-- ── COOKING SKILL ──────────────────────────────────────────── -->
@@ -568,6 +589,77 @@
       .map(p => p.dataset.value);
   }
 
+  // ── Build the allowed cooking methods list from selected appliances
+  // Each appliance pill has a data-methods attribute listing what
+  // cooking methods it supports. We use this to validate Claude's output.
+  function getAllowedMethods() {
+    const selected = document.querySelectorAll('#appliance-pills .pill.selected');
+    const methods = new Set(['no-cook', 'no cook', 'raw', 'assembled', 'mixed', 'cold']);
+    selected.forEach(pill => {
+      const appMethods = pill.dataset.methods || '';
+      appMethods.split(',').forEach(m => methods.add(m.trim().toLowerCase()));
+    });
+    return methods;
+  }
+
+  // ── Check if a cooking method is allowed ────────────────────────
+  // Returns true if the method matches any allowed method keyword
+  function isMethodAllowed(method, allowedMethods) {
+    if (!method) return true; // no method specified — skip check
+    const m = method.toLowerCase();
+    for (const allowed of allowedMethods) {
+      if (m.includes(allowed)) return true;
+    }
+    return false;
+  }
+
+  // ── Validate all meals in a plan against allowed appliances ──────
+  // Returns array of meal names that use forbidden methods
+  function findForbiddenMeals(plan, allowedMethods) {
+    const forbidden = [];
+    const mealsToCheck = plan.days
+      ? plan.days.flatMap(d => d.meals)  // 7-day
+      : plan.meals;                       // 1-day
+
+    mealsToCheck.forEach(meal => {
+      if (meal.cookingMethod && !isMethodAllowed(meal.cookingMethod, allowedMethods)) {
+        forbidden.push(`"${meal.name}" uses ${meal.cookingMethod}`);
+      }
+    });
+    return forbidden;
+  }
+
+  // ── Build the human-readable appliance instructions for the prompt
+  function buildAppliancePromptSection(appliances) {
+    // Maps each appliance to what it can and cannot do
+    const applianceDetails = {
+      'stovetop':   'stovetop/hob (boiling, frying, sautéing, simmering, steaming)',
+      'microwave':  'microwave (microwaving, reheating)',
+      'oven':       'oven (baking, roasting, grilling)',
+      'kettle':     'kettle (boiling water only — for instant noodles, porridge, couscous)',
+      'blender':    'blender (blending, smoothies)',
+      'air fryer':  'air fryer (air-frying — like a dry oven with a fan, great for chips, chicken, vegetables)'
+    };
+
+    const selected = appliances.map(a => applianceDetails[a] || a);
+    const forbidden = Object.keys(applianceDetails).filter(a => !appliances.includes(a));
+    const forbiddenDetails = forbidden.map(a => applianceDetails[a] || a);
+
+    return `APPLIANCE RULES — THIS IS THE MOST IMPORTANT RULE. READ CAREFULLY:
+The user ONLY has these appliances: ${selected.join(', ')}.
+They do NOT have: ${forbiddenDetails.length > 0 ? forbiddenDetails.join(', ') : 'nothing else'}.
+
+STRICT RULES:
+- Every single meal MUST be cookable using ONLY the appliances listed above.
+- DO NOT suggest any meal that requires an appliance not listed above.
+- If the user only has an air fryer, every meal must be air-fryer friendly or no-cook.
+- If the user only has a kettle, every meal must use only boiling water or be no-cook.
+- Check every single meal before including it. If it needs a forbidden appliance, replace it.
+- The cookingMethod field for every meal must match one of the available appliances.
+- NEVER suggest boiling, frying, or sautéing if the user has no stovetop.
+- NEVER suggest baking or roasting if the user has no oven.`;
+  }
+
   // ── Meal icon by type ────────────────────────────────────────────
   function getMealIcon(type) {
     const t = type.toLowerCase();
@@ -590,11 +682,11 @@
 
   // ── Budget confirmation banner ───────────────────────────────────
   function getBudgetConfirmation(totalCost, budget, days) {
-    const spent    = parseFloat(totalCost.replace(/[^0-9.]/g, ''));
-    const limit    = parseFloat(budget) * days;
-    const fits     = spent <= limit;
-    const diff     = Math.abs(limit - spent).toFixed(2);
-    const label    = days === 7 ? `€${budget}/day × 7 = €${limit.toFixed(2)}` : `€${budget}`;
+    const spent = parseFloat(totalCost.replace(/[^0-9.]/g, ''));
+    const limit = parseFloat(budget) * days;
+    const fits  = spent <= limit;
+    const diff  = Math.abs(limit - spent).toFixed(2);
+    const label = days === 7 ? `€${budget}/day × 7 = €${limit.toFixed(2)}` : `€${budget}`;
     return `
       <div class="budget-confirm ${fits ? 'fits' : 'over'}">
         ${fits
@@ -606,8 +698,9 @@
   }
 
   // ── Build a single meal card ─────────────────────────────────────
-  function buildMealCard(meal) {
+  function buildMealCard(meal, allowedMethods) {
     const icon = getMealIcon(meal.type);
+    const methodForbidden = meal.cookingMethod && !isMethodAllowed(meal.cookingMethod, allowedMethods);
 
     const ingredientsHTML = meal.ingredients && meal.ingredients.length > 0
       ? `<div class="meal-ingredients">
@@ -631,7 +724,7 @@
       : '';
 
     return `
-      <div class="meal-card">
+      <div class="meal-card" style="${methodForbidden ? 'border-color:#FED7AA;' : ''}">
         <div class="meal-top">
           <div class="meal-icon" style="background:${icon.bg}">${icon.emoji}</div>
           <div class="meal-body">
@@ -639,10 +732,14 @@
             <div class="meal-name">${meal.name}</div>
             <div class="meal-desc">${meal.description}</div>
             <div class="meal-meta">
-              ${meal.cookingMethod ? `<span class="meal-meta-pill method">🍳 ${meal.cookingMethod}</span>` : ''}
-              ${meal.prepTime      ? `<span class="meal-meta-pill">⏱ ${meal.prepTime}</span>` : ''}
-              ${meal.portion       ? `<span class="meal-meta-pill">⚖️ ${meal.portion}</span>` : ''}
-              ${meal.calories      ? `<span class="meal-meta-pill">🔥 ${meal.calories}</span>` : ''}
+              ${meal.cookingMethod
+                ? `<span class="meal-meta-pill method ${methodForbidden ? 'warning' : ''}">
+                     ${methodForbidden ? '⚠️' : '🍳'} ${meal.cookingMethod}
+                   </span>`
+                : ''}
+              ${meal.prepTime  ? `<span class="meal-meta-pill">⏱ ${meal.prepTime}</span>` : ''}
+              ${meal.portion   ? `<span class="meal-meta-pill">⚖️ ${meal.portion}</span>` : ''}
+              ${meal.calories  ? `<span class="meal-meta-pill">🔥 ${meal.calories}</span>` : ''}
             </div>
           </div>
           <div class="meal-cost">${meal.cost}</div>
@@ -686,6 +783,7 @@
     const skill      = getSelected('skill-pills')     || 'beginner';
     const appliances = getAppliances();
 
+    // Require at least one appliance selected
     if (appliances.length === 0) {
       showError('Please select at least one appliance you have access to.');
       return;
@@ -694,6 +792,7 @@
     setLoading(true, duration);
     hideError();
     hideResults();
+    hideApplianceWarning();
 
     try {
       const prompt = buildPrompt(budget, country, diet, goal, meals, skill, appliances, duration);
@@ -709,9 +808,23 @@
         throw new Error(err.error || `Server error: ${response.status}`);
       }
 
-      const data = await response.json();
-      const plan = parseJSON(data.result);
-      duration === 7 ? displayWeekResults(plan, budget) : displayDayResults(plan, budget);
+      const data     = await response.json();
+      const plan     = parseJSON(data.result);
+
+      // ── Validate appliances in response ─────────────────────────
+      const allowedMethods  = getAllowedMethods();
+      const forbiddenMeals  = findForbiddenMeals(plan, allowedMethods);
+
+      if (forbiddenMeals.length > 0) {
+        showApplianceWarning(
+          `⚠️ Some meals may need appliances you don't have: ${forbiddenMeals.join(', ')}. ` +
+          `These are marked in orange below. Try regenerating for a better result.`
+        );
+      }
+
+      duration === 7
+        ? displayWeekResults(plan, budget, allowedMethods)
+        : displayDayResults(plan, budget, allowedMethods);
 
     } catch (err) {
       showError(`Something went wrong: ${err.message}`);
@@ -737,17 +850,17 @@
     const weeklyBudget = (parseFloat(budget) * 7).toFixed(2);
 
     const durationInstructions = duration === 7
-      ? `Generate a 7-day meal plan. Label each day as "Day 1" through "Day 7".
-- No meal name should repeat across the full 7 days.
-- The total cost across all 7 days must stay within €${weeklyBudget} (which is €${budget}/day × 7).
-- Each day should have its own dailyCost field.
-- The shoppingList should cover the entire week.`
-      : `Generate a 1-day meal plan.
-- Total cost must stay under €${budget}.`;
+      ? `Generate a 7-day meal plan labelled Day 1 through Day 7.
+- No meal name repeats across the full 7 days.
+- Total cost across all 7 days must stay within €${weeklyBudget} (€${budget}/day × 7).
+- Each day must have its own dailyCost field.
+- The shoppingList covers the entire week.
+- For 7-day plans: keep steps to max 3 per meal and ingredients to max 4 per meal to save space.`
+      : `Generate a 1-day meal plan. Total cost must stay under €${budget}.`;
 
     return `You are a budget-conscious meal planner. Generate a practical, affordable meal plan with full cooking instructions. Keep all language simple and beginner-friendly.
 
-The user is based in ${country}. Use locally available, affordable ingredients. Assume they have: ${appliances.join(', ')}. Cooking skill level: ${skill}.
+The user is based in ${country}. Use locally available ingredients. Cooking skill level: ${skill}.
 
 USER INPUTS:
 - Daily budget: €${budget}
@@ -755,32 +868,27 @@ USER INPUTS:
 - Goal: ${goalMap[goal] || goal}
 - Meals per day: ${meals}
 
+${buildAppliancePromptSection(appliances)}
+
 DURATION:
 ${durationInstructions}
 
 BUDGET RULES:
-- Show estimated cost in euros for each meal.
-- Never exceed the total budget. Adjust ingredients if needed before responding.
+- Show cost in euros for each meal.
+- Never exceed the total budget. Adjust ingredients if needed.
 
 VARIETY RULES:
 - Do NOT repeat any ingredient as a main component in the same day.
 - Vary protein sources, cooking methods, and flavor profiles.
-- For 7-day plans: no meal name repeats across the entire week.
 
 COOKING STEPS RULES:
-- Include 3 to 5 numbered steps per meal.
+- 3 to 5 numbered steps per meal (max 3 for 7-day plans).
 - Each step under 20 words.
 - Write for a complete beginner.
 
-OTHER RULES:
-- Only use appliances: ${appliances.join(', ')}
-- Use ingredients available in ${country} supermarkets
-- If goal is weight loss: ~1600-1800 kcal/day total
-- If goal is muscle gain: ~2200-2500 kcal/day total
-
 Always respond in valid JSON. Never return plain text outside this structure.
 
-For a 1-DAY plan use this JSON:
+For a 1-DAY plan:
 {
   "totalCost": "€X.XX",
   "calories": "~XXXX kcal",
@@ -789,21 +897,21 @@ For a 1-DAY plan use this JSON:
     {
       "type": "Breakfast",
       "name": "Meal name",
-      "description": "One sentence overview.",
+      "description": "One sentence.",
       "cost": "€X.XX",
       "prepTime": "X mins",
       "portion": "e.g. 300g",
       "calories": "~XXX kcal",
-      "cookingMethod": "e.g. Pan-fried",
-      "ingredients": ["100g oats", "1 banana"],
-      "steps": ["Step one under 20 words.", "Step two under 20 words."]
+      "cookingMethod": "Air-fried",
+      "ingredients": ["item 1", "item 2"],
+      "steps": ["Step 1.", "Step 2.", "Step 3."]
     }
   ],
   "shoppingList": { "produce": [], "dairy": [], "grains": [], "protein": [], "other": [] },
   "tip": "One money-saving tip"
 }
 
-For a 7-DAY plan use this JSON:
+For a 7-DAY plan:
 {
   "totalCost": "€XX.XX",
   "budgetConfirmed": true,
@@ -816,14 +924,14 @@ For a 7-DAY plan use this JSON:
         {
           "type": "Breakfast",
           "name": "Meal name",
-          "description": "One sentence overview.",
+          "description": "One sentence.",
           "cost": "€X.XX",
           "prepTime": "X mins",
           "portion": "e.g. 300g",
           "calories": "~XXX kcal",
-          "cookingMethod": "e.g. Pan-fried",
-          "ingredients": ["100g oats", "1 banana"],
-          "steps": ["Step one under 20 words.", "Step two under 20 words."]
+          "cookingMethod": "Air-fried",
+          "ingredients": ["item 1", "item 2"],
+          "steps": ["Step 1.", "Step 2.", "Step 3."]
         }
       ]
     }
@@ -840,11 +948,9 @@ For a 7-DAY plan use this JSON:
   }
 
   // ── Display 1-day results ────────────────────────────────────────
-  function displayDayResults(plan, budget) {
+  function displayDayResults(plan, budget, allowedMethods) {
     const el = document.getElementById('results');
     el.style.display = 'block';
-
-    const mealsHTML = plan.meals.map(buildMealCard).join('');
 
     el.innerHTML = `
       <div class="fade-in">
@@ -854,7 +960,7 @@ For a 7-DAY plan use this JSON:
         </div>
         <div class="result-meta">${plan.calories} · Budget: €${budget}</div>
         ${getBudgetConfirmation(plan.totalCost, budget, 1)}
-        <div class="meals">${mealsHTML}</div>
+        <div class="meals">${plan.meals.map(m => buildMealCard(m, allowedMethods)).join('')}</div>
         <div class="shop-card">
           <div class="shop-title">🛒 Shopping list</div>
           ${buildShopHTML(plan.shoppingList)}
@@ -865,7 +971,7 @@ For a 7-DAY plan use this JSON:
   }
 
   // ── Display 7-day results ────────────────────────────────────────
-  function displayWeekResults(plan, budget) {
+  function displayWeekResults(plan, budget, allowedMethods) {
     const el = document.getElementById('results');
     el.style.display = 'block';
 
@@ -875,7 +981,7 @@ For a 7-DAY plan use this JSON:
           <span>📅 ${day.day}</span>
           <span class="day-cost">${day.dailyCost} · ${day.calories || ''}</span>
         </div>
-        <div class="meals">${day.meals.map(buildMealCard).join('')}</div>
+        <div class="meals">${day.meals.map(m => buildMealCard(m, allowedMethods)).join('')}</div>
       </div>
     `).join('');
 
@@ -906,7 +1012,7 @@ For a 7-DAY plan use this JSON:
       btn.innerHTML = '<span class="spinner"></span> Generating...';
       status.style.display = 'block';
       status.innerHTML = duration === 7
-        ? 'Building your 7-day plan — this takes a little longer...'
+        ? 'Building your 7-day plan — this takes about 20 seconds...'
         : 'Asking Claude for a meal plan...';
     } else {
       btn.disabled = false;
@@ -919,6 +1025,16 @@ For a 7-DAY plan use this JSON:
     const el = document.getElementById('error');
     el.style.display = 'block';
     el.textContent = msg;
+  }
+
+  function showApplianceWarning(msg) {
+    const el = document.getElementById('applianceWarning');
+    el.style.display = 'block';
+    el.textContent = msg;
+  }
+
+  function hideApplianceWarning() {
+    document.getElementById('applianceWarning').style.display = 'none';
   }
 
   function hideError()   { document.getElementById('error').style.display = 'none'; }
