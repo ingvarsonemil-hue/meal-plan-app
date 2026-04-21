@@ -131,7 +131,6 @@
 
     .pill:hover { border-color: #E07B39; color: #E07B39; }
     .pill.selected { background: #E07B39; border-color: #E07B39; color: #fff; }
-
     .pill.multi.selected { background: #2D5A27; border-color: #2D5A27; color: #fff; }
     .pill.multi:hover { border-color: #2D5A27; color: #2D5A27; }
 
@@ -201,29 +200,25 @@
       font-weight: 700;
     }
 
-    .budget-confirm.fits {
-      background: #F0FDF4;
-      border: 1.5px solid #86EFAC;
-      color: #166534;
-    }
-
-    .budget-confirm.over {
-      background: #FFF7ED;
-      border: 1.5px solid #FED7AA;
-      color: #92400E;
-    }
+    .budget-confirm.fits { background: #F0FDF4; border: 1.5px solid #86EFAC; color: #166534; }
+    .budget-confirm.over { background: #FFF7ED; border: 1.5px solid #FED7AA; color: #92400E; }
 
     /* ── Meal cards ───────────────────────────────────────────────── */
-    .meals { display: flex; flex-direction: column; gap: 10px; margin-bottom: 14px; }
+    .meals { display: flex; flex-direction: column; gap: 12px; margin-bottom: 14px; }
 
     .meal-card {
       background: #FDFAF7;
       border: 1.5px solid #F0E6DA;
       border-radius: 14px;
-      padding: 16px;
+      overflow: hidden;
+    }
+
+    /* Top section: icon + name + cost */
+    .meal-top {
       display: flex;
       gap: 14px;
       align-items: flex-start;
+      padding: 16px 16px 12px;
     }
 
     .meal-icon {
@@ -270,6 +265,53 @@
     }
 
     .meal-cost { font-size: 14px; font-weight: 700; color: #C9550A; white-space: nowrap; padding-top: 2px; }
+
+    /* ── Cooking steps section ────────────────────────────────────── */
+    .meal-steps {
+      border-top: 1.5px solid #F0E6DA;
+      padding: 14px 16px;
+      background: #FFFBF7;
+    }
+
+    .meal-steps-title {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #C9855A;
+      margin-bottom: 10px;
+    }
+
+    .step {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      margin-bottom: 8px;
+    }
+
+    .step:last-child { margin-bottom: 0; }
+
+    .step-number {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: #E07B39;
+      color: #fff;
+      font-size: 11px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .step-text {
+      font-size: 13px;
+      font-weight: 600;
+      color: #4A3728;
+      line-height: 1.5;
+    }
 
     /* ── Shopping list ────────────────────────────────────────────── */
     .shop-card {
@@ -497,7 +539,6 @@
   }
 
   // ── Budget confirmation banner ───────────────────────────────────
-  // Parses the total cost string (e.g. "€8.40") and compares to budget
   function getBudgetConfirmation(totalCost, budget) {
     const spent = parseFloat(totalCost.replace(/[^0-9.]/g, ''));
     const limit = parseFloat(budget);
@@ -572,7 +613,7 @@
       'gain':     'gain muscle (higher calories and protein)'
     };
 
-    return `You are a budget-conscious meal planner. When generating a meal plan, always include: meal name, estimated cost per meal in euros, prep time in minutes, exact portion sizes, a calorie estimate, the cooking method used, and a consolidated shopping list grouped by category. Keep language simple and practical.
+    return `You are a budget-conscious meal planner. Generate a practical, affordable 1-day meal plan with full cooking instructions. Keep all language simple and beginner-friendly.
 
 The user is based in ${country}. Use locally available, affordable ingredients typical to that region. Assume they have: ${appliances.join(', ')}. Their cooking skill level is ${skill}. Adjust recipe complexity accordingly.
 
@@ -582,25 +623,27 @@ USER INPUTS:
 - Goal: ${goalMap[goal] || goal}
 - Meals per day: ${meals}
 
-BUDGET RULES — these are strict:
-- Show the estimated cost in euros at the end of each meal.
-- At the end of the full plan, show the total daily cost and confirm whether it fits within the user's budget of €${budget}.
-- If the total cost exceeds €${budget}, you must adjust ingredients to bring it under budget before responding. Never return a plan that exceeds the budget.
+COOKING STEPS RULES — very important:
+- For each meal, include 3 to 5 numbered cooking steps.
+- Each step must be under 20 words.
+- Write steps for a complete beginner — assume they know nothing.
+- Focus on speed and simplicity. No fancy techniques.
+- Steps should be in the correct cooking order.
 
-VARIETY RULES — these are strict:
-- Do NOT repeat any ingredient as a main component across more than one meal in the same day.
-- Aim for variety in protein sources across meals (e.g. eggs for one meal, lentils for another, chicken or tuna for another).
-- Aim for variety in cooking methods (e.g. do not boil everything — mix boiling, frying, baking, steaming, or no-cook).
-- Aim for variety in flavor profiles (e.g. vary between mild, spiced, tangy, or fresh).
+BUDGET RULES:
+- Show the estimated cost in euros for each meal.
+- Total daily cost must stay under €${budget}. If it doesn't fit, adjust ingredients before responding.
+
+VARIETY RULES:
+- Do NOT repeat any ingredient as a main component across more than one meal.
+- Vary protein sources, cooking methods, and flavor profiles across meals.
 
 OTHER RULES:
-- Only suggest meals that can be made using: ${appliances.join(', ')}
-- Keep meals simple if skill is beginner, slightly more involved if intermediate
-- Use ingredients readily available in ${country} supermarkets
-- Prices should reflect realistic local costs in ${country}
-- If the budget is very low (under €5), use only the cheapest possible ingredients
-- If the goal is weight loss, keep calories moderate (~1600-1800 kcal total)
-- If the goal is muscle gain, add more protein and calories (~2200-2500 kcal total)
+- Only use appliances from this list: ${appliances.join(', ')}
+- Keep complexity appropriate for a ${skill} cook
+- Use ingredients available in ${country} supermarkets
+- If the goal is weight loss, keep calories ~1600-1800 kcal total
+- If the goal is muscle gain, aim for ~2200-2500 kcal total
 
 Respond ONLY with a valid JSON object. No explanation, no markdown, just the JSON.
 
@@ -613,12 +656,17 @@ JSON format:
     {
       "type": "Breakfast",
       "name": "Meal name here",
-      "description": "Short 1-2 sentence description of how to make it",
+      "description": "One sentence overview of the meal.",
       "cost": "€X.XX",
       "prepTime": "X mins",
       "portion": "e.g. 300g / 1 bowl",
       "calories": "~XXX kcal",
-      "cookingMethod": "e.g. Boiled, Pan-fried, No-cook, Baked"
+      "cookingMethod": "e.g. Pan-fried",
+      "steps": [
+        "Step one instruction here, under 20 words.",
+        "Step two instruction here, under 20 words.",
+        "Step three instruction here, under 20 words."
+      ]
     }
   ],
   "shoppingList": {
@@ -646,21 +694,38 @@ JSON format:
     // Build meal cards
     const mealsHTML = plan.meals.map(meal => {
       const icon = getMealIcon(meal.type);
+
+      // Build numbered steps HTML
+      const stepsHTML = meal.steps && meal.steps.length > 0
+        ? `<div class="meal-steps">
+            <div class="meal-steps-title">📋 How to make it</div>
+            ${meal.steps.map((step, i) => `
+              <div class="step">
+                <div class="step-number">${i + 1}</div>
+                <div class="step-text">${step}</div>
+              </div>
+            `).join('')}
+          </div>`
+        : '';
+
       return `
         <div class="meal-card">
-          <div class="meal-icon" style="background:${icon.bg}">${icon.emoji}</div>
-          <div class="meal-body">
-            <div class="meal-type">${meal.type}</div>
-            <div class="meal-name">${meal.name}</div>
-            <div class="meal-desc">${meal.description}</div>
-            <div class="meal-meta">
-              ${meal.cookingMethod ? `<span class="meal-meta-pill method">🍳 ${meal.cookingMethod}</span>` : ''}
-              ${meal.prepTime      ? `<span class="meal-meta-pill">⏱ ${meal.prepTime}</span>` : ''}
-              ${meal.portion       ? `<span class="meal-meta-pill">⚖️ ${meal.portion}</span>` : ''}
-              ${meal.calories      ? `<span class="meal-meta-pill">🔥 ${meal.calories}</span>` : ''}
+          <div class="meal-top">
+            <div class="meal-icon" style="background:${icon.bg}">${icon.emoji}</div>
+            <div class="meal-body">
+              <div class="meal-type">${meal.type}</div>
+              <div class="meal-name">${meal.name}</div>
+              <div class="meal-desc">${meal.description}</div>
+              <div class="meal-meta">
+                ${meal.cookingMethod ? `<span class="meal-meta-pill method">🍳 ${meal.cookingMethod}</span>` : ''}
+                ${meal.prepTime      ? `<span class="meal-meta-pill">⏱ ${meal.prepTime}</span>` : ''}
+                ${meal.portion       ? `<span class="meal-meta-pill">⚖️ ${meal.portion}</span>` : ''}
+                ${meal.calories      ? `<span class="meal-meta-pill">🔥 ${meal.calories}</span>` : ''}
+              </div>
             </div>
+            <div class="meal-cost">${meal.cost}</div>
           </div>
-          <div class="meal-cost">${meal.cost}</div>
+          ${stepsHTML}
         </div>
       `;
     }).join('');
