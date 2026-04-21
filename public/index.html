@@ -203,6 +203,31 @@
     .budget-confirm.fits { background: #F0FDF4; border: 1.5px solid #86EFAC; color: #166534; }
     .budget-confirm.over { background: #FFF7ED; border: 1.5px solid #FED7AA; color: #92400E; }
 
+    /* ── 7-day: Day label ─────────────────────────────────────────── */
+    .day-block { margin-bottom: 20px; }
+
+    .day-label {
+      font-size: 13px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: #E07B39;
+      background: #FFF3E8;
+      border: 1.5px solid #FFD4A8;
+      border-radius: 10px;
+      padding: 8px 14px;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .day-cost {
+      font-size: 13px;
+      font-weight: 700;
+      color: #C9550A;
+    }
+
     /* ── Meal cards ───────────────────────────────────────────────── */
     .meals { display: flex; flex-direction: column; gap: 12px; margin-bottom: 14px; }
 
@@ -232,6 +257,7 @@
     }
 
     .meal-body { flex: 1; min-width: 0; }
+
     .meal-type {
       font-size: 11px;
       font-weight: 700;
@@ -264,7 +290,7 @@
 
     .meal-cost { font-size: 14px; font-weight: 700; color: #C9550A; white-space: nowrap; padding-top: 2px; }
 
-    /* ── Ingredients section ──────────────────────────────────────── */
+    /* ── Ingredients ──────────────────────────────────────────────── */
     .meal-ingredients {
       border-top: 1.5px solid #F0E6DA;
       padding: 14px 16px;
@@ -280,11 +306,7 @@
       margin-bottom: 10px;
     }
 
-    .ingredients-grid {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-    }
+    .ingredients-grid { display: flex; flex-wrap: wrap; gap: 6px; }
 
     .ingredient-pill {
       font-size: 12px;
@@ -296,7 +318,7 @@
       color: #7A4A20;
     }
 
-    /* ── Cooking steps section ────────────────────────────────────── */
+    /* ── Cooking steps ────────────────────────────────────────────── */
     .meal-steps {
       border-top: 1.5px solid #F0E6DA;
       padding: 14px 16px;
@@ -312,13 +334,7 @@
       margin-bottom: 10px;
     }
 
-    .step {
-      display: flex;
-      gap: 10px;
-      align-items: flex-start;
-      margin-bottom: 8px;
-    }
-
+    .step { display: flex; gap: 10px; align-items: flex-start; margin-bottom: 8px; }
     .step:last-child { margin-bottom: 0; }
 
     .step-number {
@@ -336,12 +352,7 @@
       margin-top: 1px;
     }
 
-    .step-text {
-      font-size: 13px;
-      font-weight: 600;
-      color: #4A3728;
-      line-height: 1.5;
-    }
+    .step-text { font-size: 13px; font-weight: 600; color: #4A3728; line-height: 1.5; }
 
     /* ── Shopping list ────────────────────────────────────────────── */
     .shop-card {
@@ -434,7 +445,7 @@
   <div class="hero">
     <span class="hero-emoji">🥗</span>
     <h1>What's for dinner?<br/><span>Let's plan it cheap.</span></h1>
-    <p>Tell us your budget and we'll build a full day of simple, affordable meals in seconds.</p>
+    <p>Tell us your budget and we'll build a simple, affordable meal plan in seconds.</p>
   </div>
 
   <!-- ── BUDGET ─────────────────────────────────────────────────── -->
@@ -453,8 +464,15 @@
     <input class="country-input" type="text" id="country" placeholder="e.g. Sweden, Germany, Spain..."/>
   </div>
 
-  <!-- ── MEALS + GOAL ───────────────────────────────────────────── -->
+  <!-- ── PLAN DURATION + MEALS ──────────────────────────────────── -->
   <div class="two-col">
+    <div class="card">
+      <div class="card-label">📅 Plan duration</div>
+      <div class="pills" id="duration-pills">
+        <span class="pill selected" data-value="1">1 day</span>
+        <span class="pill" data-value="7">7 days</span>
+      </div>
+    </div>
     <div class="card">
       <div class="card-label">🍽 Meals per day</div>
       <div class="pills" id="meals-pills">
@@ -463,13 +481,15 @@
         <span class="pill" data-value="4">4</span>
       </div>
     </div>
-    <div class="card">
-      <div class="card-label">🎯 Goal</div>
-      <div class="pills vertical" id="goal-pills">
-        <span class="pill selected" data-value="maintain">Maintain</span>
-        <span class="pill" data-value="lose">Lose weight</span>
-        <span class="pill" data-value="gain">Gain muscle</span>
-      </div>
+  </div>
+
+  <!-- ── GOAL ───────────────────────────────────────────────────── -->
+  <div class="card">
+    <div class="card-label">🎯 Goal</div>
+    <div class="pills" id="goal-pills">
+      <span class="pill selected" data-value="maintain">Maintain weight</span>
+      <span class="pill" data-value="lose">Lose weight</span>
+      <span class="pill" data-value="gain">Gain muscle</span>
     </div>
   </div>
 
@@ -522,7 +542,7 @@
 
 <script>
   // ── Single-select pill groups ────────────────────────────────────
-  ['meals-pills', 'goal-pills', 'diet-pills', 'skill-pills'].forEach(groupId => {
+  ['duration-pills', 'meals-pills', 'goal-pills', 'diet-pills', 'skill-pills'].forEach(groupId => {
     document.getElementById(groupId).addEventListener('click', e => {
       const pill = e.target.closest('.pill');
       if (!pill) return;
@@ -569,29 +589,101 @@
   }
 
   // ── Budget confirmation banner ───────────────────────────────────
-  function getBudgetConfirmation(totalCost, budget) {
-    const spent = parseFloat(totalCost.replace(/[^0-9.]/g, ''));
-    const limit = parseFloat(budget);
-    const fits  = spent <= limit;
-    const diff  = Math.abs(limit - spent).toFixed(2);
+  function getBudgetConfirmation(totalCost, budget, days) {
+    const spent    = parseFloat(totalCost.replace(/[^0-9.]/g, ''));
+    const limit    = parseFloat(budget) * days;
+    const fits     = spent <= limit;
+    const diff     = Math.abs(limit - spent).toFixed(2);
+    const label    = days === 7 ? `€${budget}/day × 7 = €${limit.toFixed(2)}` : `€${budget}`;
     return `
       <div class="budget-confirm ${fits ? 'fits' : 'over'}">
         ${fits
-          ? `✅ Fits your €${budget} budget — €${diff} to spare`
-          : `⚠️ Slightly over your €${budget} budget by €${diff} — consider swapping one ingredient`
+          ? `✅ Fits your budget (${label}) — €${diff} to spare`
+          : `⚠️ Slightly over budget (${label}) by €${diff} — consider swapping one ingredient`
         }
       </div>
     `;
+  }
+
+  // ── Build a single meal card ─────────────────────────────────────
+  function buildMealCard(meal) {
+    const icon = getMealIcon(meal.type);
+
+    const ingredientsHTML = meal.ingredients && meal.ingredients.length > 0
+      ? `<div class="meal-ingredients">
+          <div class="meal-ingredients-title">🧺 Ingredients</div>
+          <div class="ingredients-grid">
+            ${meal.ingredients.map(ing => `<span class="ingredient-pill">${ing}</span>`).join('')}
+          </div>
+        </div>`
+      : '';
+
+    const stepsHTML = meal.steps && meal.steps.length > 0
+      ? `<div class="meal-steps">
+          <div class="meal-steps-title">📋 How to make it</div>
+          ${meal.steps.map((step, i) => `
+            <div class="step">
+              <div class="step-number">${i + 1}</div>
+              <div class="step-text">${step}</div>
+            </div>
+          `).join('')}
+        </div>`
+      : '';
+
+    return `
+      <div class="meal-card">
+        <div class="meal-top">
+          <div class="meal-icon" style="background:${icon.bg}">${icon.emoji}</div>
+          <div class="meal-body">
+            <div class="meal-type">${meal.type}</div>
+            <div class="meal-name">${meal.name}</div>
+            <div class="meal-desc">${meal.description}</div>
+            <div class="meal-meta">
+              ${meal.cookingMethod ? `<span class="meal-meta-pill method">🍳 ${meal.cookingMethod}</span>` : ''}
+              ${meal.prepTime      ? `<span class="meal-meta-pill">⏱ ${meal.prepTime}</span>` : ''}
+              ${meal.portion       ? `<span class="meal-meta-pill">⚖️ ${meal.portion}</span>` : ''}
+              ${meal.calories      ? `<span class="meal-meta-pill">🔥 ${meal.calories}</span>` : ''}
+            </div>
+          </div>
+          <div class="meal-cost">${meal.cost}</div>
+        </div>
+        ${ingredientsHTML}
+        ${stepsHTML}
+      </div>
+    `;
+  }
+
+  // ── Build shopping list HTML ─────────────────────────────────────
+  function buildShopHTML(list) {
+    if (!list) return '';
+    if (typeof list === 'object' && !Array.isArray(list)) {
+      return Object.entries(list).map(([category, items]) => {
+        if (!items || items.length === 0) return '';
+        const icon = getCategoryIcon(category);
+        return `
+          <div class="shop-category">
+            <div class="shop-category-label">${icon} ${category}</div>
+            <div class="shop-grid">
+              ${items.map(item => `<div class="shop-item"><div class="shop-dot"></div>${item}</div>`).join('')}
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+    return `<div class="shop-grid">
+      ${list.map(item => `<div class="shop-item"><div class="shop-dot"></div>${item}</div>`).join('')}
+    </div>`;
   }
 
   // ── Main generate function ───────────────────────────────────────
   async function generatePlan() {
     const budget     = document.getElementById('budget').value || 10;
     const country    = document.getElementById('country').value.trim() || 'Europe';
-    const diet       = getSelected('diet-pills')  || 'none';
-    const goal       = getSelected('goal-pills')  || 'maintain';
-    const meals      = getSelected('meals-pills') || '3';
-    const skill      = getSelected('skill-pills') || 'beginner';
+    const diet       = getSelected('diet-pills')      || 'none';
+    const goal       = getSelected('goal-pills')      || 'maintain';
+    const meals      = getSelected('meals-pills')     || '3';
+    const duration   = parseInt(getSelected('duration-pills') || '1');
+    const skill      = getSelected('skill-pills')     || 'beginner';
     const appliances = getAppliances();
 
     if (appliances.length === 0) {
@@ -599,12 +691,12 @@
       return;
     }
 
-    setLoading(true);
+    setLoading(true, duration);
     hideError();
     hideResults();
 
     try {
-      const prompt = buildPrompt(budget, country, diet, goal, meals, skill, appliances);
+      const prompt = buildPrompt(budget, country, diet, goal, meals, skill, appliances, duration);
 
       const response = await fetch('/generate', {
         method: 'POST',
@@ -619,7 +711,7 @@
 
       const data = await response.json();
       const plan = parseJSON(data.result);
-      displayResults(plan, budget);
+      duration === 7 ? displayWeekResults(plan, budget) : displayDayResults(plan, budget);
 
     } catch (err) {
       showError(`Something went wrong: ${err.message}`);
@@ -629,7 +721,7 @@
   }
 
   // ── Prompt builder ───────────────────────────────────────────────
-  function buildPrompt(budget, country, diet, goal, meals, skill, appliances) {
+  function buildPrompt(budget, country, diet, goal, meals, skill, appliances, duration) {
     const dietMap = {
       'none':         'no dietary restrictions (omnivore)',
       'vegetarian':   'vegetarian (no meat or fish)',
@@ -642,9 +734,20 @@
       'gain':     'gain muscle (higher calories and protein)'
     };
 
-    return `You are a budget-conscious meal planner. Generate a practical, affordable 1-day meal plan with full cooking instructions. Keep all language simple and beginner-friendly.
+    const weeklyBudget = (parseFloat(budget) * 7).toFixed(2);
 
-The user is based in ${country}. Use locally available, affordable ingredients typical to that region. Assume they have: ${appliances.join(', ')}. Their cooking skill level is ${skill}. Adjust recipe complexity accordingly.
+    const durationInstructions = duration === 7
+      ? `Generate a 7-day meal plan. Label each day as "Day 1" through "Day 7".
+- No meal name should repeat across the full 7 days.
+- The total cost across all 7 days must stay within €${weeklyBudget} (which is €${budget}/day × 7).
+- Each day should have its own dailyCost field.
+- The shoppingList should cover the entire week.`
+      : `Generate a 1-day meal plan.
+- Total cost must stay under €${budget}.`;
+
+    return `You are a budget-conscious meal planner. Generate a practical, affordable meal plan with full cooking instructions. Keep all language simple and beginner-friendly.
+
+The user is based in ${country}. Use locally available, affordable ingredients. Assume they have: ${appliances.join(', ')}. Cooking skill level: ${skill}.
 
 USER INPUTS:
 - Daily budget: €${budget}
@@ -652,29 +755,32 @@ USER INPUTS:
 - Goal: ${goalMap[goal] || goal}
 - Meals per day: ${meals}
 
+DURATION:
+${durationInstructions}
+
 BUDGET RULES:
-- Show the estimated cost in euros for each meal.
-- Total daily cost must stay under €${budget}. If it does not fit, adjust ingredients before responding.
+- Show estimated cost in euros for each meal.
+- Never exceed the total budget. Adjust ingredients if needed before responding.
 
 VARIETY RULES:
-- Do NOT repeat any ingredient as a main component across more than one meal.
-- Vary protein sources, cooking methods, and flavor profiles across meals.
+- Do NOT repeat any ingredient as a main component in the same day.
+- Vary protein sources, cooking methods, and flavor profiles.
+- For 7-day plans: no meal name repeats across the entire week.
 
 COOKING STEPS RULES:
-- For each meal, include 3 to 5 numbered cooking steps.
-- Each step must be under 20 words.
-- Write for a complete beginner. Assume they know nothing.
-- Focus on speed and simplicity. No fancy techniques.
+- Include 3 to 5 numbered steps per meal.
+- Each step under 20 words.
+- Write for a complete beginner.
 
 OTHER RULES:
-- Only use appliances from this list: ${appliances.join(', ')}
-- Keep complexity appropriate for a ${skill} cook
+- Only use appliances: ${appliances.join(', ')}
 - Use ingredients available in ${country} supermarkets
-- If the goal is weight loss, keep calories ~1600-1800 kcal total
-- If the goal is muscle gain, aim for ~2200-2500 kcal total
+- If goal is weight loss: ~1600-1800 kcal/day total
+- If goal is muscle gain: ~2200-2500 kcal/day total
 
-Always respond in valid JSON with this exact structure. Never return plain text outside this structure.
+Always respond in valid JSON. Never return plain text outside this structure.
 
+For a 1-DAY plan use this JSON:
 {
   "totalCost": "€X.XX",
   "calories": "~XXXX kcal",
@@ -682,29 +788,48 @@ Always respond in valid JSON with this exact structure. Never return plain text 
   "meals": [
     {
       "type": "Breakfast",
-      "name": "Meal name here",
-      "description": "One sentence overview of the meal.",
+      "name": "Meal name",
+      "description": "One sentence overview.",
       "cost": "€X.XX",
       "prepTime": "X mins",
-      "portion": "e.g. 300g / 1 bowl",
+      "portion": "e.g. 300g",
       "calories": "~XXX kcal",
       "cookingMethod": "e.g. Pan-fried",
-      "ingredients": ["100g oats", "1 banana", "200ml water"],
-      "steps": [
-        "Step one instruction, under 20 words.",
-        "Step two instruction, under 20 words.",
-        "Step three instruction, under 20 words."
+      "ingredients": ["100g oats", "1 banana"],
+      "steps": ["Step one under 20 words.", "Step two under 20 words."]
+    }
+  ],
+  "shoppingList": { "produce": [], "dairy": [], "grains": [], "protein": [], "other": [] },
+  "tip": "One money-saving tip"
+}
+
+For a 7-DAY plan use this JSON:
+{
+  "totalCost": "€XX.XX",
+  "budgetConfirmed": true,
+  "days": [
+    {
+      "day": "Day 1",
+      "dailyCost": "€X.XX",
+      "calories": "~XXXX kcal",
+      "meals": [
+        {
+          "type": "Breakfast",
+          "name": "Meal name",
+          "description": "One sentence overview.",
+          "cost": "€X.XX",
+          "prepTime": "X mins",
+          "portion": "e.g. 300g",
+          "calories": "~XXX kcal",
+          "cookingMethod": "e.g. Pan-fried",
+          "ingredients": ["100g oats", "1 banana"],
+          "steps": ["Step one under 20 words.", "Step two under 20 words."]
+        }
       ]
     }
   ],
-  "shoppingList": {
-    "produce": ["item 1", "item 2"],
-    "dairy": ["item 1"],
-    "grains": ["item 1"],
-    "protein": ["item 1"],
-    "other": ["item 1"]
-  },
-  "tip": "One practical money-saving tip for this meal plan"
+  "shoppingList": { "produce": [], "dairy": [], "grains": [], "protein": [], "other": [] },
+  "tip": "One money-saving tip for the week"
 }`;
   }
 
@@ -714,82 +839,12 @@ Always respond in valid JSON with this exact structure. Never return plain text 
     return JSON.parse(cleaned);
   }
 
-  // ── Display results ──────────────────────────────────────────────
-  function displayResults(plan, budget) {
+  // ── Display 1-day results ────────────────────────────────────────
+  function displayDayResults(plan, budget) {
     const el = document.getElementById('results');
     el.style.display = 'block';
 
-    const mealsHTML = plan.meals.map(meal => {
-      const icon = getMealIcon(meal.type);
-
-      // Ingredients pills
-      const ingredientsHTML = meal.ingredients && meal.ingredients.length > 0
-        ? `<div class="meal-ingredients">
-            <div class="meal-ingredients-title">🧺 Ingredients</div>
-            <div class="ingredients-grid">
-              ${meal.ingredients.map(ing => `<span class="ingredient-pill">${ing}</span>`).join('')}
-            </div>
-          </div>`
-        : '';
-
-      // Numbered steps
-      const stepsHTML = meal.steps && meal.steps.length > 0
-        ? `<div class="meal-steps">
-            <div class="meal-steps-title">📋 How to make it</div>
-            ${meal.steps.map((step, i) => `
-              <div class="step">
-                <div class="step-number">${i + 1}</div>
-                <div class="step-text">${step}</div>
-              </div>
-            `).join('')}
-          </div>`
-        : '';
-
-      return `
-        <div class="meal-card">
-          <div class="meal-top">
-            <div class="meal-icon" style="background:${icon.bg}">${icon.emoji}</div>
-            <div class="meal-body">
-              <div class="meal-type">${meal.type}</div>
-              <div class="meal-name">${meal.name}</div>
-              <div class="meal-desc">${meal.description}</div>
-              <div class="meal-meta">
-                ${meal.cookingMethod ? `<span class="meal-meta-pill method">🍳 ${meal.cookingMethod}</span>` : ''}
-                ${meal.prepTime      ? `<span class="meal-meta-pill">⏱ ${meal.prepTime}</span>` : ''}
-                ${meal.portion       ? `<span class="meal-meta-pill">⚖️ ${meal.portion}</span>` : ''}
-                ${meal.calories      ? `<span class="meal-meta-pill">🔥 ${meal.calories}</span>` : ''}
-              </div>
-            </div>
-            <div class="meal-cost">${meal.cost}</div>
-          </div>
-          ${ingredientsHTML}
-          ${stepsHTML}
-        </div>
-      `;
-    }).join('');
-
-    // Grouped shopping list
-    let shopHTML = '';
-    const list = plan.shoppingList;
-
-    if (typeof list === 'object' && !Array.isArray(list)) {
-      Object.entries(list).forEach(([category, items]) => {
-        if (!items || items.length === 0) return;
-        const icon = getCategoryIcon(category);
-        shopHTML += `
-          <div class="shop-category">
-            <div class="shop-category-label">${icon} ${category}</div>
-            <div class="shop-grid">
-              ${items.map(item => `<div class="shop-item"><div class="shop-dot"></div>${item}</div>`).join('')}
-            </div>
-          </div>
-        `;
-      });
-    } else {
-      shopHTML = `<div class="shop-grid">
-        ${list.map(item => `<div class="shop-item"><div class="shop-dot"></div>${item}</div>`).join('')}
-      </div>`;
-    }
+    const mealsHTML = plan.meals.map(buildMealCard).join('');
 
     el.innerHTML = `
       <div class="fade-in">
@@ -798,11 +853,44 @@ Always respond in valid JSON with this exact structure. Never return plain text 
           <div class="cost-badge">${plan.totalCost} / day</div>
         </div>
         <div class="result-meta">${plan.calories} · Budget: €${budget}</div>
-        ${getBudgetConfirmation(plan.totalCost, budget)}
+        ${getBudgetConfirmation(plan.totalCost, budget, 1)}
         <div class="meals">${mealsHTML}</div>
         <div class="shop-card">
           <div class="shop-title">🛒 Shopping list</div>
-          ${shopHTML}
+          ${buildShopHTML(plan.shoppingList)}
+        </div>
+        <div class="tip-box">💡 ${plan.tip}</div>
+      </div>
+    `;
+  }
+
+  // ── Display 7-day results ────────────────────────────────────────
+  function displayWeekResults(plan, budget) {
+    const el = document.getElementById('results');
+    el.style.display = 'block';
+
+    const daysHTML = plan.days.map(day => `
+      <div class="day-block">
+        <div class="day-label">
+          <span>📅 ${day.day}</span>
+          <span class="day-cost">${day.dailyCost} · ${day.calories || ''}</span>
+        </div>
+        <div class="meals">${day.meals.map(buildMealCard).join('')}</div>
+      </div>
+    `).join('');
+
+    el.innerHTML = `
+      <div class="fade-in">
+        <div class="result-header">
+          <div class="result-title">Your 7-day plan</div>
+          <div class="cost-badge">${plan.totalCost} total</div>
+        </div>
+        <div class="result-meta">Budget: €${budget}/day · €${(parseFloat(budget) * 7).toFixed(2)} for the week</div>
+        ${getBudgetConfirmation(plan.totalCost, budget, 7)}
+        ${daysHTML}
+        <div class="shop-card">
+          <div class="shop-title">🛒 Weekly shopping list</div>
+          ${buildShopHTML(plan.shoppingList)}
         </div>
         <div class="tip-box">💡 ${plan.tip}</div>
       </div>
@@ -810,14 +898,16 @@ Always respond in valid JSON with this exact structure. Never return plain text 
   }
 
   // ── UI helpers ───────────────────────────────────────────────────
-  function setLoading(on) {
-    const btn = document.getElementById('generateBtn');
+  function setLoading(on, duration) {
+    const btn    = document.getElementById('generateBtn');
     const status = document.getElementById('status');
     if (on) {
       btn.disabled = true;
       btn.innerHTML = '<span class="spinner"></span> Generating...';
       status.style.display = 'block';
-      status.innerHTML = 'Asking Claude for a meal plan...';
+      status.innerHTML = duration === 7
+        ? 'Building your 7-day plan — this takes a little longer...'
+        : 'Asking Claude for a meal plan...';
     } else {
       btn.disabled = false;
       btn.innerHTML = '✨ Generate my meal plan';
