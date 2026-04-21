@@ -132,7 +132,7 @@
     .pill:hover { border-color: #E07B39; color: #E07B39; }
     .pill.selected { background: #E07B39; border-color: #E07B39; color: #fff; }
 
-    /* Multi-select pills use a different selected color so user knows they can pick many */
+    /* Multi-select pills */
     .pill.multi.selected { background: #2D5A27; border-color: #2D5A27; color: #fff; }
     .pill.multi:hover { border-color: #2D5A27; color: #2D5A27; }
 
@@ -241,6 +241,13 @@
       background: #FFF3E8;
       border: 1px solid #FFD4A8;
       color: #C9550A;
+    }
+
+    /* Cooking method pill — slightly different color to stand out */
+    .meal-meta-pill.method {
+      background: #EEF6FF;
+      border-color: #BFDBFE;
+      color: #1D4ED8;
     }
 
     .meal-cost { font-size: 14px; font-weight: 700; color: #C9550A; white-space: nowrap; padding-top: 2px; }
@@ -352,7 +359,7 @@
   <!-- ── COUNTRY ────────────────────────────────────────────────── -->
   <div class="card">
     <div class="card-label">🌍 Your country</div>
-    <input class="country-input" type="text" id="country" placeholder="e.g. Sweden, Germany, Spain..." />
+    <input class="country-input" type="text" id="country" placeholder="e.g. Sweden, Germany, Spain..."/>
   </div>
 
   <!-- ── MEALS + GOAL ───────────────────────────────────────────── -->
@@ -386,7 +393,7 @@
     </div>
   </div>
 
-  <!-- ── APPLIANCES (multi-select) ─────────────────────────────── -->
+  <!-- ── APPLIANCES (multi-select) ──────────────────────────────── -->
   <div class="card">
     <div class="card-label">🔌 Appliances you have <span style="font-weight:400;color:#C9A882;">(pick all that apply)</span></div>
     <div class="pills" id="appliance-pills">
@@ -433,23 +440,21 @@
     });
   });
 
-  // ── Multi-select appliance pills (toggle on/off) ─────────────────
+  // ── Multi-select appliance pills ─────────────────────────────────
   document.getElementById('appliance-pills').addEventListener('click', e => {
     const pill = e.target.closest('.pill');
     if (!pill) return;
     pill.classList.toggle('selected');
   });
 
-  // ── Get selected value from a single-select group ────────────────
   function getSelected(groupId) {
     const el = document.querySelector(`#${groupId} .pill.selected`);
     return el ? el.dataset.value : null;
   }
 
-  // ── Get all selected values from the appliance multi-select ──────
   function getAppliances() {
-    const selected = document.querySelectorAll('#appliance-pills .pill.selected');
-    return Array.from(selected).map(p => p.dataset.value);
+    return Array.from(document.querySelectorAll('#appliance-pills .pill.selected'))
+      .map(p => p.dataset.value);
   }
 
   // ── Meal icon by type ────────────────────────────────────────────
@@ -530,7 +535,7 @@
       'gain':     'gain muscle (higher calories and protein)'
     };
 
-    return `You are a budget-conscious meal planner. When generating a meal plan, always include: meal name, estimated cost per meal, prep time in minutes, exact portion sizes, a calorie estimate, and a consolidated shopping list at the end grouped by category (produce, dairy, grains, protein, other). Keep language simple and practical.
+    return `You are a budget-conscious meal planner. When generating a meal plan, always include: meal name, estimated cost per meal, prep time in minutes, exact portion sizes, a calorie estimate, the cooking method used, and a consolidated shopping list grouped by category. Keep language simple and practical.
 
 The user is based in ${country}. Use locally available, affordable ingredients typical to that region. Assume they have: ${appliances.join(', ')}. Their cooking skill level is ${skill}. Adjust recipe complexity accordingly.
 
@@ -540,11 +545,17 @@ USER INPUTS:
 - Goal: ${goalMap[goal] || goal}
 - Meals per day: ${meals}
 
-RULES:
-- Only suggest meals that can be made using the appliances listed above
+VARIETY RULES — these are strict and must be followed:
+- Do NOT repeat any ingredient as a main component across more than one meal in the same day. For example, if eggs are used in breakfast, do not use eggs as a main component in lunch or dinner.
+- Aim for variety in protein sources across meals (e.g. eggs for one meal, lentils for another, chicken or tuna for another).
+- Aim for variety in cooking methods (e.g. do not boil everything — mix boiling, frying, baking, steaming, or no-cook across meals).
+- Aim for variety in flavor profiles (e.g. do not make every meal savory and plain — vary between mild, spiced, tangy, or fresh).
+
+OTHER RULES:
+- Only suggest meals that can be made using: ${appliances.join(', ')}
 - Keep meals simple if skill is beginner, slightly more involved if intermediate
 - Use ingredients readily available in ${country} supermarkets
-- Prices should reflect local costs in ${country}
+- Prices should reflect realistic local costs in ${country}
 - Total estimated cost must stay under €${budget}
 - If the goal is weight loss, keep calories moderate (~1600-1800 kcal total)
 - If the goal is muscle gain, add more protein and calories (~2200-2500 kcal total)
@@ -564,7 +575,8 @@ JSON format:
       "cost": "€X.XX",
       "prepTime": "X mins",
       "portion": "e.g. 300g / 1 bowl",
-      "calories": "~XXX kcal"
+      "calories": "~XXX kcal",
+      "cookingMethod": "e.g. Boiled, Pan-fried, No-cook, Baked"
     }
   ],
   "shoppingList": {
@@ -599,9 +611,10 @@ JSON format:
             <div class="meal-name">${meal.name}</div>
             <div class="meal-desc">${meal.description}</div>
             <div class="meal-meta">
-              ${meal.prepTime ? `<span class="meal-meta-pill">⏱ ${meal.prepTime}</span>` : ''}
-              ${meal.portion  ? `<span class="meal-meta-pill">⚖️ ${meal.portion}</span>` : ''}
-              ${meal.calories ? `<span class="meal-meta-pill">🔥 ${meal.calories}</span>` : ''}
+              ${meal.cookingMethod ? `<span class="meal-meta-pill method">🍳 ${meal.cookingMethod}</span>` : ''}
+              ${meal.prepTime     ? `<span class="meal-meta-pill">⏱ ${meal.prepTime}</span>` : ''}
+              ${meal.portion      ? `<span class="meal-meta-pill">⚖️ ${meal.portion}</span>` : ''}
+              ${meal.calories     ? `<span class="meal-meta-pill">🔥 ${meal.calories}</span>` : ''}
             </div>
           </div>
           <div class="meal-cost">${meal.cost}</div>
