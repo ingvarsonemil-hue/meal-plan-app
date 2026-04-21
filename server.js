@@ -13,6 +13,26 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static(path.join(__dirname, "public")));
 
+// ✅ NEW: buildPrompt function with Claude fix
+function buildPrompt(userPrompt) {
+  const durationInstructions = `
+- The shoppingList should cover the entire week.
+- For 7-day plans: keep steps to maximum 3 per meal (not 5).
+- Keep ingredients to maximum 4 per meal.
+- Keep descriptions to one short sentence.
+- This is critical to stay within response limits.
+`;
+
+  return `
+You are a meal planning assistant.
+
+${durationInstructions}
+
+User request:
+${userPrompt}
+`;
+}
+
 app.post("/generate", async (req, res) => {
   const { prompt } = req.body;
 
@@ -21,6 +41,9 @@ app.post("/generate", async (req, res) => {
   }
 
   try {
+    // ✅ Use buildPrompt here
+    const finalPrompt = buildPrompt(prompt);
+
     const response = await fetch("https://api.anthropic.com/v1/messages", {
       method: "POST",
       headers: {
@@ -31,7 +54,7 @@ app.post("/generate", async (req, res) => {
       body: JSON.stringify({
         model: "claude-sonnet-4-5",
         max_tokens: 8000,
-        messages: [{ role: "user", content: prompt }]
+        messages: [{ role: "user", content: finalPrompt }]
       })
     });
 
