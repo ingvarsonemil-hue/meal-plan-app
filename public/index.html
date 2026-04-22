@@ -742,15 +742,22 @@
   }
 
   // ===== CHIP TOGGLES =====
-  // Don't use onclick on labels — the browser already toggles the checkbox on click.
-  // Instead, listen to the checkbox change event and sync the active class.
-  document.addEventListener('DOMContentLoaded', () => {
-    document.querySelectorAll('.chip input[type="checkbox"]').forEach(cb => {
-      cb.addEventListener('change', () => {
-        cb.closest('.chip').classList.toggle('active', cb.checked);
+  // We intercept the label click, prevent default (stops browser double-toggling
+  // the checkbox when the input is inside the label), then manually flip everything.
+  function initChips() {
+    document.querySelectorAll('.chip').forEach(chip => {
+      chip.addEventListener('click', function(e) {
+        e.preventDefault();
+        const cb = this.querySelector('input[type="checkbox"]');
+        if (!cb) return;
+        cb.checked = !cb.checked;
+        this.classList.toggle('active', cb.checked);
       });
     });
-  });
+  }
+
+  // Run immediately (script is at bottom of body, DOM is ready)
+  initChips();
 
   // ===== EXAMPLE TOGGLE =====
   function toggleExample() {
