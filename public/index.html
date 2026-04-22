@@ -15,438 +15,95 @@
       --text: #1a1a1a;
       --text-muted: #6b7280;
       --border: #e5e7eb;
-      --border-focus: #40916c;
       --radius: 12px;
       --radius-sm: 8px;
       --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 4px 16px rgba(0,0,0,0.06);
       --shadow-lg: 0 8px 32px rgba(0,0,0,0.12);
     }
-
     * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(--text); min-height: 100vh; font-size: 15px; line-height: 1.6; }
 
-    body {
-      font-family: 'DM Sans', sans-serif;
-      background: var(--cream);
-      color: var(--text);
-      min-height: 100vh;
-      font-size: 15px;
-      line-height: 1.6;
-    }
-
-    /* ===== HEADER ===== */
-    header {
-      background: var(--green);
-      padding: 16px 24px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    .logo {
-      font-family: 'Fraunces', serif;
-      font-size: 22px;
-      color: white;
-      font-weight: 700;
-      letter-spacing: -0.3px;
-    }
+    header { background: var(--green); padding: 16px 24px; display: flex; align-items: center; }
+    .logo { font-family: 'Fraunces', serif; font-size: 22px; color: white; font-weight: 700; }
     .logo span { color: #b7e4c7; }
 
-    /* ===== HERO ===== */
-    .hero {
-      background: linear-gradient(135deg, var(--green) 0%, var(--green-light) 100%);
-      color: white;
-      text-align: center;
-      padding: 48px 24px 56px;
-      position: relative;
-      overflow: hidden;
-    }
-    .hero::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Ccircle cx='30' cy='30' r='20'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
-    }
-    .hero-icon { font-size: 44px; margin-bottom: 12px; position: relative; }
-    .hero h1 {
-      font-family: 'Fraunces', serif;
-      font-size: clamp(26px, 5vw, 38px);
-      font-weight: 700;
-      line-height: 1.2;
-      margin-bottom: 12px;
-      position: relative;
-    }
-    .hero p {
-      font-size: 16px;
-      opacity: 0.88;
-      max-width: 480px;
-      margin: 0 auto 28px;
-      position: relative;
-    }
+    .hero { background: linear-gradient(135deg, var(--green) 0%, var(--green-light) 100%); color: white; text-align: center; padding: 48px 24px 56px; position: relative; overflow: hidden; }
+    .hero h1 { font-family: 'Fraunces', serif; font-size: clamp(26px, 5vw, 38px); font-weight: 700; line-height: 1.2; margin-bottom: 12px; }
+    .hero p { font-size: 16px; opacity: 0.88; max-width: 480px; margin: 0 auto 28px; }
+    .how-it-works { display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; }
+    .step { background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.25); border-radius: 50px; padding: 8px 16px; font-size: 13px; display: flex; align-items: center; gap: 7px; }
+    .step-num { background: white; color: var(--green); width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; }
 
-    /* ===== HOW IT WORKS ===== */
-    .how-it-works {
-      display: flex;
-      justify-content: center;
-      gap: 8px;
-      flex-wrap: wrap;
-      position: relative;
-    }
-    .step {
-      background: rgba(255,255,255,0.15);
-      border: 1px solid rgba(255,255,255,0.25);
-      border-radius: 50px;
-      padding: 8px 16px;
-      font-size: 13px;
-      display: flex;
-      align-items: center;
-      gap: 7px;
-      backdrop-filter: blur(4px);
-    }
-    .step-num {
-      background: white;
-      color: var(--green);
-      width: 20px; height: 20px;
-      border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 11px; font-weight: 700;
-      flex-shrink: 0;
-    }
-
-    /* ===== EXAMPLE PLAN ===== */
-    .example-wrapper {
-      max-width: 680px;
-      margin: -24px auto 0;
-      padding: 0 16px;
-      position: relative;
-      z-index: 2;
-    }
-    .example-toggle {
-      background: white;
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      overflow: hidden;
-    }
-    .example-btn {
-      width: 100%;
-      background: none;
-      border: none;
-      padding: 14px 18px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      cursor: pointer;
-      font-family: 'DM Sans', sans-serif;
-      font-size: 14px;
-      font-weight: 600;
-      color: var(--green);
-      gap: 8px;
-    }
+    .example-wrapper { max-width: 680px; margin: -24px auto 0; padding: 0 16px; position: relative; z-index: 2; }
+    .example-toggle { background: white; border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; }
+    .example-btn { width: 100%; background: none; border: none; padding: 14px 18px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 600; color: var(--green); }
     .example-btn:hover { background: var(--green-faint); }
-    .example-btn .arrow { transition: transform 0.25s; font-size: 12px; }
-    .example-btn.open .arrow { transform: rotate(180deg); }
-    .example-body {
-      display: none;
-      border-top: 1px solid var(--border);
-      padding: 16px;
-      gap: 10px;
-      flex-direction: column;
-    }
+    .example-body { display: none; border-top: 1px solid var(--border); padding: 16px; flex-direction: column; gap: 10px; }
     .example-body.visible { display: flex; }
-    .example-meal {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 12px 14px;
-      background: var(--green-faint);
-      border-radius: var(--radius-sm);
-      gap: 12px;
-    }
+    .example-meal { display: flex; align-items: center; justify-content: space-between; padding: 12px 14px; background: var(--green-faint); border-radius: var(--radius-sm); gap: 12px; }
     .meal-left { display: flex; align-items: center; gap: 10px; }
     .meal-icon { font-size: 20px; }
-    .meal-info {}
     .meal-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); font-weight: 600; }
     .meal-name { font-weight: 600; font-size: 14px; }
     .meal-meta { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
     .meal-cost { font-weight: 700; color: var(--green); font-size: 15px; white-space: nowrap; }
     .example-note { font-size: 12px; color: var(--text-muted); text-align: center; font-style: italic; }
 
-    /* ===== MAIN FORM ===== */
-    .main {
-      max-width: 680px;
-      margin: 24px auto 60px;
-      padding: 0 16px;
-    }
+    .main { max-width: 680px; margin: 24px auto 60px; padding: 0 16px; }
+    .card { background: white; border-radius: var(--radius); border: 1px solid var(--border); box-shadow: var(--shadow); padding: 24px; margin-bottom: 16px; }
+    .section-title { font-family: 'Fraunces', serif; font-size: 17px; font-weight: 600; margin-bottom: 18px; color: var(--green); display: flex; align-items: center; gap: 8px; }
 
-    .card {
-      background: white;
-      border-radius: var(--radius);
-      border: 1px solid var(--border);
-      box-shadow: var(--shadow);
-      padding: 24px;
-      margin-bottom: 16px;
-    }
-
-    .section-title {
-      font-family: 'Fraunces', serif;
-      font-size: 17px;
-      font-weight: 600;
-      margin-bottom: 18px;
-      color: var(--green);
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    /* ===== FORM FIELDS ===== */
-    label {
-      display: block;
-      font-size: 13px;
-      font-weight: 600;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      letter-spacing: 0.4px;
-      margin-bottom: 6px;
-    }
-
-    input[type="text"],
-    input[type="number"],
-    select,
-    textarea {
-      width: 100%;
-      padding: 11px 14px;
-      border: 1.5px solid var(--border);
-      border-radius: var(--radius-sm);
-      font-family: 'DM Sans', sans-serif;
-      font-size: 15px;
-      color: var(--text);
-      background: white;
-      outline: none;
-      transition: border-color 0.2s;
-    }
-    input[type="text"]:focus,
-    input[type="number"]:focus,
-    select:focus,
-    textarea:focus {
-      border-color: var(--border-focus);
-      box-shadow: 0 0 0 3px rgba(64,145,108,0.12);
-    }
+    .field-label { display: block; font-size: 13px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 6px; }
+    input[type="text"], input[type="number"], textarea { width: 100%; padding: 11px 14px; border: 1.5px solid var(--border); border-radius: var(--radius-sm); font-family: 'DM Sans', sans-serif; font-size: 15px; color: var(--text); background: white; outline: none; transition: border-color 0.2s; }
+    input[type="text"]:focus, input[type="number"]:focus, textarea:focus { border-color: var(--green); box-shadow: 0 0 0 3px rgba(64,145,108,0.12); }
     textarea { resize: vertical; min-height: 72px; }
-
-    .input-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 14px;
-    }
+    .input-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
     @media(max-width: 480px) { .input-row { grid-template-columns: 1fr; } }
-
     .field { margin-bottom: 16px; }
     .field:last-child { margin-bottom: 0; }
-
-    .budget-wrap {
-      position: relative;
-      display: flex;
-      align-items: center;
-    }
-    .currency-prefix {
-      position: absolute;
-      left: 12px;
-      font-weight: 600;
-      color: var(--text-muted);
-      pointer-events: none;
-    }
+    .budget-wrap { position: relative; display: flex; align-items: center; }
+    .currency-prefix { position: absolute; left: 12px; font-weight: 600; color: var(--text-muted); pointer-events: none; }
     .budget-wrap input { padding-left: 30px; }
 
-    /* ===== PILL TOGGLES ===== */
-    .pill-group {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
-    .pill {
-      padding: 8px 14px;
-      border: 1.5px solid var(--border);
-      border-radius: 50px;
-      font-size: 13px;
-      font-weight: 500;
-      cursor: pointer;
-      transition: all 0.15s;
-      background: white;
-      color: var(--text);
-      user-select: none;
-    }
+    .pill-group { display: flex; flex-wrap: wrap; gap: 8px; }
+    .pill { padding: 8px 14px; border: 1.5px solid var(--border); border-radius: 50px; font-size: 13px; font-weight: 500; cursor: pointer; transition: all 0.15s; background: white; color: var(--text); user-select: none; }
     .pill:hover { border-color: var(--green-light); color: var(--green); background: var(--green-faint); }
-    .pill.active {
-      background: var(--green);
-      color: white;
-      border-color: var(--green);
-    }
-    .pill input { display: none; }
+    .pill.active { background: var(--green); color: white; border-color: var(--green); }
 
-    /* ===== CHIP TOGGLES (appliances, macros) ===== */
-    .chip-group {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
-    .chip {
-      padding: 7px 13px;
-      border: 1.5px solid var(--border);
-      border-radius: var(--radius-sm);
-      font-size: 13px;
-      cursor: pointer;
-      transition: all 0.15s;
-      background: white;
-      color: var(--text);
-      user-select: none;
-      display: flex;
-      align-items: center;
-      gap: 5px;
-    }
+    .chip-group { display: flex; flex-wrap: wrap; gap: 8px; }
+    .chip { padding: 7px 13px; border: 1.5px solid var(--border); border-radius: var(--radius-sm); font-size: 13px; cursor: pointer; transition: all 0.15s; background: white; color: var(--text); user-select: none; }
     .chip:hover { border-color: var(--green-light); background: var(--green-faint); }
     .chip.active { background: var(--green-pale); border-color: var(--green); color: var(--green); font-weight: 600; }
-    .chip input { display: none; }
 
-    /* ===== RANGE SLIDER ===== */
     .slider-wrap { display: flex; align-items: center; gap: 12px; }
-    input[type="range"] {
-      flex: 1;
-      -webkit-appearance: none;
-      height: 4px;
-      background: var(--green-pale);
-      border-radius: 4px;
-      outline: none;
-    }
-    input[type="range"]::-webkit-slider-thumb {
-      -webkit-appearance: none;
-      width: 20px; height: 20px;
-      border-radius: 50%;
-      background: var(--green);
-      cursor: pointer;
-      border: 3px solid white;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.2);
-    }
-    .slider-val {
-      min-width: 44px;
-      text-align: center;
-      font-weight: 700;
-      color: var(--green);
-      font-size: 16px;
-    }
+    input[type="range"] { flex: 1; -webkit-appearance: none; height: 4px; background: var(--green-pale); border-radius: 4px; outline: none; }
+    input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 20px; height: 20px; border-radius: 50%; background: var(--green); cursor: pointer; border: 3px solid white; box-shadow: 0 1px 4px rgba(0,0,0,0.2); }
+    .slider-val { min-width: 44px; text-align: center; font-weight: 700; color: var(--green); font-size: 16px; }
 
-    /* ===== HINT ===== */
-    .hint {
-      font-size: 12px;
-      color: var(--text-muted);
-      margin-top: 6px;
-      display: flex;
-      align-items: flex-start;
-      gap: 5px;
-    }
-    .hint::before { content: '💡'; font-size: 12px; flex-shrink: 0; margin-top: 1px; }
+    .hint { font-size: 12px; color: var(--text-muted); margin-top: 6px; }
 
-    /* ===== GENERATE BUTTON ===== */
-    .btn-generate {
-      width: 100%;
-      background: var(--green);
-      color: white;
-      border: none;
-      border-radius: var(--radius);
-      padding: 16px;
-      font-family: 'DM Sans', sans-serif;
-      font-size: 17px;
-      font-weight: 700;
-      cursor: pointer;
-      transition: background 0.2s, transform 0.1s, box-shadow 0.2s;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      box-shadow: 0 4px 16px rgba(45,106,79,0.35);
-      letter-spacing: -0.2px;
-    }
-    .btn-generate:hover { background: var(--green-light); box-shadow: 0 6px 20px rgba(45,106,79,0.45); transform: translateY(-1px); }
-    .btn-generate:active { transform: translateY(0); }
+    .btn-generate { width: 100%; background: var(--green); color: white; border: none; border-radius: var(--radius); padding: 16px; font-family: 'DM Sans', sans-serif; font-size: 17px; font-weight: 700; cursor: pointer; transition: background 0.2s, transform 0.1s; display: flex; align-items: center; justify-content: center; gap: 10px; box-shadow: 0 4px 16px rgba(45,106,79,0.35); }
+    .btn-generate:hover { background: var(--green-light); transform: translateY(-1px); }
     .btn-generate:disabled { opacity: 0.65; cursor: not-allowed; transform: none; }
 
-    /* ===== LOADING ===== */
-    .loading {
-      display: none;
-      text-align: center;
-      padding: 40px 20px;
-    }
+    .loading { display: none; text-align: center; padding: 40px 20px; }
     .loading.visible { display: block; }
-    .spinner {
-      width: 40px; height: 40px;
-      border: 3px solid var(--green-pale);
-      border-top-color: var(--green);
-      border-radius: 50%;
-      animation: spin 0.8s linear infinite;
-      margin: 0 auto 16px;
-    }
+    .spinner { width: 40px; height: 40px; border: 3px solid var(--green-pale); border-top-color: var(--green); border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 16px; }
     @keyframes spin { to { transform: rotate(360deg); } }
-    .loading p { color: var(--text-muted); font-size: 15px; }
-    .loading-tips {
-      margin-top: 12px;
-      font-size: 13px;
-      color: var(--text-muted);
-      font-style: italic;
-    }
+    .loading p { color: var(--text-muted); }
+    .loading-tip { margin-top: 8px; font-size: 13px; color: var(--text-muted); font-style: italic; }
 
-    /* ===== RESULT ===== */
-    #result {
-      display: none;
-      background: white;
-      border-radius: var(--radius);
-      border: 1px solid var(--border);
-      box-shadow: var(--shadow-lg);
-      overflow: hidden;
-      margin-top: 20px;
-    }
+    #result { display: none; background: white; border-radius: var(--radius); border: 1px solid var(--border); box-shadow: var(--shadow-lg); overflow: hidden; margin-top: 20px; }
     #result.visible { display: block; }
-    .result-header {
-      background: var(--green);
-      color: white;
-      padding: 20px 24px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-    .result-header h2 {
-      font-family: 'Fraunces', serif;
-      font-size: 20px;
-      font-weight: 700;
-    }
+    .result-header { background: var(--green); color: white; padding: 20px 24px; }
+    .result-header h2 { font-family: 'Fraunces', serif; font-size: 20px; font-weight: 700; }
     .result-header p { font-size: 13px; opacity: 0.8; margin-top: 2px; }
-    .result-body {
-      padding: 24px;
-      white-space: pre-wrap;
-      font-size: 14px;
-      line-height: 1.75;
-      color: var(--text);
-    }
-    .result-body strong { color: var(--green); }
+    .result-body { padding: 24px; white-space: pre-wrap; font-size: 14px; line-height: 1.75; }
 
-    /* ===== FOOTER ===== */
-    footer {
-      text-align: center;
-      padding: 24px;
-      font-size: 12px;
-      color: var(--text-muted);
-      border-top: 1px solid var(--border);
-    }
-
-    /* ===== ERROR ===== */
-    .error-msg {
-      background: #fef2f2;
-      border: 1px solid #fecaca;
-      color: #b91c1c;
-      border-radius: var(--radius-sm);
-      padding: 12px 16px;
-      font-size: 14px;
-      margin-top: 12px;
-      display: none;
-    }
+    .error-msg { background: #fef2f2; border: 1px solid #fecaca; color: #b91c1c; border-radius: var(--radius-sm); padding: 12px 16px; font-size: 14px; margin-top: 12px; display: none; }
     .error-msg.visible { display: block; }
+
+    footer { text-align: center; padding: 24px; font-size: 12px; color: var(--text-muted); border-top: 1px solid var(--border); }
   </style>
 </head>
 <body>
@@ -455,9 +112,7 @@
   <div class="logo">🥗 Meal<span>zy</span></div>
 </header>
 
-<!-- HERO -->
 <section class="hero">
-  <div class="hero-icon">🥗</div>
   <h1>Your Personalised Meal Plan,<br>Built Around Your Budget</h1>
   <p>Tell us your preferences — get a full plan with exact recipes, real quantities, accurate costs, and a shopping list.</p>
   <div class="how-it-works">
@@ -467,473 +122,336 @@
   </div>
 </section>
 
-<!-- EXAMPLE PLAN -->
 <div class="example-wrapper">
   <div class="example-toggle">
-    <button class="example-btn" id="exampleBtn" onclick="toggleExample()">
+    <button class="example-btn" id="exampleBtn">
       <span>👀 See an example plan</span>
-      <span class="arrow">▼</span>
+      <span id="exampleArrow">▼</span>
     </button>
     <div class="example-body" id="exampleBody">
       <div class="example-meal">
-        <div class="meal-left">
-          <div class="meal-icon">🌅</div>
-          <div class="meal-info">
-            <div class="meal-label">Breakfast</div>
-            <div class="meal-name">Oat porridge with banana & cinnamon</div>
-            <div class="meal-meta">⏱ 8 mins · 🔥 380 kcal · 80g oats, 1 banana, ½ tsp cinnamon, 300ml milk</div>
-          </div>
-        </div>
+        <div class="meal-left"><div class="meal-icon">🌅</div><div><div class="meal-label">Breakfast</div><div class="meal-name">Oat porridge with banana & cinnamon</div><div class="meal-meta">⏱ 8 mins · 🔥 380 kcal · 80g oats, 1 banana, ½ tsp cinnamon, 300ml milk</div></div></div>
         <div class="meal-cost">€1.10</div>
       </div>
       <div class="example-meal">
-        <div class="meal-left">
-          <div class="meal-icon">☀️</div>
-          <div class="meal-info">
-            <div class="meal-label">Lunch</div>
-            <div class="meal-name">Red lentil soup with sourdough</div>
-            <div class="meal-meta">⏱ 22 mins · 🔥 520 kcal · 150g lentils, 1 carrot, 1 onion, 1 tsp cumin, 1 slice bread</div>
-          </div>
-        </div>
+        <div class="meal-left"><div class="meal-icon">☀️</div><div><div class="meal-label">Lunch</div><div class="meal-name">Red lentil soup with sourdough</div><div class="meal-meta">⏱ 22 mins · 🔥 520 kcal · 150g lentils, 1 carrot, 1 onion, 1 tsp cumin</div></div></div>
         <div class="meal-cost">€1.85</div>
       </div>
       <div class="example-meal">
-        <div class="meal-left">
-          <div class="meal-icon">🌙</div>
-          <div class="meal-info">
-            <div class="meal-label">Dinner</div>
-            <div class="meal-name">Pasta with tomato sauce & fried egg</div>
-            <div class="meal-meta">⏱ 18 mins · 🔥 680 kcal · 120g pasta, 200g canned tomatoes, 2 eggs, 1 garlic clove, 1 tbsp olive oil</div>
-          </div>
-        </div>
+        <div class="meal-left"><div class="meal-icon">🌙</div><div><div class="meal-label">Dinner</div><div class="meal-name">Pasta with tomato sauce & fried egg</div><div class="meal-meta">⏱ 18 mins · 🔥 680 kcal · 120g pasta, 200g canned tomatoes, 2 eggs</div></div></div>
         <div class="meal-cost">€2.20</div>
       </div>
-      <div class="example-note">👆 Example only — your real plan will use your country's prices, stores & preferences.</div>
+      <div class="example-note">👆 Example only — your real plan uses your country's prices & preferences.</div>
     </div>
   </div>
 </div>
 
-<!-- FORM -->
 <main class="main">
 
-  <!-- Budget & Basics -->
   <div class="card">
     <div class="section-title">💰 Budget & Basics</div>
-
     <div class="input-row">
       <div class="field">
-        <label>Daily budget</label>
+        <span class="field-label">Daily budget</span>
         <div class="budget-wrap">
           <span class="currency-prefix">€</span>
           <input type="number" id="budget" placeholder="e.g. 8" min="1" max="100" step="0.5"/>
         </div>
       </div>
       <div class="field">
-        <label>Your country</label>
+        <span class="field-label">Your country</span>
         <input type="text" id="country" placeholder="e.g. Sweden, Germany…"/>
       </div>
     </div>
-
     <div class="field">
-      <label>Plan duration (days)</label>
+      <span class="field-label">Plan duration (days)</span>
       <div class="slider-wrap">
-        <input type="range" id="daysSlider" min="1" max="30" value="7" oninput="document.getElementById('daysVal').textContent=this.value"/>
+        <input type="range" id="daysSlider" min="1" max="30" value="7"/>
         <span class="slider-val" id="daysVal">7</span>
       </div>
-      <div class="hint">Drag to choose 1–30 days</div>
+      <div class="hint">💡 Drag to choose 1–30 days</div>
     </div>
-
     <div class="field">
-      <label>Meals per day</label>
-      <div class="pill-group">
-        <label class="pill active" onclick="selectPill(this,'meals')"><input type="radio" name="meals" value="2"/> 2 meals</label>
-        <label class="pill" onclick="selectPill(this,'meals')"><input type="radio" name="meals" value="3"/> 3 meals</label>
-        <label class="pill" onclick="selectPill(this,'meals')"><input type="radio" name="meals" value="4"/> 4 meals</label>
-        <label class="pill" onclick="selectPill(this,'meals')"><input type="radio" name="meals" value="5"/> 5 meals</label>
+      <span class="field-label">Meals per day</span>
+      <div class="pill-group" data-group="meals" data-type="single">
+        <div class="pill active" data-value="2">2 meals</div>
+        <div class="pill" data-value="3">3 meals</div>
+        <div class="pill" data-value="4">4 meals</div>
+        <div class="pill" data-value="5">5 meals</div>
       </div>
     </div>
   </div>
 
-  <!-- Goals & Diet -->
   <div class="card">
     <div class="section-title">🎯 Goals & Diet</div>
-
     <div class="field">
-      <label>Your goal</label>
-      <div class="pill-group">
-        <label class="pill active" onclick="selectPill(this,'goal')"><input type="radio" name="goal" value="Maintain weight"/> Maintain weight</label>
-        <label class="pill" onclick="selectPill(this,'goal')"><input type="radio" name="goal" value="Lose weight"/> Lose weight</label>
-        <label class="pill" onclick="selectPill(this,'goal')"><input type="radio" name="goal" value="Gain muscle"/> Gain muscle</label>
-        <label class="pill" onclick="selectPill(this,'goal')"><input type="radio" name="goal" value="Improve energy"/> Improve energy</label>
-        <label class="pill" onclick="selectPill(this,'goal')"><input type="radio" name="goal" value="Eat healthier"/> Eat healthier</label>
-        <label class="pill" onclick="selectPill(this,'goal')"><input type="radio" name="goal" value="Save money"/> Save money</label>
+      <span class="field-label">Your goal</span>
+      <div class="pill-group" data-group="goal" data-type="single">
+        <div class="pill active" data-value="Maintain weight">Maintain weight</div>
+        <div class="pill" data-value="Lose weight">Lose weight</div>
+        <div class="pill" data-value="Gain muscle">Gain muscle</div>
+        <div class="pill" data-value="Improve energy">Improve energy</div>
+        <div class="pill" data-value="Eat healthier">Eat healthier</div>
+        <div class="pill" data-value="Save money">Save money</div>
       </div>
     </div>
-
     <div class="field">
-      <label>Diet type</label>
-      <div class="pill-group">
-        <label class="pill active" onclick="selectPill(this,'diet')"><input type="radio" name="diet" value="No restriction"/> No restriction</label>
-        <label class="pill" onclick="selectPill(this,'diet')"><input type="radio" name="diet" value="Vegetarian"/> Vegetarian</label>
-        <label class="pill" onclick="selectPill(this,'diet')"><input type="radio" name="diet" value="Vegan"/> Vegan</label>
-        <label class="pill" onclick="selectPill(this,'diet')"><input type="radio" name="diet" value="High protein"/> High protein</label>
-        <label class="pill" onclick="selectPill(this,'diet')"><input type="radio" name="diet" value="Carnivore"/> Carnivore</label>
-        <label class="pill" onclick="selectPill(this,'diet')"><input type="radio" name="diet" value="Flexitarian"/> Flexitarian</label>
-        <label class="pill" onclick="selectPill(this,'diet')"><input type="radio" name="diet" value="Keto"/> Keto</label>
-        <label class="pill" onclick="selectPill(this,'diet')"><input type="radio" name="diet" value="Mediterranean"/> Mediterranean</label>
+      <span class="field-label">Diet type</span>
+      <div class="pill-group" data-group="diet" data-type="single">
+        <div class="pill active" data-value="No restriction">No restriction</div>
+        <div class="pill" data-value="Vegetarian">Vegetarian</div>
+        <div class="pill" data-value="Vegan">Vegan</div>
+        <div class="pill" data-value="High protein">High protein</div>
+        <div class="pill" data-value="Carnivore">Carnivore</div>
+        <div class="pill" data-value="Flexitarian">Flexitarian</div>
+        <div class="pill" data-value="Keto">Keto</div>
+        <div class="pill" data-value="Mediterranean">Mediterranean</div>
       </div>
     </div>
-
     <div class="field">
-      <label>Cuisine preference (optional)</label>
-      <div class="pill-group" id="cuisineGroup" data-group="cuisines">
-        <div class="chip" data-value="Any" onclick="toggleChip(this)">🌍 Any</div>
-        <div class="chip" data-value="Italian" onclick="toggleChip(this)">🍝 Italian</div>
-        <div class="chip" data-value="Asian" onclick="toggleChip(this)">🥢 Asian</div>
-        <div class="chip" data-value="Mexican" onclick="toggleChip(this)">🌮 Mexican</div>
-        <div class="chip" data-value="Middle Eastern" onclick="toggleChip(this)">🧆 Middle Eastern</div>
-        <div class="chip" data-value="Nordic" onclick="toggleChip(this)">🐟 Nordic</div>
-        <div class="chip" data-value="American" onclick="toggleChip(this)">🍔 American</div>
-        <div class="chip" data-value="Indian" onclick="toggleChip(this)">🍛 Indian</div>
+      <span class="field-label">Cuisine preference (optional)</span>
+      <div class="chip-group" data-group="cuisines" data-type="multi">
+        <div class="chip" data-value="Any">🌍 Any</div>
+        <div class="chip" data-value="Italian">🍝 Italian</div>
+        <div class="chip" data-value="Asian">🥢 Asian</div>
+        <div class="chip" data-value="Mexican">🌮 Mexican</div>
+        <div class="chip" data-value="Middle Eastern">🧆 Middle Eastern</div>
+        <div class="chip" data-value="Nordic">🐟 Nordic</div>
+        <div class="chip" data-value="American">🍔 American</div>
+        <div class="chip" data-value="Indian">🍛 Indian</div>
       </div>
     </div>
   </div>
 
-  <!-- Allergies & Preferences -->
   <div class="card">
     <div class="section-title">🚫 Allergies & Dislikes</div>
-
     <div class="field">
-      <label>Allergies (select all that apply)</label>
-      <div class="chip-group" data-group="allergies">
-        <div class="chip" data-value="gluten" onclick="toggleChip(this)">🌾 Gluten</div>
-        <div class="chip" data-value="dairy" onclick="toggleChip(this)">🥛 Dairy</div>
-        <div class="chip" data-value="nuts" onclick="toggleChip(this)">🥜 Nuts</div>
-        <div class="chip" data-value="eggs" onclick="toggleChip(this)">🥚 Eggs</div>
-        <div class="chip" data-value="soy" onclick="toggleChip(this)">🌱 Soy</div>
-        <div class="chip" data-value="shellfish" onclick="toggleChip(this)">🦐 Shellfish</div>
-        <div class="chip" data-value="fish" onclick="toggleChip(this)">🐟 Fish</div>
+      <span class="field-label">Allergies</span>
+      <div class="chip-group" data-group="allergies" data-type="multi">
+        <div class="chip" data-value="gluten">🌾 Gluten</div>
+        <div class="chip" data-value="dairy">🥛 Dairy</div>
+        <div class="chip" data-value="nuts">🥜 Nuts</div>
+        <div class="chip" data-value="eggs">🥚 Eggs</div>
+        <div class="chip" data-value="soy">🌱 Soy</div>
+        <div class="chip" data-value="shellfish">🦐 Shellfish</div>
+        <div class="chip" data-value="fish">🐟 Fish</div>
       </div>
     </div>
-
     <div class="field">
-      <label>Foods you dislike or want to avoid</label>
-      <textarea id="dislikes" placeholder="e.g. I hate mushrooms, no lamb, not a fan of lentils…"></textarea>
+      <span class="field-label">Foods you dislike or want to avoid</span>
+      <textarea id="dislikes" placeholder="e.g. I hate mushrooms, no lamb…"></textarea>
     </div>
   </div>
 
-  <!-- Macros & Protein -->
   <div class="card">
     <div class="section-title">💪 Protein & Macros</div>
-
     <div class="field">
-      <label>Preferred protein sources</label>
-      <div class="chip-group" data-group="proteins">
-        <div class="chip active" data-value="chicken" onclick="toggleChip(this)">🍗 Chicken</div>
-        <div class="chip active" data-value="eggs" onclick="toggleChip(this)">🥚 Eggs</div>
-        <div class="chip active" data-value="lentils" onclick="toggleChip(this)">🌱 Lentils</div>
-        <div class="chip active" data-value="chickpeas" onclick="toggleChip(this)">🫘 Chickpeas</div>
-        <div class="chip" data-value="beef" onclick="toggleChip(this)">🥩 Beef</div>
-        <div class="chip" data-value="pork" onclick="toggleChip(this)">🐷 Pork</div>
-        <div class="chip" data-value="fish" onclick="toggleChip(this)">🐟 Fish</div>
-        <div class="chip" data-value="tofu" onclick="toggleChip(this)">🫙 Tofu</div>
-        <div class="chip" data-value="greek yogurt" onclick="toggleChip(this)">🥛 Greek yogurt</div>
-        <div class="chip" data-value="canned tuna" onclick="toggleChip(this)">🐟 Canned tuna</div>
-        <div class="chip" data-value="cottage cheese" onclick="toggleChip(this)">🧀 Cottage cheese</div>
+      <span class="field-label">Preferred protein sources</span>
+      <div class="chip-group" data-group="proteins" data-type="multi">
+        <div class="chip active" data-value="chicken">🍗 Chicken</div>
+        <div class="chip active" data-value="eggs">🥚 Eggs</div>
+        <div class="chip active" data-value="lentils">🌱 Lentils</div>
+        <div class="chip active" data-value="chickpeas">🫘 Chickpeas</div>
+        <div class="chip" data-value="beef">🥩 Beef</div>
+        <div class="chip" data-value="pork">🐷 Pork</div>
+        <div class="chip" data-value="fish">🐟 Fish</div>
+        <div class="chip" data-value="tofu">🫙 Tofu</div>
+        <div class="chip" data-value="greek yogurt">🥛 Greek yogurt</div>
+        <div class="chip" data-value="canned tuna">🐟 Canned tuna</div>
+        <div class="chip" data-value="cottage cheese">🧀 Cottage cheese</div>
       </div>
     </div>
-
     <div class="field">
-      <label>Preferred carbohydrates</label>
-      <div class="chip-group" data-group="carbs">
-        <div class="chip active" data-value="pasta" onclick="toggleChip(this)">🍝 Pasta</div>
-        <div class="chip active" data-value="bread" onclick="toggleChip(this)">🍞 Bread</div>
-        <div class="chip active" data-value="oats" onclick="toggleChip(this)">🥣 Oats</div>
-        <div class="chip active" data-value="potatoes" onclick="toggleChip(this)">🥔 Potatoes</div>
-        <div class="chip" data-value="rice" onclick="toggleChip(this)">🍚 Rice</div>
-        <div class="chip" data-value="sweet potato" onclick="toggleChip(this)">🍠 Sweet potato</div>
-        <div class="chip" data-value="quinoa" onclick="toggleChip(this)">🌾 Quinoa</div>
-        <div class="chip" data-value="wraps" onclick="toggleChip(this)">🫓 Wraps</div>
+      <span class="field-label">Preferred carbohydrates</span>
+      <div class="chip-group" data-group="carbs" data-type="multi">
+        <div class="chip active" data-value="pasta">🍝 Pasta</div>
+        <div class="chip active" data-value="bread">🍞 Bread</div>
+        <div class="chip active" data-value="oats">🥣 Oats</div>
+        <div class="chip active" data-value="potatoes">🥔 Potatoes</div>
+        <div class="chip" data-value="rice">🍚 Rice</div>
+        <div class="chip" data-value="sweet potato">🍠 Sweet potato</div>
+        <div class="chip" data-value="quinoa">🌾 Quinoa</div>
+        <div class="chip" data-value="wraps">🫓 Wraps</div>
       </div>
     </div>
-
     <div class="field">
-      <label>Vegetables you enjoy</label>
-      <div class="chip-group" data-group="vegetables">
-        <div class="chip active" data-value="broccoli" onclick="toggleChip(this)">🥦 Broccoli</div>
-        <div class="chip active" data-value="carrots" onclick="toggleChip(this)">🥕 Carrots</div>
-        <div class="chip active" data-value="onions" onclick="toggleChip(this)">🧅 Onions</div>
-        <div class="chip active" data-value="tomatoes" onclick="toggleChip(this)">🍅 Tomatoes</div>
-        <div class="chip" data-value="spinach" onclick="toggleChip(this)">🥬 Spinach</div>
-        <div class="chip" data-value="zucchini" onclick="toggleChip(this)">🥒 Zucchini</div>
-        <div class="chip" data-value="bell peppers" onclick="toggleChip(this)">🫑 Bell peppers</div>
-        <div class="chip" data-value="mushrooms" onclick="toggleChip(this)">🍄 Mushrooms</div>
-        <div class="chip" data-value="cabbage" onclick="toggleChip(this)">🥬 Cabbage</div>
-        <div class="chip" data-value="cucumber" onclick="toggleChip(this)">🥒 Cucumber</div>
+      <span class="field-label">Vegetables you enjoy</span>
+      <div class="chip-group" data-group="vegetables" data-type="multi">
+        <div class="chip active" data-value="broccoli">🥦 Broccoli</div>
+        <div class="chip active" data-value="carrots">🥕 Carrots</div>
+        <div class="chip active" data-value="onions">🧅 Onions</div>
+        <div class="chip active" data-value="tomatoes">🍅 Tomatoes</div>
+        <div class="chip" data-value="spinach">🥬 Spinach</div>
+        <div class="chip" data-value="zucchini">🥒 Zucchini</div>
+        <div class="chip" data-value="bell peppers">🫑 Bell peppers</div>
+        <div class="chip" data-value="mushrooms">🍄 Mushrooms</div>
+        <div class="chip" data-value="cabbage">🥬 Cabbage</div>
+        <div class="chip" data-value="cucumber">🥒 Cucumber</div>
       </div>
-      <div class="hint">Select what you like — the AI will rotate through these across your plan.</div>
+      <div class="hint">💡 Select what you like — the AI will rotate through these.</div>
     </div>
   </div>
 
-  <!-- Kitchen & Skill -->
   <div class="card">
     <div class="section-title">🍳 Kitchen & Skill</div>
-
     <div class="field">
-      <label>Appliances you have</label>
-      <div class="chip-group" data-group="appliances">
-        <div class="chip active" data-value="stovetop" onclick="toggleChip(this)">🍳 Stovetop</div>
-        <div class="chip" data-value="microwave" onclick="toggleChip(this)">📡 Microwave</div>
-        <div class="chip" data-value="oven" onclick="toggleChip(this)">🔥 Oven</div>
-        <div class="chip" data-value="kettle" onclick="toggleChip(this)">☕ Kettle</div>
-        <div class="chip" data-value="blender" onclick="toggleChip(this)">🥤 Blender</div>
-        <div class="chip" data-value="air fryer" onclick="toggleChip(this)">💨 Air fryer</div>
+      <span class="field-label">Appliances you have</span>
+      <div class="chip-group" data-group="appliances" data-type="multi">
+        <div class="chip active" data-value="stovetop">🍳 Stovetop</div>
+        <div class="chip" data-value="microwave">📡 Microwave</div>
+        <div class="chip" data-value="oven">🔥 Oven</div>
+        <div class="chip" data-value="kettle">☕ Kettle</div>
+        <div class="chip" data-value="blender">🥤 Blender</div>
+        <div class="chip" data-value="air fryer">💨 Air fryer</div>
       </div>
-      <div class="hint">Only select what you actually have — meals will be built around these only.</div>
+      <div class="hint">💡 Only select what you actually have.</div>
     </div>
-
     <div class="field">
-      <label>Cooking skill level</label>
-      <div class="pill-group">
-        <label class="pill active" onclick="selectPill(this,'skill')"><input type="radio" name="skill" value="Beginner"/> 🟢 Beginner</label>
-        <label class="pill" onclick="selectPill(this,'skill')"><input type="radio" name="skill" value="Intermediate"/> 🟡 Intermediate</label>
-        <label class="pill" onclick="selectPill(this,'skill')"><input type="radio" name="skill" value="Advanced"/> 🔴 Advanced</label>
+      <span class="field-label">Cooking skill level</span>
+      <div class="pill-group" data-group="skill" data-type="single">
+        <div class="pill active" data-value="Beginner">🟢 Beginner</div>
+        <div class="pill" data-value="Intermediate">🟡 Intermediate</div>
+        <div class="pill" data-value="Advanced">🔴 Advanced</div>
       </div>
     </div>
   </div>
 
-  <!-- Generate -->
-  <button class="btn-generate" id="generateBtn" onclick="generate()">
-    ✨ Generate My Meal Plan
-  </button>
+  <button class="btn-generate" id="generateBtn">✨ Generate My Meal Plan</button>
   <div class="error-msg" id="errorMsg"></div>
 
-  <!-- Loading -->
   <div class="loading" id="loading">
     <div class="spinner"></div>
     <p>Building your personalised plan…</p>
-    <div class="loading-tips" id="loadingTip">Finding the best meals for your budget & preferences</div>
+    <div class="loading-tip" id="loadingTip">Finding the best meals for your budget & preferences</div>
   </div>
 
-  <!-- Result -->
   <div id="result">
     <div class="result-header">
-      <div>
-        <h2>🥗 Your Meal Plan</h2>
-        <p id="resultMeta"></p>
-      </div>
+      <h2>🥗 Your Meal Plan</h2>
+      <p id="resultMeta"></p>
     </div>
     <div class="result-body" id="resultBody"></div>
   </div>
 
 </main>
 
-<footer>
-  Mealzy · Powered by Claude AI · Free to use
-</footer>
+<footer>Mealzy · Powered by Claude AI · Free to use</footer>
 
 <script>
-  // ===== PILL SELECTS (radio-style) =====
-  function selectPill(el, name) {
-    document.querySelectorAll(`.pill-group .pill`).forEach(p => {
-      if (p.querySelector(`input[name="${name}"]`)) p.classList.remove('active');
-    });
-    el.classList.add('active');
-  }
-
-  // ===== CHIP TOGGLES =====
-  // Chips store their value in data-value. No checkboxes involved in the click path.
-  // getChecked() reads the .active class directly.
-  function toggleChip(el) {
-    el.classList.toggle('active');
-  }
-
-  // ===== READ CHIPS =====
-  function getChecked(group) {
-    return [...document.querySelectorAll(`[data-group="${group}"] .chip.active`)].map(el => el.dataset.value);
-  }
-
   // ===== EXAMPLE TOGGLE =====
-  function toggleExample() {
-    const btn = document.getElementById('exampleBtn');
-    const body = document.getElementById('exampleBody');
-    btn.classList.toggle('open');
-    body.classList.toggle('visible');
+  document.getElementById('exampleBtn').addEventListener('click', function() {
+    var body = document.getElementById('exampleBody');
+    var arrow = document.getElementById('exampleArrow');
+    var open = body.classList.toggle('visible');
+    arrow.textContent = open ? '▲' : '▼';
+  });
+
+  // ===== SLIDER =====
+  document.getElementById('daysSlider').addEventListener('input', function() {
+    document.getElementById('daysVal').textContent = this.value;
+  });
+
+  // ===== PILLS (single select) & CHIPS (multi select) =====
+  document.querySelectorAll('.pill-group, .chip-group').forEach(function(group) {
+    var type = group.dataset.type;
+    group.querySelectorAll('.pill, .chip').forEach(function(item) {
+      item.addEventListener('click', function() {
+        if (type === 'single') {
+          group.querySelectorAll('.pill, .chip').forEach(function(p) { p.classList.remove('active'); });
+          item.classList.add('active');
+        } else {
+          item.classList.toggle('active');
+        }
+      });
+    });
+  });
+
+  // ===== READ VALUES =====
+  function getVal(group) {
+    var el = document.querySelector('[data-group="' + group + '"] .active');
+    return el ? el.dataset.value : '';
   }
-
-  // ===== LOADING TIPS =====
-  const tips = [
-    "Checking local prices in your country…",
-    "Balancing your macros & calories…",
-    "Picking the cheapest protein sources…",
-    "Building your shopping list…",
-    "Making sure recipes match your appliances…",
-    "Calculating exact cooking times…",
-  ];
-  let tipIdx = 0;
-  let tipTimer = null;
-  function rotateTips() {
-    tipIdx = (tipIdx + 1) % tips.length;
-    document.getElementById('loadingTip').textContent = tips[tipIdx];
-  }
-
-  // ===== READ FORM =====
-  function getFormData() {
-    const get = id => document.getElementById(id)?.value?.trim();
-    const getActivePill = (name) => {
-      const el = document.querySelector(`.pill.active input[name="${name}"]`);
-      return el?.value || '';
-    };
-
-    return {
-      budget: get('budget'),
-      country: get('country'),
-      days: document.getElementById('daysSlider').value,
-      meals: getActivePill('meals') || '3',
-      goal: getActivePill('goal') || 'Maintain weight',
-      diet: getActivePill('diet') || 'No restriction',
-      cuisines: getChecked('cuisines'),
-      allergies: getChecked('allergies'),
-      dislikes: get('dislikes'),
-      proteins: getChecked('proteins'),
-      carbs: getChecked('carbs'),
-      vegetables: getChecked('vegetables'),
-      appliances: getChecked('appliances'),
-      skill: getActivePill('skill') || 'Beginner',
-    };
-  }
-
-  // ===== BUILD PROMPT =====
-  function buildPrompt(f) {
-    return `You are a professional nutritionist and budget meal planner. Generate a detailed, realistic ${f.days}-day meal plan for someone in ${f.country || 'Europe'}.
-
-USER PROFILE:
-- Daily budget: ${f.budget ? f.budget + ' EUR' : 'as cheap as possible'}
-- Plan duration: ${f.days} days
-- Meals per day: ${f.meals}
-- Goal: ${f.goal}
-- Diet: ${f.diet}
-- Cuisine preference: ${f.cuisines.length ? f.cuisines.join(', ') : 'Any'}
-- Allergies: ${f.allergies.length ? f.allergies.join(', ') : 'None'}
-- Foods to avoid/dislikes: ${f.dislikes || 'None'}
-- Preferred proteins: ${f.proteins.length ? f.proteins.join(', ') : 'Any'}
-- Preferred carbs: ${f.carbs.length ? f.carbs.join(', ') : 'Any'}
-- Preferred vegetables: ${f.vegetables.length ? f.vegetables.join(', ') : 'Any'}
-- Appliances available: ${f.appliances.length ? f.appliances.join(', ') : 'stovetop only'}
-- Cooking skill: ${f.skill}
-
-CRITICAL RULES — follow every single one:
-1. COSTS: Use REAL supermarket prices for ${f.country || 'the user's country'}. Name specific budget supermarkets in that country (e.g. Lidl, Aldi, Willys, Netto, etc.). Be accurate — do NOT guess. Ingredient costs should reflect actual shelf prices.
-2. QUANTITIES: Give exact amounts for every ingredient. Example: "80g oats", "2 large eggs", "1 tsp cumin", "½ tsp salt", "300ml milk", "1 tbsp olive oil". Never write "some" or "a handful".
-3. COOKING TIMES: Be realistic. Pasta takes 10-12 mins to boil. Chicken breast takes 15-20 mins to cook through. Lentil soup takes 25-30 mins. Do not underestimate.
-4. PROTEIN VARIETY: Do NOT rely only on meat. Rotate between: ${f.proteins.length ? f.proteins.join(', ') : 'eggs, lentils, chickpeas, chicken, canned tuna, Greek yogurt, cottage cheese'}.
-5. CARB VARIETY: Do NOT default to rice every meal. Rotate: ${f.carbs.length ? f.carbs.join(', ') : 'pasta, bread, oats, potatoes'}.
-6. NO REPEATS: Don't repeat the same meal more than twice across the plan.
-7. ALLERGENS: Strictly exclude: ${f.allergies.length ? f.allergies.join(', ') : 'none'}. Double-check every ingredient.
-8. APPLIANCES: Only use: ${f.appliances.length ? f.appliances.join(', ') : 'stovetop'}. Do not suggest oven recipes if the user has no oven.
-9. BUDGET: Total cost per day must stay at or under ${f.budget ? f.budget + ' EUR' : 'the budget'}. Track it.
-
-FORMAT — use this exact structure for each day:
-
-═══ DAY 1 ═══
-Daily budget: €X.XX | Estimated total: €X.XX
-
-🌅 BREAKFAST — [Meal name]
-  Ingredients: [exact quantities of each item]
-  How to make: [clear step-by-step, numbered]
-  ⏱ Time: X mins | 🔥 Calories: ~XXX kcal | 💰 Cost: ~€X.XX
-
-☀️ LUNCH — [Meal name]
-  Ingredients: [exact quantities]
-  How to make: [steps]
-  ⏱ Time: X mins | 🔥 Calories: ~XXX kcal | 💰 Cost: ~€X.XX
-
-🌙 DINNER — [Meal name]
-  Ingredients: [exact quantities]
-  How to make: [steps]
-  ⏱ Time: X mins | 🔥 Calories: ~XXX kcal | 💰 Cost: ~€X.XX
-
-─── Day 1 Totals: Calories: ~XXXX kcal | Cost: ~€X.XX ───
-
-[Repeat for all ${f.days} days]
-
-═══ SHOPPING LIST ═══
-Organised by category (Produce, Protein, Dairy, Pantry, Bread & Grains). Include exact total quantity needed across all ${f.days} days and estimated price per item.
-
-Budget supermarkets in ${f.country || 'your country'} to shop at: [list 2-3 specific store names]
-
-═══ MONEY-SAVING TIPS ═══
-3 specific tips for this country and budget.`;
+  function getVals(group) {
+    return Array.from(document.querySelectorAll('[data-group="' + group + '"] .active')).map(function(el) { return el.dataset.value; });
   }
 
   // ===== GENERATE =====
-  async function generate() {
-    const f = getFormData();
+  document.getElementById('generateBtn').addEventListener('click', function() {
+    var budget = document.getElementById('budget').value.trim();
+    var country = document.getElementById('country').value.trim();
 
-    // basic validation
-    if (!f.country) {
-      showError('Please enter your country so we can use accurate local prices.');
-      return;
-    }
-    if (!f.budget) {
-      showError('Please enter your daily budget.');
-      return;
-    }
+    if (!country) { showError('Please enter your country.'); return; }
+    if (!budget) { showError('Please enter your daily budget.'); return; }
+
+    var f = {
+      budget: budget,
+      country: country,
+      days: document.getElementById('daysSlider').value,
+      meals: getVal('meals') || '3',
+      goal: getVal('goal') || 'Maintain weight',
+      diet: getVal('diet') || 'No restriction',
+      skill: getVal('skill') || 'Beginner',
+      cuisines: getVals('cuisines'),
+      allergies: getVals('allergies'),
+      dislikes: document.getElementById('dislikes').value.trim(),
+      proteins: getVals('proteins'),
+      carbs: getVals('carbs'),
+      vegetables: getVals('vegetables'),
+      appliances: getVals('appliances'),
+    };
 
     hideError();
     setLoading(true);
 
-    tipTimer = setInterval(rotateTips, 2800);
+    var tips = ['Checking local prices…', 'Balancing your macros…', 'Picking cheap protein sources…', 'Building your shopping list…', 'Calculating cooking times…'];
+    var tipIdx = 0;
+    var tipTimer = setInterval(function() {
+      tipIdx = (tipIdx + 1) % tips.length;
+      document.getElementById('loadingTip').textContent = tips[tipIdx];
+    }, 2800);
 
-    const prompt = buildPrompt(f);
+    var prompt = buildPrompt(f);
 
-    try {
-      const res = await fetch('/generate', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
-        body: JSON.stringify({ prompt })
-      });
-
-      const data = await res.json();
-
-      if (data.error) {
-        showError(data.error === 'Not logged in'
-          ? 'Please log in to generate a meal plan.'
-          : data.error === 'Upgrade to Premium'
-          ? 'You\'ve used your free generations today. Upgrade to Premium to continue.'
-          : data.error);
-      } else {
-        showResult(data.result, f);
-      }
-    } catch (err) {
-      showError('Something went wrong. Please try again.');
-    } finally {
+    fetch('/generate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({ prompt: prompt })
+    })
+    .then(function(res) { return res.json(); })
+    .then(function(data) {
+      clearInterval(tipTimer);
       setLoading(false);
-    }
+      if (data.error) {
+        showError(data.error === 'Not logged in' ? 'Please log in to generate a meal plan.' : data.error === 'Upgrade to Premium' ? 'You\'ve reached your daily limit. Upgrade to Premium to continue.' : data.error);
+      } else {
+        document.getElementById('resultMeta').textContent = f.days + '-day plan · ' + f.meals + ' meals/day · ' + f.goal + ' · ' + f.diet;
+        document.getElementById('resultBody').textContent = data.result;
+        document.getElementById('result').classList.add('visible');
+        document.getElementById('result').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    })
+    .catch(function() {
+      clearInterval(tipTimer);
+      setLoading(false);
+      showError('Something went wrong. Please try again.');
+    });
+  });
+
+  function buildPrompt(f) {
+    return 'You are a professional nutritionist and budget meal planner. Generate a detailed, realistic ' + f.days + '-day meal plan for someone in ' + (f.country || 'Europe') + '.\n\nUSER PROFILE:\n- Daily budget: ' + (f.budget ? f.budget + ' EUR' : 'as cheap as possible') + '\n- Plan duration: ' + f.days + ' days\n- Meals per day: ' + f.meals + '\n- Goal: ' + f.goal + '\n- Diet: ' + f.diet + '\n- Cuisine preference: ' + (f.cuisines.length ? f.cuisines.join(', ') : 'Any') + '\n- Allergies: ' + (f.allergies.length ? f.allergies.join(', ') : 'None') + '\n- Foods to avoid: ' + (f.dislikes || 'None') + '\n- Preferred proteins: ' + (f.proteins.length ? f.proteins.join(', ') : 'Any') + '\n- Preferred carbs: ' + (f.carbs.length ? f.carbs.join(', ') : 'Any') + '\n- Preferred vegetables: ' + (f.vegetables.length ? f.vegetables.join(', ') : 'Any') + '\n- Appliances: ' + (f.appliances.length ? f.appliances.join(', ') : 'stovetop only') + '\n- Cooking skill: ' + f.skill + '\n\nCRITICAL RULES:\n1. COSTS: Use REAL supermarket prices for ' + f.country + '. Name specific budget supermarkets in that country (Lidl, Aldi, Willys, Netto, etc.).\n2. QUANTITIES: Give exact amounts for every ingredient (80g oats, 2 large eggs, 1 tsp cumin, 300ml milk).\n3. COOKING TIMES: Be realistic. Pasta = 10-12 mins. Chicken breast = 15-20 mins. Lentil soup = 25-30 mins.\n4. PROTEIN VARIETY: Rotate between: ' + (f.proteins.length ? f.proteins.join(', ') : 'eggs, lentils, chickpeas, chicken, canned tuna') + '\n5. CARB VARIETY: Rotate: ' + (f.carbs.length ? f.carbs.join(', ') : 'pasta, bread, oats, potatoes') + '\n6. NO REPEATS: Do not repeat the same meal more than twice.\n7. ALLERGENS: Strictly exclude: ' + (f.allergies.length ? f.allergies.join(', ') : 'none') + '\n8. APPLIANCES: Only use: ' + (f.appliances.length ? f.appliances.join(', ') : 'stovetop') + '\n9. BUDGET: Stay at or under ' + f.budget + ' EUR per day.\n\nFORMAT:\n\n\u2550\u2550\u2550 DAY 1 \u2550\u2550\u2550\nDaily budget: \u20acX.XX | Estimated total: \u20acX.XX\n\n\uD83C\uDF05 BREAKFAST \u2014 [Meal name]\n  Ingredients: [exact quantities]\n  How to make: [numbered steps]\n  \u23F1 Time: X mins | \uD83D\uDD25 Calories: ~XXX kcal | \uD83D\uDCB0 Cost: ~\u20acX.XX\n\n\u2600\uFE0F LUNCH \u2014 [Meal name]\n  Ingredients: [exact quantities]\n  How to make: [numbered steps]\n  \u23F1 Time: X mins | \uD83D\uDD25 Calories: ~XXX kcal | \uD83D\uDCB0 Cost: ~\u20acX.XX\n\n\uD83C\uDF19 DINNER \u2014 [Meal name]\n  Ingredients: [exact quantities]\n  How to make: [numbered steps]\n  \u23F1 Time: X mins | \uD83D\uDD25 Calories: ~XXX kcal | \uD83D\uDCB0 Cost: ~\u20acX.XX\n\n\u2500\u2500\u2500 Day 1 Totals: Calories: ~XXXX kcal | Cost: ~\u20acX.XX \u2500\u2500\u2500\n\n[Repeat for all ' + f.days + ' days]\n\n\u2550\u2550\u2550 SHOPPING LIST \u2550\u2550\u2550\nBy category (Produce, Protein, Dairy, Pantry, Grains). Include total quantity needed and price per item.\nBest budget supermarkets in ' + f.country + ': [list 2-3 stores]\n\n\u2550\u2550\u2550 MONEY-SAVING TIPS \u2550\u2550\u2550\n3 specific tips for ' + f.country + '.';
   }
 
   function setLoading(on) {
     document.getElementById('loading').classList.toggle('visible', on);
     document.getElementById('generateBtn').disabled = on;
-    document.getElementById('result').classList.remove('visible');
-    if (!on) { clearInterval(tipTimer); tipIdx = 0; }
+    if (!on) document.getElementById('result').classList.remove('visible');
   }
-
-  function showResult(text, f) {
-    document.getElementById('resultMeta').textContent =
-      `${f.days}-day plan · ${f.meals} meals/day · ${f.goal} · ${f.diet}`;
-    document.getElementById('resultBody').textContent = text;
-    document.getElementById('result').classList.add('visible');
-    document.getElementById('result').scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }
-
   function showError(msg) {
-    const el = document.getElementById('errorMsg');
+    var el = document.getElementById('errorMsg');
     el.textContent = msg;
     el.classList.add('visible');
   }
-
   function hideError() {
     document.getElementById('errorMsg').classList.remove('visible');
   }
