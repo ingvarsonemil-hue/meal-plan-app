@@ -1,114 +1,1410 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>AI Generator</title>
-
+  <title>Mealzy — Free Meal Plan Generator</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet"/>
   <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --orange:     #E8793A;
+      --orange-lt:  #FFF4EC;
+      --orange-bd:  #FFD9BC;
+      --green:      #2A5E2A;
+      --green-lt:   #F0FAF0;
+      --green-bd:   #A8D8A8;
+      --text:       #1A1209;
+      --text-mid:   #6B5744;
+      --text-muted: #A8927E;
+      --bg:         #FEFAF6;
+      --surface:    #FFFFFF;
+      --border:     #EDE4D8;
+      --radius-sm:  10px;
+      --radius-md:  14px;
+      --radius-lg:  20px;
+    }
+
     body {
-      font-family: Arial, sans-serif;
-      background: #0f172a;
-      color: white;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      margin: 0;
+      font-family: 'Nunito', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 24px 16px 100px;
     }
 
-    .container {
-      width: 400px;
-      background: #1e293b;
-      padding: 20px;
-      border-radius: 12px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+    .container { max-width: 600px; margin: 0 auto; }
+
+    /* ─── HERO ────────────────────────────────────────────────────── */
+    .hero {
+      text-align: center;
+      padding: 32px 24px 28px;
+      background: var(--surface);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-lg);
+      margin-bottom: 12px;
     }
 
-    input, textarea, button {
-      width: 100%;
-      margin-top: 10px;
-      padding: 10px;
-      border-radius: 8px;
-      border: none;
+    .hero-badge {
+      display: inline-block;
+      background: var(--orange-lt);
+      color: var(--orange);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 5px 14px;
+      border-radius: 100px;
+      border: 1.5px solid var(--orange-bd);
+      margin-bottom: 16px;
+    }
+
+    .hero h1 {
+      font-size: clamp(24px, 6vw, 36px);
+      font-weight: 900;
+      line-height: 1.15;
+      margin-bottom: 10px;
+      color: var(--text);
+    }
+
+    .hero h1 em {
+      font-style: normal;
+      color: var(--orange);
+    }
+
+    .hero p {
       font-size: 14px;
+      color: var(--text-mid);
+      line-height: 1.65;
+      max-width: 420px;
+      margin: 0 auto 20px;
     }
 
-    input, textarea {
-      background: #334155;
-      color: white;
+    /* ─── HOW IT WORKS ────────────────────────────────────────────── */
+    .how {
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      gap: 8px;
+      padding-top: 4px;
     }
 
-    button {
-      background: #38bdf8;
+    .how-step {
+      flex: 1;
+      text-align: center;
+      max-width: 120px;
+    }
+
+    .how-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      background: var(--orange-lt);
+      border: 1.5px solid var(--orange-bd);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      margin: 0 auto 8px;
+    }
+
+    .how-label {
+      font-size: 12px;
+      font-weight: 800;
+      color: var(--text);
+      line-height: 1.3;
+    }
+
+    .how-sub {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .how-arrow {
+      font-size: 16px;
+      color: var(--orange-bd);
+      margin-top: 12px;
+      flex-shrink: 0;
+    }
+
+    /* ─── SAMPLE PLAN ─────────────────────────────────────────────── */
+    .sample {
+      background: var(--surface);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      margin-bottom: 12px;
+    }
+
+    .sample-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 18px;
       cursor: pointer;
-      font-weight: bold;
+      user-select: none;
+      background: var(--orange-lt);
+      border-bottom: 1.5px solid var(--orange-bd);
     }
 
-    button:hover {
-      background: #0ea5e9;
+    .sample-header-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
 
-    #output {
-      margin-top: 15px;
-      white-space: pre-wrap;
-      background: #020617;
-      padding: 10px;
-      border-radius: 8px;
+    .sample-header-title {
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--orange);
+    }
+
+    .sample-header-sub {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .sample-toggle-btn {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--orange);
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 4px 10px;
+      border-radius: 100px;
+      border: 1.5px solid var(--orange-bd);
+      background: var(--surface);
+    }
+
+    .sample-body { padding: 14px 16px 16px; }
+
+    .sample-meal {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 12px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      margin-bottom: 8px;
+    }
+
+    .sample-meal:last-of-type { margin-bottom: 0; }
+
+    .sample-icon { font-size: 22px; flex-shrink: 0; }
+
+    .sample-info { flex: 1; }
+
+    .sample-type {
+      font-size: 10px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+    }
+
+    .sample-name {
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--text);
+      margin: 1px 0;
+    }
+
+    .sample-meta { font-size: 11px; color: var(--text-muted); }
+
+    .sample-cost {
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--orange);
+    }
+
+    .sample-note {
+      font-size: 12px;
+      color: var(--text-muted);
+      text-align: center;
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid var(--border);
+      font-weight: 600;
+    }
+
+    /* ─── SECTION CARDS ───────────────────────────────────────────── */
+    .section {
+      background: var(--surface);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 18px;
+      margin-bottom: 10px;
+    }
+
+    .section-label {
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* ─── BUDGET ──────────────────────────────────────────────────── */
+    .budget-wrap {
+      display: flex;
+      align-items: center;
+      background: var(--bg);
+      border: 2px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 10px 16px;
+      gap: 4px;
+      transition: border-color 0.15s;
+    }
+
+    .budget-wrap:focus-within { border-color: var(--orange); }
+
+    .currency-sym {
+      font-size: 28px;
+      font-weight: 900;
+      color: var(--orange);
+      min-width: 28px;
+      transition: all 0.2s;
+    }
+
+    .budget-input {
+      font-family: 'Nunito', sans-serif;
+      font-size: 44px;
+      font-weight: 900;
+      color: var(--text);
+      border: none;
+      background: transparent;
+      width: 140px;
+      outline: none;
+      line-height: 1;
+    }
+
+    .budget-input::-webkit-inner-spin-button,
+    .budget-input::-webkit-outer-spin-button { -webkit-appearance: none; }
+
+    .budget-right { margin-left: auto; text-align: right; }
+
+    .budget-per { font-size: 13px; color: var(--text-muted); font-weight: 700; }
+
+    .currency-name {
+      font-size: 11px;
+      color: var(--orange);
+      font-weight: 700;
+      margin-top: 2px;
+      min-height: 14px;
+      transition: all 0.2s;
+    }
+
+    /* ─── COUNTRY ─────────────────────────────────────────────────── */
+    .country-input {
+      font-family: 'Nunito', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text);
+      border: 2px solid var(--border);
+      background: var(--bg);
+      border-radius: var(--radius-md);
+      padding: 13px 16px;
+      width: 100%;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+
+    .country-input:focus { border-color: var(--orange); }
+    .country-input::placeholder { color: var(--text-muted); font-weight: 600; }
+
+    .country-hint {
+      font-size: 12px;
+      color: var(--text-muted);
+      font-weight: 600;
+      margin-top: 8px;
+      min-height: 16px;
+      transition: all 0.2s;
+    }
+
+    /* ─── TWO COL ─────────────────────────────────────────────────── */
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .two-col .section { margin-bottom: 0; }
+
+    /* ─── PILLS ───────────────────────────────────────────────────── */
+    .pills { display: flex; flex-wrap: wrap; gap: 7px; }
+    .pills.col { flex-direction: column; }
+
+    .pill {
+      font-family: 'Nunito', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      padding: 8px 15px;
+      border-radius: 100px;
+      border: 1.5px solid var(--border);
+      color: var(--text-mid);
+      background: var(--bg);
+      cursor: pointer;
+      transition: all 0.15s;
+      user-select: none;
+      white-space: nowrap;
+    }
+
+    .pill:hover { border-color: var(--orange); color: var(--orange); }
+
+    .pill.on { background: var(--orange); border-color: var(--orange); color: #fff; }
+
+    .pill.multi.on { background: var(--green); border-color: var(--green); color: #fff; }
+    .pill.multi:hover { border-color: var(--green); color: var(--green); }
+
+    /* ─── GENERATE BUTTON ─────────────────────────────────────────── */
+    .gen-btn {
+      width: 100%;
+      padding: 19px;
+      background: var(--orange);
+      color: #fff;
+      border: none;
+      border-radius: var(--radius-md);
+      font-family: 'Nunito', sans-serif;
+      font-size: 18px;
+      font-weight: 900;
+      cursor: pointer;
+      margin-bottom: 24px;
+      transition: opacity 0.15s, transform 0.1s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      letter-spacing: 0.01em;
+    }
+
+    .gen-btn:hover:not(:disabled) { opacity: 0.88; }
+    .gen-btn:active:not(:disabled) { transform: scale(0.985); }
+    .gen-btn:disabled { opacity: 0.45; cursor: not-allowed; }
+
+    /* ─── STATUS / ERROR ──────────────────────────────────────────── */
+    .status-box {
+      text-align: center;
+      padding: 20px;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text-mid);
+      display: none;
+    }
+
+    .status-box .status-sub {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 4px;
+      font-weight: 600;
+    }
+
+    .error-box {
+      background: #FFF0F0;
+      border: 1.5px solid #FFBDBD;
+      color: #B91C1C;
+      padding: 14px 18px;
+      border-radius: var(--radius-md);
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 16px;
+      display: none;
+    }
+
+    .warn-box {
+      background: #FFFBEB;
+      border: 1.5px solid #FDE68A;
+      color: #92400E;
+      padding: 12px 16px;
+      border-radius: var(--radius-md);
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 12px;
+      display: none;
+    }
+
+    /* ─── RESULTS ─────────────────────────────────────────────────── */
+    #results { display: none; }
+
+    .results-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: 8px;
+      gap: 12px;
+    }
+
+    .results-title { font-size: 22px; font-weight: 900; color: var(--text); }
+
+    .total-cost {
+      background: var(--orange-lt);
+      border: 1.5px solid var(--orange-bd);
+      border-radius: 100px;
+      padding: 6px 16px;
+      font-size: 17px;
+      font-weight: 900;
+      color: var(--orange);
+      white-space: nowrap;
+    }
+
+    .results-meta {
+      font-size: 13px;
+      color: var(--text-muted);
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+
+    /* Budget badge */
+    .budget-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 10px 14px;
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+      font-weight: 800;
+      margin-bottom: 14px;
+    }
+
+    .budget-badge.ok { background: var(--green-lt); border: 1.5px solid var(--green-bd); color: var(--green); }
+    .budget-badge.over { background: #FFF7ED; border: 1.5px solid #FED7AA; color: #92400E; }
+
+    /* Action buttons */
+    .action-row {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+
+    .act-btn {
+      flex: 1;
+      padding: 11px 12px;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      background: var(--surface);
+      font-family: 'Nunito', sans-serif;
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--text-mid);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: all 0.15s;
+    }
+
+    .act-btn:hover { border-color: var(--orange); color: var(--orange); }
+    .act-btn.done { background: var(--green-lt); border-color: var(--green-bd); color: var(--green); }
+
+    /* Day block */
+    .day-block { margin-bottom: 18px; }
+
+    .day-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--orange-lt);
+      border: 1.5px solid var(--orange-bd);
+      border-radius: var(--radius-sm);
+      padding: 9px 14px;
+      margin-bottom: 10px;
+    }
+
+    .day-name { font-size: 13px; font-weight: 900; color: var(--orange); text-transform: uppercase; letter-spacing: 0.07em; }
+    .day-info { font-size: 12px; color: var(--text-muted); font-weight: 700; }
+
+    /* Meals list */
+    .meals { display: flex; flex-direction: column; gap: 10px; margin-bottom: 12px; }
+
+    /* Meal card */
+    .meal-card {
+      background: var(--surface);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+    }
+
+    .meal-card.flagged { border-color: #FED7AA; }
+
+    /* Meal header row */
+    .meal-head {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      padding: 14px 14px 10px;
+    }
+
+    .meal-emoji {
+      width: 46px;
+      height: 46px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      flex-shrink: 0;
+    }
+
+    .meal-info { flex: 1; min-width: 0; }
+
+    .meal-type-label {
+      font-size: 10px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-muted);
+      margin-bottom: 2px;
+    }
+
+    .meal-name {
+      font-size: 16px;
+      font-weight: 900;
+      color: var(--text);
+      margin-bottom: 4px;
+      line-height: 1.2;
+    }
+
+    .meal-desc {
+      font-size: 13px;
+      color: var(--text-mid);
+      line-height: 1.5;
+      margin-bottom: 8px;
+    }
+
+    .meal-tags { display: flex; flex-wrap: wrap; gap: 5px; }
+
+    .tag {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 9px;
+      border-radius: 100px;
+      border: 1px solid var(--border);
+      color: var(--text-mid);
+      background: var(--bg);
+    }
+
+    .tag.blue { background: #EFF6FF; border-color: #BFDBFE; color: #1D4ED8; }
+    .tag.warn { background: #FFF7ED; border-color: #FED7AA; color: #92400E; }
+
+    .meal-price {
+      font-size: 15px;
+      font-weight: 900;
+      color: var(--orange);
+      white-space: nowrap;
+      padding-top: 2px;
+    }
+
+    /* Ingredients strip */
+    .meal-ingredients {
+      border-top: 1px solid var(--border);
+      padding: 11px 14px;
+      background: #FFFAF6;
+    }
+
+    .strip-label {
+      font-size: 10px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+
+    .ing-list { display: flex; flex-wrap: wrap; gap: 5px; }
+
+    .ing {
+      font-size: 12px;
+      font-weight: 700;
+      padding: 4px 10px;
+      background: var(--surface);
+      border: 1px solid var(--orange-bd);
+      border-radius: 100px;
+      color: #7A4A20;
+    }
+
+    /* Steps — the improved recipe section */
+    .meal-steps {
+      border-top: 1px solid var(--border);
+      padding: 14px;
+      background: var(--bg);
+    }
+
+    .steps-list { display: flex; flex-direction: column; gap: 0; }
+
+    .step-row {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      position: relative;
+      padding-bottom: 14px;
+    }
+
+    .step-row:last-child { padding-bottom: 0; }
+
+    /* Vertical line connecting steps */
+    .step-row:not(:last-child)::before {
+      content: '';
+      position: absolute;
+      left: 14px;
+      top: 30px;
+      bottom: 0;
+      width: 2px;
+      background: var(--orange-bd);
+      border-radius: 2px;
+    }
+
+    .step-num {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: var(--orange);
+      color: #fff;
+      font-size: 13px;
+      font-weight: 900;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      position: relative;
+      z-index: 1;
+      box-shadow: 0 2px 6px rgba(232,121,58,0.3);
+    }
+
+    .step-body { flex: 1; padding-top: 5px; }
+
+    .step-text {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1.5;
+    }
+
+    /* Shopping list */
+    .shop-card {
+      background: var(--green-lt);
+      border: 1.5px solid var(--green-bd);
+      border-radius: var(--radius-lg);
+      padding: 18px;
+      margin-bottom: 10px;
+    }
+
+    .shop-title {
+      font-size: 15px;
+      font-weight: 900;
+      color: var(--green);
+      margin-bottom: 14px;
+    }
+
+    .shop-cat { margin-bottom: 12px; }
+    .shop-cat:last-child { margin-bottom: 0; }
+
+    .shop-cat-label {
+      font-size: 10px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #3A7A3A;
+      margin-bottom: 6px;
+    }
+
+    .shop-items { display: flex; flex-wrap: wrap; gap: 6px; }
+
+    .shop-item {
+      font-size: 13px;
+      font-weight: 700;
+      padding: 7px 12px;
+      background: var(--surface);
+      border: 1px solid var(--green-bd);
+      border-radius: var(--radius-sm);
+      color: var(--green);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .shop-item::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #4CAF50;
+      flex-shrink: 0;
+    }
+
+    /* Tip */
+    .tip-card {
+      background: #FFFBEB;
+      border: 1.5px solid #FDE68A;
+      border-radius: var(--radius-md);
+      padding: 14px 16px;
+      font-size: 13px;
+      font-weight: 700;
+      color: #78350F;
+      line-height: 1.6;
+      margin-bottom: 14px;
+    }
+
+    /* Spinner */
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .spin {
+      display: inline-block;
+      width: 18px;
+      height: 18px;
+      border: 2.5px solid rgba(255,255,255,0.35);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      vertical-align: middle;
+      margin-right: 6px;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .fade { animation: fadeUp 0.3s ease forwards; }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      font-size: 12px;
+      color: var(--text-muted);
+      font-weight: 600;
+      margin-top: 48px;
+    }
+
+    /* Mobile */
+    @media (max-width: 480px) {
+      .two-col { grid-template-columns: 1fr; }
+      .how-arrow { display: none; }
+    }
+
+    /* Print */
+    @media print {
+      .gen-btn, .action-row, .how, .sample, .hero-badge { display: none; }
+      body { background: white; padding: 0; }
+      .meal-card { break-inside: avoid; }
     }
   </style>
 </head>
 <body>
+<div class="container">
 
-  <div class="container">
-    <h2>AI Generator</h2>
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-badge">✨ Free · No signup needed</div>
+    <h1>Your personal meal plan,<br/><em>built around your budget</em></h1>
+    <p>Tell us what you have and what you need — we'll build a full meal plan with recipes, ingredients and a shopping list in seconds.</p>
 
-    <!-- ✅ FIXED INPUT (removed broken oninput handler) -->
-    <input 
-      class="country-input" 
-      type="text" 
-      id="country" 
-      placeholder="e.g. Sweden, Germany"
-    />
-
-    <textarea id="prompt" placeholder="Enter your prompt..."></textarea>
-
-    <button onclick="generate()">Generate</button>
-
-    <div id="output"></div>
+    <div class="how">
+      <div class="how-step">
+        <div class="how-icon">📝</div>
+        <div class="how-label">Fill in your details</div>
+        <div class="how-sub">Budget, diet & kitchen</div>
+      </div>
+      <div class="how-arrow">→</div>
+      <div class="how-step">
+        <div class="how-icon">✨</div>
+        <div class="how-label">Generate your plan</div>
+        <div class="how-sub">AI builds it instantly</div>
+      </div>
+      <div class="how-arrow">→</div>
+      <div class="how-step">
+        <div class="how-icon">🛒</div>
+        <div class="how-label">Shop & cook</div>
+        <div class="how-sub">Save money every week</div>
+      </div>
+    </div>
   </div>
 
-  <script>
-    async function generate() {
-      const prompt = document.getElementById("prompt").value;
-      const output = document.getElementById("output");
+  <!-- SAMPLE PLAN -->
+  <div class="sample">
+    <div class="sample-header" onclick="toggleSample()">
+      <div class="sample-header-left">
+        <span>👀</span>
+        <div>
+          <div class="sample-header-title">See an example plan</div>
+          <div class="sample-header-sub">€10/day · Sweden · 3 meals</div>
+        </div>
+      </div>
+      <button class="sample-toggle-btn" id="sampleBtn">Hide ▲</button>
+    </div>
+    <div class="sample-body" id="sampleBody">
+      <div class="sample-meal">
+        <span class="sample-icon">🌅</span>
+        <div class="sample-info">
+          <div class="sample-type">Breakfast</div>
+          <div class="sample-name">Oat porridge with banana & honey</div>
+          <div class="sample-meta">⏱ 5 mins · 🔥 ~380 kcal · ⚖️ 1 bowl</div>
+        </div>
+        <div class="sample-cost">kr 12</div>
+      </div>
+      <div class="sample-meal">
+        <span class="sample-icon">☀️</span>
+        <div class="sample-info">
+          <div class="sample-type">Lunch</div>
+          <div class="sample-name">Lentil soup with rye bread</div>
+          <div class="sample-meta">⏱ 20 mins · 🔥 ~520 kcal · ⚖️ 1 bowl</div>
+        </div>
+        <div class="sample-cost">kr 24</div>
+      </div>
+      <div class="sample-meal">
+        <span class="sample-icon">🌙</span>
+        <div class="sample-info">
+          <div class="sample-type">Dinner</div>
+          <div class="sample-name">Pasta with tomato sauce & egg</div>
+          <div class="sample-meta">⏱ 20 mins · 🔥 ~680 kcal · ⚖️ 1 plate</div>
+        </div>
+        <div class="sample-cost">kr 31</div>
+      </div>
+      <div class="sample-note">This is just an example — your real plan is built around your inputs.</div>
+    </div>
+  </div>
 
-      if (!prompt) {
-        output.textContent = "Please enter a prompt.";
-        return;
-      }
+  <!-- BUDGET -->
+  <div class="section">
+    <div class="section-label">💰 Daily budget</div>
+    <div class="budget-wrap">
+      <span class="currency-sym" id="sym">€</span>
+      <input class="budget-input" type="number" id="budget" value="10" min="1" max="9999"/>
+      <div class="budget-right">
+        <div class="budget-per">per day</div>
+        <div class="currency-name" id="curName"></div>
+      </div>
+    </div>
+  </div>
 
-      output.textContent = "Loading...";
+  <!-- COUNTRY -->
+  <div class="section">
+    <div class="section-label">🌍 Your country</div>
+    <input
+      class="country-input"
+      type="text"
+      id="country"
+      placeholder="e.g. Sweden, Germany, USA, Japan..."
+      oninput="onCountryChange()"
+      onchange="onCountryChange()"
+      onblur="onCountryChange()"
+    />
+    <div class="country-hint" id="countryHint">Enter your country — we'll use local prices and currency</div>
+  </div>
 
-      try {
-        const res = await fetch("/generate", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ prompt })
-        });
+  <!-- DURATION + MEALS -->
+  <div class="two-col">
+    <div class="section">
+      <div class="section-label">📅 Duration</div>
+      <div class="pills" id="dur">
+        <span class="pill on" data-v="1">1 day</span>
+        <span class="pill" data-v="7">7 days</span>
+      </div>
+    </div>
+    <div class="section">
+      <div class="section-label">🍽 Meals/day</div>
+      <div class="pills" id="mpp">
+        <span class="pill" data-v="2">2</span>
+        <span class="pill on" data-v="3">3</span>
+        <span class="pill" data-v="4">4</span>
+      </div>
+    </div>
+  </div>
 
-        const data = await res.json();
+  <!-- GOAL -->
+  <div class="section">
+    <div class="section-label">🎯 Goal</div>
+    <div class="pills" id="goal">
+      <span class="pill on" data-v="maintain">Maintain weight</span>
+      <span class="pill" data-v="lose">Lose weight</span>
+      <span class="pill" data-v="gain">Gain muscle</span>
+    </div>
+  </div>
 
-        if (data.error) {
-          output.textContent = data.error;
-        } else {
-          output.textContent = data.result;
-        }
-      } catch (err) {
-        output.textContent = "Error: " + err.message;
-      }
+  <!-- DIET -->
+  <div class="section">
+    <div class="section-label">🥦 Diet</div>
+    <div class="pills" id="diet">
+      <span class="pill on" data-v="none">No restriction</span>
+      <span class="pill" data-v="vegetarian">Vegetarian</span>
+      <span class="pill" data-v="high-protein">High protein</span>
+      <span class="pill" data-v="vegan">Vegan</span>
+    </div>
+  </div>
+
+  <!-- APPLIANCES -->
+  <div class="section">
+    <div class="section-label">🔌 Your appliances <span style="font-weight:600;text-transform:none;letter-spacing:0;">(select all you have)</span></div>
+    <div class="warn-box" id="appWarn"></div>
+    <div class="pills" id="apps">
+      <span class="pill multi" data-v="stovetop"  data-m="boiled,pan-fried,fried,sauteed,sautéed,simmered,steamed,poached">🍳 Stovetop</span>
+      <span class="pill multi" data-v="microwave" data-m="microwaved,microwave">📡 Microwave</span>
+      <span class="pill multi" data-v="oven"      data-m="baked,roasted,grilled,broiled">🔥 Oven</span>
+      <span class="pill multi" data-v="kettle"    data-m="kettle,hot water">☕ Kettle</span>
+      <span class="pill multi" data-v="blender"   data-m="blended,blender">🥤 Blender</span>
+      <span class="pill multi" data-v="air fryer" data-m="air-fried,air fried,air fryer">💨 Air fryer</span>
+    </div>
+    <p style="font-size:12px;color:var(--text-muted);margin-top:10px;font-weight:700;">
+      Only select what you actually own — every meal will be built around your exact kitchen.
+    </p>
+  </div>
+
+  <!-- SKILL -->
+  <div class="section">
+    <div class="section-label">👨‍🍳 Cooking skill</div>
+    <div class="pills" id="skill">
+      <span class="pill on" data-v="beginner">Beginner</span>
+      <span class="pill" data-v="intermediate">Intermediate</span>
+    </div>
+  </div>
+
+  <!-- GENERATE -->
+  <button class="gen-btn" id="genBtn" onclick="generate()">✨ Generate My Meal Plan</button>
+
+  <div class="status-box" id="statusBox">
+    <div id="statusText"></div>
+    <div class="status-sub" id="statusSub"></div>
+  </div>
+  <div class="error-box" id="errBox"></div>
+  <div id="results"></div>
+
+</div>
+
+<footer>Mealzy · Powered by Claude AI · Free forever</footer>
+
+<script>
+// ── Currency data ─────────────────────────────────────────────────
+const CURRENCIES = [
+  { k:['sweden','sverige'],                                                    s:'kr',   c:'SEK', n:'Swedish Krona' },
+  { k:['norway','norge'],                                                       s:'kr',   c:'NOK', n:'Norwegian Krone' },
+  { k:['denmark','danmark'],                                                    s:'kr',   c:'DKK', n:'Danish Krone' },
+  { k:['uk','united kingdom','england','britain','scotland','wales'],           s:'£',    c:'GBP', n:'British Pound' },
+  { k:['usa','united states','america',' us ','us'],                           s:'$',    c:'USD', n:'US Dollar' },
+  { k:['canada'],                                                               s:'CA$',  c:'CAD', n:'Canadian Dollar' },
+  { k:['australia'],                                                            s:'A$',   c:'AUD', n:'Australian Dollar' },
+  { k:['japan'],                                                                s:'¥',    c:'JPY', n:'Japanese Yen' },
+  { k:['china'],                                                                s:'¥',    c:'CNY', n:'Chinese Yuan' },
+  { k:['india'],                                                                s:'₹',    c:'INR', n:'Indian Rupee' },
+  { k:['brazil'],                                                               s:'R$',   c:'BRL', n:'Brazilian Real' },
+  { k:['mexico'],                                                               s:'MX$',  c:'MXN', n:'Mexican Peso' },
+  { k:['switzerland'],                                                          s:'CHF',  c:'CHF', n:'Swiss Franc' },
+  { k:['poland'],                                                               s:'zł',   c:'PLN', n:'Polish Zloty' },
+  { k:['czech'],                                                                s:'Kč',   c:'CZK', n:'Czech Koruna' },
+  { k:['hungary'],                                                              s:'Ft',   c:'HUF', n:'Hungarian Forint' },
+  { k:['romania'],                                                              s:'lei',  c:'RON', n:'Romanian Leu' },
+  { k:['turkey','türkiye'],                                                     s:'₺',    c:'TRY', n:'Turkish Lira' },
+  { k:['south korea','korea'],                                                  s:'₩',    c:'KRW', n:'South Korean Won' },
+  { k:['singapore'],                                                            s:'S$',   c:'SGD', n:'Singapore Dollar' },
+  { k:['new zealand'],                                                          s:'NZ$',  c:'NZD', n:'New Zealand Dollar' },
+  { k:['south africa'],                                                         s:'R',    c:'ZAR', n:'South African Rand' },
+  { k:['germany','france','spain','italy','netherlands','belgium','portugal',
+       'austria','finland','ireland','greece','croatia','slovakia','slovenia',
+       'estonia','latvia','lithuania','luxembourg','malta','cyprus','europe'],  s:'€',    c:'EUR', n:'Euro' },
+];
+
+const EUR = { s:'€', c:'EUR', n:'Euro' };
+
+function getCurrency(txt) {
+  const lo = txt.toLowerCase().trim();
+  if (!lo) return EUR;
+  for (const e of CURRENCIES) {
+    if (e.k.some(k => lo.includes(k))) return { s:e.s, c:e.c, n:e.n };
+  }
+  return EUR;
+}
+
+let currentCurrency = EUR;
+
+function onCountryChange() {
+  const val = document.getElementById('country').value;
+  currentCurrency = getCurrency(val);
+  document.getElementById('sym').textContent = currentCurrency.s;
+  const hint = document.getElementById('countryHint');
+  const curName = document.getElementById('curName');
+  if (val.trim()) {
+    hint.textContent  = `💱 Prices will be shown in ${currentCurrency.n} (${currentCurrency.c})`;
+    curName.textContent = currentCurrency.c;
+    hint.style.color  = 'var(--orange)';
+  } else {
+    hint.textContent  = 'Enter your country — we\'ll use local prices and currency';
+    hint.style.color  = 'var(--text-muted)';
+    curName.textContent = '';
+  }
+}
+
+// ── Sample toggle (open by default) ──────────────────────────────
+function toggleSample() {
+  const body = document.getElementById('sampleBody');
+  const btn  = document.getElementById('sampleBtn');
+  const open = body.style.display !== 'none';
+  body.style.display = open ? 'none' : 'block';
+  btn.textContent    = open ? 'Show ▼' : 'Hide ▲';
+}
+
+// ── Single-select pills ───────────────────────────────────────────
+['dur','mpp','goal','diet','skill'].forEach(id => {
+  document.getElementById(id).addEventListener('click', e => {
+    const p = e.target.closest('.pill');
+    if (!p) return;
+    document.querySelectorAll(`#${id} .pill`).forEach(x => x.classList.remove('on'));
+    p.classList.add('on');
+  });
+});
+
+// ── Multi-select appliances ───────────────────────────────────────
+document.getElementById('apps').addEventListener('click', e => {
+  const p = e.target.closest('.pill');
+  if (p) p.classList.toggle('on');
+});
+
+function sel(id)  { const p = document.querySelector(`#${id} .pill.on`); return p ? p.dataset.v : null; }
+function apps()   { return [...document.querySelectorAll('#apps .pill.on')].map(p => p.dataset.v); }
+
+// ── Allowed methods for appliance validation ──────────────────────
+function allowedMethods() {
+  const methods = new Set(['no-cook','no cook','raw','assembled','mixed','cold','none']);
+  document.querySelectorAll('#apps .pill.on').forEach(p => {
+    (p.dataset.m||'').split(',').forEach(m => methods.add(m.trim().toLowerCase()));
+  });
+  return methods;
+}
+
+function methodOk(method, allowed) {
+  if (!method) return true;
+  const m = method.toLowerCase();
+  for (const a of allowed) { if (m.includes(a)) return true; }
+  return false;
+}
+
+// ── Appliance prompt section ──────────────────────────────────────
+function appliancePrompt(selected) {
+  const details = {
+    'stovetop':  'stovetop/hob — boiling, frying, sautéing, simmering, steaming',
+    'microwave': 'microwave — microwaving and reheating only',
+    'oven':      'oven — baking, roasting, grilling',
+    'kettle':    'kettle — boiling water only (for oats, noodles, couscous)',
+    'blender':   'blender — blending and smoothies',
+    'air fryer': 'air fryer — air-frying (chips, chicken, vegetables, reheating)'
+  };
+  const have = selected.map(a => details[a]||a);
+  const miss  = Object.keys(details).filter(a => !selected.includes(a)).map(a => details[a]||a);
+  return `APPLIANCE RULE — THIS IS THE SINGLE MOST IMPORTANT RULE:
+The user ONLY has these appliances: ${have.join('; ')}.
+They do NOT have: ${miss.length ? miss.join('; ') : 'nothing else'}.
+STRICT:
+- Every meal must be cookable ONLY with the appliances listed above.
+- NEVER suggest a meal requiring an appliance not listed.
+- Air fryer only → all meals must be air-fried or no-cook.
+- Kettle only → all meals must use boiling water or be no-cook.
+- No stovetop → NEVER boil/fry/sauté anything.
+- No oven → NEVER bake/roast anything.
+- The cookingMethod field must match one of the available appliances.`;
+}
+
+// ── Meal icons ────────────────────────────────────────────────────
+function mealIcon(type) {
+  const t = type.toLowerCase();
+  if (t.includes('break'))  return { e:'🌅', bg:'#FFF9DB' };
+  if (t.includes('lunch'))  return { e:'☀️',  bg:'#DCFCE7' };
+  if (t.includes('dinner')) return { e:'🌙', bg:'#DBEAFE' };
+  if (t.includes('snack'))  return { e:'🍎', bg:'#FFE4E6' };
+  return { e:'🍴', bg:'#F3F4F6' };
+}
+
+function catIcon(c) {
+  return {produce:'🥬',dairy:'🥛',grains:'🌾',protein:'🥩',other:'🛒',pantry:'🫙',frozen:'🧊',bakery:'🍞',beverages:'🧃'}[c.toLowerCase()]||'🛒';
+}
+
+// ── Budget banner ─────────────────────────────────────────────────
+function budgetBanner(totalStr, budget, days, sym) {
+  const spent = parseFloat(totalStr.replace(/[^0-9.]/g,''));
+  const limit = parseFloat(budget) * days;
+  const ok    = spent <= limit;
+  const diff  = Math.abs(limit-spent).toFixed(2);
+  const lbl   = days===7 ? `${sym}${budget}/day × 7 = ${sym}${limit.toFixed(2)}` : `${sym}${budget}`;
+  return `<div class="budget-badge ${ok?'ok':'over'}">
+    ${ok ? `✅ Fits budget (${lbl}) — ${sym}${diff} to spare` : `⚠️ Over budget (${lbl}) by ${sym}${diff}`}
+  </div>`;
+}
+
+// ── Build meal card ───────────────────────────────────────────────
+function mealCard(meal, allowed) {
+  const ic      = mealIcon(meal.type);
+  const flagged = meal.cookingMethod && !methodOk(meal.cookingMethod, allowed);
+
+  const ings = meal.ingredients?.length
+    ? `<div class="meal-ingredients">
+        <div class="strip-label">🧺 Ingredients</div>
+        <div class="ing-list">${meal.ingredients.map(i=>`<span class="ing">${i}</span>`).join('')}</div>
+       </div>` : '';
+
+  const steps = meal.steps?.length
+    ? `<div class="meal-steps">
+        <div class="strip-label">📋 How to make it</div>
+        <div class="steps-list">
+          ${meal.steps.map((s,i)=>`
+            <div class="step-row">
+              <div class="step-num">${i+1}</div>
+              <div class="step-body"><div class="step-text">${s}</div></div>
+            </div>`).join('')}
+        </div>
+       </div>` : '';
+
+  return `<div class="meal-card ${flagged?'flagged':''}">
+    <div class="meal-head">
+      <div class="meal-emoji" style="background:${ic.bg}">${ic.e}</div>
+      <div class="meal-info">
+        <div class="meal-type-label">${meal.type}</div>
+        <div class="meal-name">${meal.name}</div>
+        <div class="meal-desc">${meal.description}</div>
+        <div class="meal-tags">
+          ${meal.cookingMethod ? `<span class="tag ${flagged?'warn':'blue'}">${flagged?'⚠️':'🍳'} ${meal.cookingMethod}</span>` : ''}
+          ${meal.prepTime  ? `<span class="tag">⏱ ${meal.prepTime}</span>`  : ''}
+          ${meal.portion   ? `<span class="tag">⚖️ ${meal.portion}</span>`   : ''}
+          ${meal.calories  ? `<span class="tag">🔥 ${meal.calories}</span>`  : ''}
+        </div>
+      </div>
+      <div class="meal-price">${meal.cost}</div>
+    </div>
+    ${ings}${steps}
+  </div>`;
+}
+
+// ── Shopping list ─────────────────────────────────────────────────
+function shopHTML(list) {
+  if (!list) return '';
+  if (typeof list==='object' && !Array.isArray(list)) {
+    return Object.entries(list).map(([cat,items])=>{
+      if (!items?.length) return '';
+      return `<div class="shop-cat">
+        <div class="shop-cat-label">${catIcon(cat)} ${cat}</div>
+        <div class="shop-items">${items.map(i=>`<div class="shop-item">${i}</div>`).join('')}</div>
+      </div>`;
+    }).join('');
+  }
+  return `<div class="shop-items">${list.map(i=>`<div class="shop-item">${i}</div>`).join('')}</div>`;
+}
+
+// ── Copy & Print ──────────────────────────────────────────────────
+function copyPlan() {
+  navigator.clipboard.writeText(document.getElementById('results').innerText).then(()=>{
+    document.querySelectorAll('.copy-btn').forEach(b => {
+      b.textContent='✅ Copied!';
+      b.classList.add('done');
+      setTimeout(()=>{ b.textContent='📋 Copy'; b.classList.remove('done'); }, 2000);
+    });
+  });
+}
+
+function printPlan() { window.print(); }
+
+function actionRow() {
+  return `<div class="action-row">
+    <button class="act-btn copy-btn" onclick="copyPlan()">📋 Copy</button>
+    <button class="act-btn" onclick="printPlan()">🖨️ Print</button>
+  </div>`;
+}
+
+// ── Display results ───────────────────────────────────────────────
+function showDay(plan, budget, sym, allowed) {
+  const mealsH = plan.meals.map(m=>mealCard(m,allowed)).join('');
+  document.getElementById('results').innerHTML = `<div class="fade">
+    <div class="results-top">
+      <div class="results-title">Your meal plan</div>
+      <div class="total-cost">${plan.totalCost} / day</div>
+    </div>
+    <div class="results-meta">${plan.calories||''} · Budget: ${sym}${budget}</div>
+    ${budgetBanner(plan.totalCost, budget, 1, sym)}
+    ${actionRow()}
+    <div class="meals">${mealsH}</div>
+    <div class="shop-card"><div class="shop-title">🛒 Shopping list</div>${shopHTML(plan.shoppingList)}</div>
+    <div class="tip-card">💡 ${plan.tip}</div>
+    ${actionRow()}
+  </div>`;
+}
+
+function showWeek(plan, budget, sym, allowed) {
+  const daysH = plan.days.map(d=>`
+    <div class="day-block">
+      <div class="day-header">
+        <div class="day-name">📅 ${d.day}</div>
+        <div class="day-info">${d.dailyCost} · ${d.calories||''}</div>
+      </div>
+      <div class="meals">${d.meals.map(m=>mealCard(m,allowed)).join('')}</div>
+    </div>`).join('');
+
+  document.getElementById('results').innerHTML = `<div class="fade">
+    <div class="results-top">
+      <div class="results-title">Your 7-day plan</div>
+      <div class="total-cost">${plan.totalCost} total</div>
+    </div>
+    <div class="results-meta">Budget: ${sym}${budget}/day · ${sym}${(parseFloat(budget)*7).toFixed(2)} for the week</div>
+    ${budgetBanner(plan.totalCost, budget, 7, sym)}
+    ${actionRow()}
+    ${daysH}
+    <div class="shop-card"><div class="shop-title">🛒 Weekly shopping list</div>${shopHTML(plan.shoppingList)}</div>
+    <div class="tip-card">💡 ${plan.tip}</div>
+    ${actionRow()}
+  </div>`;
+}
+
+// ── Prompt ────────────────────────────────────────────────────────
+function buildPrompt(budget, country, cur, diet, goal, meals, skill, selected, duration) {
+  const dietMap = {
+    'none':'no dietary restrictions (omnivore)',
+    'vegetarian':'vegetarian (no meat or fish)',
+    'high-protein':'high protein (focus on meat, eggs, legumes)',
+    'vegan':'vegan (no animal products)'
+  };
+  const goalMap = {
+    'maintain':'maintain current weight',
+    'lose':'lose weight (lower calories, filling foods)',
+    'gain':'gain muscle (higher calories and protein)'
+  };
+  const wb = (parseFloat(budget)*7).toFixed(2);
+  const dur = duration===7
+    ? `Generate a 7-day plan labelled Day 1–Day 7.
+- No meal name repeats across all 7 days.
+- Total must stay within ${cur.s}${wb} (${cur.s}${budget}/day × 7).
+- Each day has its own dailyCost field.
+- shoppingList covers the entire week.
+- For 7-day: max 3 steps per meal, max 4 ingredients per meal.`
+    : `Generate a 1-day plan. Total cost must stay under ${cur.s}${budget}.`;
+
+  return `You are a budget meal planner. Generate a practical affordable meal plan. Keep language simple and beginner-friendly.
+
+User is based in ${country||'Europe'}. Use locally available ingredients typical to that region.
+IMPORTANT: All prices must be in ${cur.n} (${cur.c}), symbol "${cur.s}". Use realistic local supermarket prices for ${country||'Europe'}.
+Cooking skill: ${skill}.
+
+USER INPUTS:
+- Budget: ${cur.s}${budget} ${cur.c} per day
+- Diet: ${dietMap[diet]||diet}
+- Goal: ${goalMap[goal]||goal}
+- Meals per day: ${meals}
+
+${appliancePrompt(selected)}
+
+DURATION: ${dur}
+
+BUDGET: Show cost in ${cur.s} for each meal. Never exceed total budget — adjust if needed.
+
+VARIETY: No repeated main ingredient in the same day. Vary proteins, cooking methods, flavor profiles.
+
+STEPS:
+- 3–5 numbered steps per meal (max 3 for 7-day).
+- Each step under 20 words.
+- Start each step with an action verb (Boil, Chop, Mix, Heat, Add, Stir, Place, Cook, Drain, Season).
+- Write for a complete beginner. Be direct and specific.
+
+Always respond in valid JSON only. No text outside JSON.
+
+1-DAY format:
+{
+  "totalCost":"${cur.s}X.XX","calories":"~XXXX kcal","budgetConfirmed":true,
+  "meals":[{"type":"Breakfast","name":"...","description":"One sentence.","cost":"${cur.s}X.XX","prepTime":"X mins","portion":"e.g. 300g","calories":"~XXX kcal","cookingMethod":"e.g. Pan-fried","ingredients":["item 1","item 2"],"steps":["Verb + action.","Verb + action."]}],
+  "shoppingList":{"produce":[],"dairy":[],"grains":[],"protein":[],"other":[]},
+  "tip":"One money-saving tip."
+}
+
+7-DAY format:
+{
+  "totalCost":"${cur.s}XX.XX","budgetConfirmed":true,
+  "days":[{"day":"Day 1","dailyCost":"${cur.s}X.XX","calories":"~XXXX kcal","meals":[{"type":"Breakfast","name":"...","description":"One sentence.","cost":"${cur.s}X.XX","prepTime":"X mins","portion":"e.g. 300g","calories":"~XXX kcal","cookingMethod":"e.g. Air-fried","ingredients":["item 1","item 2"],"steps":["Verb + action.","Verb + action.","Verb + action."]}]}],
+  "shoppingList":{"produce":[],"dairy":[],"grains":[],"protein":[],"other":[]},
+  "tip":"One money-saving tip for the week."
+}`;
+}
+
+// ── Main ──────────────────────────────────────────────────────────
+async function generate() {
+  const budget   = document.getElementById('budget').value || 10;
+  const country  = document.getElementById('country').value.trim() || 'Europe';
+  const cur      = currentCurrency;
+  const diet     = sel('diet')  || 'none';
+  const goal     = sel('goal')  || 'maintain';
+  const meals    = sel('mpp')   || '3';
+  const duration = parseInt(sel('dur') || '1');
+  const skill    = sel('skill') || 'beginner';
+  const selected = apps();
+
+  if (!selected.length) {
+    showErr('Please select at least one appliance you have access to.');
+    return;
+  }
+
+  // UI — loading
+  const btn = document.getElementById('genBtn');
+  const sb  = document.getElementById('statusBox');
+  const st  = document.getElementById('statusText');
+  const ss  = document.getElementById('statusSub');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spin"></span> Generating...';
+  sb.style.display = 'block';
+  st.innerHTML = duration===7
+    ? '🧠 Building your 7-day plan...'
+    : '🧠 Building your meal plan...';
+  ss.textContent = duration===7
+    ? 'This takes about 20–30 seconds — hang tight!'
+    : 'Usually takes 5–10 seconds';
+  document.getElementById('errBox').style.display   = 'none';
+  document.getElementById('appWarn').style.display  = 'none';
+  document.getElementById('results').style.display  = 'none';
+
+  try {
+    const prompt   = buildPrompt(budget, country, cur, diet, goal, meals, skill, selected, duration);
+    const response = await fetch('/generate', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({prompt})
+    });
+
+    if (!response.ok) {
+      const e = await response.json();
+      throw new Error(e.error || `Server error: ${response.status}`);
     }
-  </script>
 
+    const data   = await response.json();
+    const raw    = data.result.replace(/```json|```/g,'').trim();
+    const plan   = JSON.parse(raw);
+    const allowed = allowedMethods();
+
+    // Check for appliance violations
+    const all_meals = plan.days ? plan.days.flatMap(d=>d.meals) : plan.meals;
+    const bad = all_meals.filter(m => m.cookingMethod && !methodOk(m.cookingMethod, allowed));
+    if (bad.length) {
+      const w = document.getElementById('appWarn');
+      w.style.display = 'block';
+      w.textContent = `⚠️ ${bad.length} meal(s) may use appliances you don't have (shown in orange). Try regenerating for a better result.`;
+    }
+
+    document.getElementById('results').style.display = 'block';
+    duration === 7
+      ? showWeek(plan, budget, cur.s, allowed)
+      : showDay(plan, budget, cur.s, allowed);
+
+  } catch(err) {
+    showErr(`Something went wrong: ${err.message}`);
+  } finally {
+    btn.disabled  = false;
+    btn.innerHTML = '✨ Generate My Meal Plan';
+    sb.style.display = 'none';
+  }
+}
+
+function showErr(msg) {
+  const b = document.getElementById('errBox');
+  b.style.display = 'block';
+  b.textContent = msg;
+}
+</script>
 </body>
 </html>
