@@ -586,15 +586,15 @@
 
     <div class="field">
       <label>Cuisine preference (optional)</label>
-      <div class="pill-group" id="cuisineGroup">
-        <label class="chip" onclick="toggleChip(this)"><input type="checkbox" value="Any"/> 🌍 Any</label>
-        <label class="chip" onclick="toggleChip(this)"><input type="checkbox" value="Italian"/> 🍝 Italian</label>
-        <label class="chip" onclick="toggleChip(this)"><input type="checkbox" value="Asian"/> 🥢 Asian</label>
-        <label class="chip" onclick="toggleChip(this)"><input type="checkbox" value="Mexican"/> 🌮 Mexican</label>
-        <label class="chip" onclick="toggleChip(this)"><input type="checkbox" value="Middle Eastern"/> 🧆 Middle Eastern</label>
-        <label class="chip" onclick="toggleChip(this)"><input type="checkbox" value="Nordic"/> 🐟 Nordic</label>
-        <label class="chip" onclick="toggleChip(this)"><input type="checkbox" value="American"/> 🍔 American</label>
-        <label class="chip" onclick="toggleChip(this)"><input type="checkbox" value="Indian"/> 🍛 Indian</label>
+      <div class="pill-group" id="cuisineGroup" data-group="cuisines">
+        <label class="chip"><input type="checkbox" value="Any"/> 🌍 Any</label>
+        <label class="chip"><input type="checkbox" value="Italian"/> 🍝 Italian</label>
+        <label class="chip"><input type="checkbox" value="Asian"/> 🥢 Asian</label>
+        <label class="chip"><input type="checkbox" value="Mexican"/> 🌮 Mexican</label>
+        <label class="chip"><input type="checkbox" value="Middle Eastern"/> 🧆 Middle Eastern</label>
+        <label class="chip"><input type="checkbox" value="Nordic"/> 🐟 Nordic</label>
+        <label class="chip"><input type="checkbox" value="American"/> 🍔 American</label>
+        <label class="chip"><input type="checkbox" value="Indian"/> 🍛 Indian</label>
       </div>
     </div>
   </div>
@@ -605,14 +605,14 @@
 
     <div class="field">
       <label>Allergies (select all that apply)</label>
-      <div class="chip-group">
-        <label class="chip" onclick="toggleChip(this)"><input type="checkbox" value="gluten"/> 🌾 Gluten</label>
-        <label class="chip" onclick="toggleChip(this)"><input type="checkbox" value="dairy"/> 🥛 Dairy</label>
-        <label class="chip" onclick="toggleChip(this)"><input type="checkbox" value="nuts"/> 🥜 Nuts</label>
-        <label class="chip" onclick="toggleChip(this)"><input type="checkbox" value="eggs"/> 🥚 Eggs</label>
-        <label class="chip" onclick="toggleChip(this)"><input type="checkbox" value="soy"/> 🌱 Soy</label>
-        <label class="chip" onclick="toggleChip(this)"><input type="checkbox" value="shellfish"/> 🦐 Shellfish</label>
-        <label class="chip" onclick="toggleChip(this)"><input type="checkbox" value="fish"/> 🐟 Fish</label>
+      <div class="chip-group" data-group="allergies">
+        <label class="chip"><input type="checkbox" value="gluten"/> 🌾 Gluten</label>
+        <label class="chip"><input type="checkbox" value="dairy"/> 🥛 Dairy</label>
+        <label class="chip"><input type="checkbox" value="nuts"/> 🥜 Nuts</label>
+        <label class="chip"><input type="checkbox" value="eggs"/> 🥚 Eggs</label>
+        <label class="chip"><input type="checkbox" value="soy"/> 🌱 Soy</label>
+        <label class="chip"><input type="checkbox" value="shellfish"/> 🦐 Shellfish</label>
+        <label class="chip"><input type="checkbox" value="fish"/> 🐟 Fish</label>
       </div>
     </div>
 
@@ -628,48 +628,48 @@
 
     <div class="field">
       <label>Preferred protein sources</label>
-      <div class="chip-group">
-        <label class="chip active" onclick="toggleChip(this)"><input type="checkbox" value="chicken" checked/> 🍗 Chicken</label>
-        <label class="chip active" onclick="toggleChip(this)"><input type="checkbox" value="eggs" checked/> 🥚 Eggs</label>
-        <label class="chip active" onclick="toggleChip(this)"><input type="checkbox" value="lentils" checked/> 🌱 Lentils</label>
-        <label class="chip active" onclick="toggleChip(this)"><input type="checkbox" value="chickpeas" checked/> 🫘 Chickpeas</label>
-        <label class="chip" onclick="toggleChip(this)"><input type="checkbox" value="beef"/> 🥩 Beef</label>
-        <label class="chip" onclick="toggleChip(this)"><input type="checkbox" value="pork"/> 🐷 Pork</label>
-        <label class="chip" onclick="toggleChip(this)"><input type="checkbox" value="fish"/> 🐟 Fish</label>
-        <label class="chip" onclick="toggleChip(this)"><input type="checkbox" value="tofu"/> 🫙 Tofu</label>
-        <label class="chip" onclick="toggleChip(this)"><input type="checkbox" value="greek yogurt"/> 🥛 Greek yogurt</label>
-        <label class="chip" onclick="toggleChip(this)"><input type="checkbox" value="canned tuna"/> 🐟 Canned tuna</label>
-        <label class="chip" onclick="toggleChip(this)"><input type="checkbox" value="cottage cheese"/> 🧀 Cottage cheese</label>
+      <div class="chip-group" data-group="proteins">
+        <label class="chip active"><input type="checkbox" value="chicken" checked/> 🍗 Chicken</label>
+        <label class="chip active"><input type="checkbox" value="eggs" checked/> 🥚 Eggs</label>
+        <label class="chip active"><input type="checkbox" value="lentils" checked/> 🌱 Lentils</label>
+        <label class="chip active"><input type="checkbox" value="chickpeas" checked/> 🫘 Chickpeas</label>
+        <label class="chip"><input type="checkbox" value="beef"/> 🥩 Beef</label>
+        <label class="chip"><input type="checkbox" value="pork"/> 🐷 Pork</label>
+        <label class="chip"><input type="checkbox" value="fish"/> 🐟 Fish</label>
+        <label class="chip"><input type="checkbox" value="tofu"/> 🫙 Tofu</label>
+        <label class="chip"><input type="checkbox" value="greek yogurt"/> 🥛 Greek yogurt</label>
+        <label class="chip"><input type="checkbox" value="canned tuna"/> 🐟 Canned tuna</label>
+        <label class="chip"><input type="checkbox" value="cottage cheese"/> 🧀 Cottage cheese</label>
       </div>
     </div>
 
     <div class="field">
       <label>Preferred carbohydrates</label>
-      <div class="chip-group">
-        <label class="chip active" onclick="toggleChip(this)"><input type="checkbox" value="pasta" checked/> 🍝 Pasta</label>
-        <label class="chip active" onclick="toggleChip(this)"><input type="checkbox" value="bread" checked/> 🍞 Bread</label>
-        <label class="chip active" onclick="toggleChip(this)"><input type="checkbox" value="oats" checked/> 🥣 Oats</label>
-        <label class="chip active" onclick="toggleChip(this)"><input type="checkbox" value="potatoes" checked/> 🥔 Potatoes</label>
-        <label class="chip" onclick="toggleChip(this)"><input type="checkbox" value="rice"/> 🍚 Rice</label>
-        <label class="chip" onclick="toggleChip(this)"><input type="checkbox" value="sweet potato"/> 🍠 Sweet potato</label>
-        <label class="chip" onclick="toggleChip(this)"><input type="checkbox" value="quinoa"/> 🌾 Quinoa</label>
-        <label class="chip" onclick="toggleChip(this)"><input type="checkbox" value="wraps"/> 🫓 Wraps</label>
+      <div class="chip-group" data-group="carbs">
+        <label class="chip active"><input type="checkbox" value="pasta" checked/> 🍝 Pasta</label>
+        <label class="chip active"><input type="checkbox" value="bread" checked/> 🍞 Bread</label>
+        <label class="chip active"><input type="checkbox" value="oats" checked/> 🥣 Oats</label>
+        <label class="chip active"><input type="checkbox" value="potatoes" checked/> 🥔 Potatoes</label>
+        <label class="chip"><input type="checkbox" value="rice"/> 🍚 Rice</label>
+        <label class="chip"><input type="checkbox" value="sweet potato"/> 🍠 Sweet potato</label>
+        <label class="chip"><input type="checkbox" value="quinoa"/> 🌾 Quinoa</label>
+        <label class="chip"><input type="checkbox" value="wraps"/> 🫓 Wraps</label>
       </div>
     </div>
 
     <div class="field">
       <label>Vegetables you enjoy</label>
-      <div class="chip-group">
-        <label class="chip active" onclick="toggleChip(this)"><input type="checkbox" value="broccoli" checked/> 🥦 Broccoli</label>
-        <label class="chip active" onclick="toggleChip(this)"><input type="checkbox" value="carrots" checked/> 🥕 Carrots</label>
-        <label class="chip active" onclick="toggleChip(this)"><input type="checkbox" value="onions" checked/> 🧅 Onions</label>
-        <label class="chip active" onclick="toggleChip(this)"><input type="checkbox" value="tomatoes" checked/> 🍅 Tomatoes</label>
-        <label class="chip" onclick="toggleChip(this)"><input type="checkbox" value="spinach"/> 🥬 Spinach</label>
-        <label class="chip" onclick="toggleChip(this)"><input type="checkbox" value="zucchini"/> 🥒 Zucchini</label>
-        <label class="chip" onclick="toggleChip(this)"><input type="checkbox" value="bell peppers"/> 🫑 Bell peppers</label>
-        <label class="chip" onclick="toggleChip(this)"><input type="checkbox" value="mushrooms"/> 🍄 Mushrooms</label>
-        <label class="chip" onclick="toggleChip(this)"><input type="checkbox" value="cabbage"/> 🥬 Cabbage</label>
-        <label class="chip" onclick="toggleChip(this)"><input type="checkbox" value="cucumber"/> 🥒 Cucumber</label>
+      <div class="chip-group" data-group="vegetables">
+        <label class="chip active"><input type="checkbox" value="broccoli" checked/> 🥦 Broccoli</label>
+        <label class="chip active"><input type="checkbox" value="carrots" checked/> 🥕 Carrots</label>
+        <label class="chip active"><input type="checkbox" value="onions" checked/> 🧅 Onions</label>
+        <label class="chip active"><input type="checkbox" value="tomatoes" checked/> 🍅 Tomatoes</label>
+        <label class="chip"><input type="checkbox" value="spinach"/> 🥬 Spinach</label>
+        <label class="chip"><input type="checkbox" value="zucchini"/> 🥒 Zucchini</label>
+        <label class="chip"><input type="checkbox" value="bell peppers"/> 🫑 Bell peppers</label>
+        <label class="chip"><input type="checkbox" value="mushrooms"/> 🍄 Mushrooms</label>
+        <label class="chip"><input type="checkbox" value="cabbage"/> 🥬 Cabbage</label>
+        <label class="chip"><input type="checkbox" value="cucumber"/> 🥒 Cucumber</label>
       </div>
       <div class="hint">Select what you like — the AI will rotate through these across your plan.</div>
     </div>
@@ -681,13 +681,13 @@
 
     <div class="field">
       <label>Appliances you have</label>
-      <div class="chip-group">
-        <label class="chip active" onclick="toggleChip(this)"><input type="checkbox" value="stovetop" checked/> 🍳 Stovetop</label>
-        <label class="chip" onclick="toggleChip(this)"><input type="checkbox" value="microwave"/> 📡 Microwave</label>
-        <label class="chip" onclick="toggleChip(this)"><input type="checkbox" value="oven"/> 🔥 Oven</label>
-        <label class="chip" onclick="toggleChip(this)"><input type="checkbox" value="kettle"/> ☕ Kettle</label>
-        <label class="chip" onclick="toggleChip(this)"><input type="checkbox" value="blender"/> 🥤 Blender</label>
-        <label class="chip" onclick="toggleChip(this)"><input type="checkbox" value="air fryer"/> 💨 Air fryer</label>
+      <div class="chip-group" data-group="appliances">
+        <label class="chip active"><input type="checkbox" value="stovetop" checked/> 🍳 Stovetop</label>
+        <label class="chip"><input type="checkbox" value="microwave"/> 📡 Microwave</label>
+        <label class="chip"><input type="checkbox" value="oven"/> 🔥 Oven</label>
+        <label class="chip"><input type="checkbox" value="kettle"/> ☕ Kettle</label>
+        <label class="chip"><input type="checkbox" value="blender"/> 🥤 Blender</label>
+        <label class="chip"><input type="checkbox" value="air fryer"/> 💨 Air fryer</label>
       </div>
       <div class="hint">Only select what you actually have — meals will be built around these only.</div>
     </div>
@@ -741,12 +741,16 @@
     el.classList.add('active');
   }
 
-  // ===== CHIP TOGGLES (checkbox-style) =====
-  function toggleChip(el) {
-    el.classList.toggle('active');
-    const cb = el.querySelector('input[type="checkbox"]');
-    if (cb) cb.checked = !cb.checked;
-  }
+  // ===== CHIP TOGGLES =====
+  // Don't use onclick on labels — the browser already toggles the checkbox on click.
+  // Instead, listen to the checkbox change event and sync the active class.
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.chip input[type="checkbox"]').forEach(cb => {
+      cb.addEventListener('change', () => {
+        cb.closest('.chip').classList.toggle('active', cb.checked);
+      });
+    });
+  });
 
   // ===== EXAMPLE TOGGLE =====
   function toggleExample() {
@@ -773,23 +777,12 @@
   }
 
   // ===== READ FORM =====
+  function getChecked(group) {
+    return [...document.querySelectorAll(`[data-group="${group}"] input:checked`)].map(i => i.value);
+  }
+
   function getFormData() {
     const get = id => document.getElementById(id)?.value?.trim();
-    const getRadio = name => {
-      const el = document.querySelector(`input[name="${name}"]:checked`) ||
-                 document.querySelector(`.pill.active input[name="${name}"]`);
-      return el?.value || '';
-    };
-    const getActive = (name) => {
-      return [...document.querySelectorAll(`input[name="${name}"]`)]
-        .filter(i => i.checked).map(i => i.value);
-    };
-    const getCheckedChips = (groupId) => {
-      return [...document.querySelectorAll(`#${groupId} .chip.active input`)]
-        .map(i => i.value);
-    };
-
-    // radios via active pill class
     const getActivePill = (name) => {
       const el = document.querySelector(`.pill.active input[name="${name}"]`);
       return el?.value || '';
@@ -802,13 +795,13 @@
       meals: getActivePill('meals') || '3',
       goal: getActivePill('goal') || 'Maintain weight',
       diet: getActivePill('diet') || 'No restriction',
-      cuisines: [...document.querySelectorAll('#cuisineGroup .chip.active input')].map(i=>i.value),
-      allergies: [...document.querySelectorAll('.chip-group .chip.active input[value="gluten"], .chip-group .chip.active input[value="dairy"], .chip-group .chip.active input[value="nuts"], .chip-group .chip.active input[value="eggs"], .chip-group .chip.active input[value="soy"], .chip-group .chip.active input[value="shellfish"], .chip-group .chip.active input[value="fish"]')].map(i=>i.value),
+      cuisines: getChecked('cuisines'),
+      allergies: getChecked('allergies'),
       dislikes: get('dislikes'),
-      proteins: [...document.querySelectorAll('.chip-group .chip.active input[value="chicken"], .chip-group .chip.active input[value="beef"], .chip-group .chip.active input[value="pork"], .chip-group .chip.active input[value="fish"], .chip-group .chip.active input[value="tofu"], .chip-group .chip.active input[value="lentils"], .chip-group .chip.active input[value="chickpeas"], .chip-group .chip.active input[value="greek yogurt"], .chip-group .chip.active input[value="canned tuna"], .chip-group .chip.active input[value="cottage cheese"], .chip-group .chip.active input[value="eggs"]')].map(i=>i.value),
-      carbs: [...document.querySelectorAll('.chip-group .chip.active input[value="pasta"], .chip-group .chip.active input[value="bread"], .chip-group .chip.active input[value="oats"], .chip-group .chip.active input[value="potatoes"], .chip-group .chip.active input[value="rice"], .chip-group .chip.active input[value="sweet potato"], .chip-group .chip.active input[value="quinoa"], .chip-group .chip.active input[value="wraps"]')].map(i=>i.value),
-      vegetables: [...document.querySelectorAll('.chip-group .chip.active input[value="broccoli"], .chip-group .chip.active input[value="carrots"], .chip-group .chip.active input[value="onions"], .chip-group .chip.active input[value="tomatoes"], .chip-group .chip.active input[value="spinach"], .chip-group .chip.active input[value="zucchini"], .chip-group .chip.active input[value="bell peppers"], .chip-group .chip.active input[value="mushrooms"], .chip-group .chip.active input[value="cabbage"], .chip-group .chip.active input[value="cucumber"]')].map(i=>i.value),
-      appliances: [...document.querySelectorAll('.chip-group .chip.active input[value="stovetop"], .chip-group .chip.active input[value="microwave"], .chip-group .chip.active input[value="oven"], .chip-group .chip.active input[value="kettle"], .chip-group .chip.active input[value="blender"], .chip-group .chip.active input[value="air fryer"]')].map(i=>i.value),
+      proteins: getChecked('proteins'),
+      carbs: getChecked('carbs'),
+      vegetables: getChecked('vegetables'),
+      appliances: getChecked('appliances'),
       skill: getActivePill('skill') || 'Beginner',
     };
   }
