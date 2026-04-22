@@ -17,7 +17,7 @@ app.use(cors({
 app.use(express.json());
 
 app.use(session({
-  secret: process.env.SESSION_SECRET || "fallback-secret-change-me", // FIX 1: use env var
+  secret: process.env.SESSION_SECRET || "fallback-secret-change-me",
   resave: false,
   saveUninitialized: true
 }));
@@ -36,8 +36,12 @@ const FREE_LIMIT = 10;
 const DAY = 24 * 60 * 60 * 1000;
 const API_KEY = process.env.API_KEY;
 
+// ================= STATIC FILES =================
+// Serve your HTML/CSS/JS files from a "public" folder
+app.use(express.static(path.join(__dirname, "public")));
+
 // ================= INIT DB (RUN ONCE) =================
-// FIX 2: protect /init-db with a secret so random visitors can't trigger it
+// Protect with a secret: visit /init-db?secret=YOUR_INIT_SECRET
 app.get("/init-db", async (req, res) => {
   if (req.query.secret !== process.env.INIT_SECRET) {
     return res.status(403).send("Forbidden");
@@ -129,6 +133,11 @@ app.post("/generate", async (req, res) => {
 
   const { prompt } = req.body;
 
+  // Safety: reject empty prompts
+  if (!prompt || prompt.trim().length < 10) {
+    return res.json({ error: "Invalid request" });
+  }
+
   const response = await fetch("https://api.anthropic.com/v1/messages", {
     method: "POST",
     headers: {
@@ -138,7 +147,7 @@ app.post("/generate", async (req, res) => {
     },
     body: JSON.stringify({
       model: "claude-sonnet-4-20250514",
-      max_tokens: 800,
+      max_tokens: 4000, // increased from 800 — meal plans need space
       messages: [
         { role: "user", content: prompt }
       ]
@@ -192,7 +201,7 @@ app.post("/create-checkout-session", async (req, res) => {
 });
 
 // ================= STRIPE WEBHOOK =================
-// FIX 3: verify Stripe webhook signature to prevent fake events
+// Verify Stripe signature to prevent fake events
 app.post("/stripe-webhook", express.raw({ type: "application/json" }), async (req, res) => {
   const sig = req.headers["stripe-signature"];
   let event;
@@ -201,7 +210,7 @@ app.post("/stripe-webhook", express.raw({ type: "application/json" }), async (re
     event = stripe.webhooks.constructEvent(
       req.body,
       sig,
-      process.env.STRIPE_WEBHOOK_SECRET // add this in Render env vars
+      process.env.STRIPE_WEBHOOK_SECRET
     );
   } catch (err) {
     console.error("Webhook signature verification failed:", err.message);
@@ -223,11 +232,6 @@ app.post("/stripe-webhook", express.raw({ type: "application/json" }), async (re
 // ================= SUCCESS PAGE =================
 app.get("/success", (req, res) => {
   res.send("Payment successful ✔ You are now Premium!");
-});
-
-// ================= HOME =================
-app.get("/", (req, res) => {
-  res.send("SaaS Server is running ✔");
 });
 
 // ================= START =================
