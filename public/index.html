@@ -778,10 +778,6 @@
   }
 
   // ===== READ FORM =====
-  function getChecked(group) {
-    return [...document.querySelectorAll(`[data-group="${group}"] input:checked`)].map(i => i.value);
-  }
-
   function getFormData() {
     const get = id => document.getElementById(id)?.value?.trim();
     const getActivePill = (name) => {
