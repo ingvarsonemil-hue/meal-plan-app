@@ -3,616 +3,762 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Mealzy — Free Meal Plan Generator</title>
-  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Lora:wght@600&display=swap" rel="stylesheet"/>
+  <title>Mealzy — Personalised Meal Plans</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Bebas+Neue&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --o:      #E07B39;
-      --o-d:    #C45E20;
-      --o-lt:   #FFF5EC;
-      --o-bd:   #FFDCBC;
-      --g:      #2A5C2A;
-      --g-lt:   #EFF8EF;
-      --g-bd:   #A8D8A8;
-      --r:      #C0392B;
-      --r-lt:   #FFF0EE;
-      --r-bd:   #FFBBBB;
-      --b-lt:   #EFF6FF;
-      --b-bd:   #BFDBFE;
-      --b-txt:  #1D4ED8;
-      --text:   #1C1007;
-      --mid:    #6B5744;
-      --muted:  #AA917C;
-      --bg:     #FDF8F3;
-      --bg2:    #FAF3EB;
-      --surf:   #FFFFFF;
-      --bord:   #EAE0D5;
-      --bord2:  #DDD0C2;
-      --shadow: 0 2px 12px rgba(100,60,20,0.07);
-      --shadow2: 0 4px 24px rgba(100,60,20,0.11);
-      --r-sm:   10px;
-      --r-md:   16px;
-      --r-lg:   22px;
-      --r-xl:   28px;
+      --glass:        rgba(255,255,255,0.07);
+      --glass-hover:  rgba(255,255,255,0.12);
+      --glass-border: rgba(255,255,255,0.12);
+      --glass-strong: rgba(255,255,255,0.15);
+      --accent:       #E8C547;
+      --accent2:      #C8F0A0;
+      --text:         #F5F0E8;
+      --text-dim:     rgba(245,240,232,0.55);
+      --text-dimmer:  rgba(245,240,232,0.35);
+      --red-glass:    rgba(220,60,60,0.25);
+      --red-border:   rgba(255,100,100,0.4);
+      --green-glass:  rgba(80,160,80,0.2);
+      --green-border: rgba(120,200,120,0.4);
     }
 
     html { scroll-behavior: smooth; }
 
     body {
-      font-family: 'Nunito', sans-serif;
-      background: var(--bg);
+      font-family: 'Space Grotesk', sans-serif;
+      background: #0A0A08;
       color: var(--text);
       min-height: 100vh;
-      padding: 28px 16px 120px;
+      overflow-x: hidden;
     }
 
-    .wrap { max-width: 620px; margin: 0 auto; }
+    /* ── ANIMATED BACKGROUND ─────────────────────────────────── */
+    .bg-scene {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 20% 20%, rgba(60,40,10,0.9) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 80% at 80% 80%, rgba(10,30,20,0.95) 0%, transparent 60%),
+        radial-gradient(ellipse 100% 100% at 50% 50%, #0D0B08 0%, #080A06 100%);
+    }
 
-    /* ── HERO ───────────────────────────────────────────────────── */
-    .hero {
-      background: linear-gradient(145deg, #FFF8F1 0%, #FFF2E5 100%);
-      border: 1.5px solid var(--o-bd);
-      border-radius: var(--r-xl);
-      padding: 36px 28px 32px;
-      margin-bottom: 14px;
-      text-align: center;
-      box-shadow: var(--shadow);
+    /* Floating orbs for atmosphere */
+    .orb {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.4;
+      animation: drift 20s ease-in-out infinite;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .orb1 { width: 500px; height: 500px; background: radial-gradient(circle, rgba(180,120,20,0.6), transparent); top: -100px; left: -100px; animation-delay: 0s; }
+    .orb2 { width: 400px; height: 400px; background: radial-gradient(circle, rgba(20,80,40,0.5), transparent); bottom: -100px; right: -100px; animation-delay: -10s; }
+    .orb3 { width: 300px; height: 300px; background: radial-gradient(circle, rgba(100,60,160,0.3), transparent); top: 50%; left: 50%; transform: translate(-50%,-50%); animation-delay: -5s; }
+
+    @keyframes drift {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      33%       { transform: translate(30px, -20px) scale(1.05); }
+      66%       { transform: translate(-20px, 30px) scale(0.95); }
+    }
+
+    /* ── LAYOUT ──────────────────────────────────────────────── */
+    .page {
       position: relative;
-      overflow: hidden;
+      z-index: 1;
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 0 20px 120px;
     }
 
-    /* Decorative background circles */
-    .hero::before {
-      content: '';
-      position: absolute;
-      width: 200px; height: 200px;
-      background: radial-gradient(circle, rgba(224,123,57,0.08) 0%, transparent 70%);
-      top: -60px; right: -60px;
-      border-radius: 50%;
-    }
-
-    .hero::after {
-      content: '';
-      position: absolute;
-      width: 150px; height: 150px;
-      background: radial-gradient(circle, rgba(224,123,57,0.06) 0%, transparent 70%);
-      bottom: -40px; left: -40px;
-      border-radius: 50%;
-    }
-
-    .hero-inner { position: relative; z-index: 1; }
-
-    .badge {
-      display: inline-flex;
+    /* ── NAV ─────────────────────────────────────────────────── */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      display: flex;
       align-items: center;
-      gap: 6px;
-      background: var(--surf);
-      color: var(--o);
-      font-size: 12px;
-      font-weight: 800;
-      letter-spacing: 0.05em;
+      justify-content: space-between;
+      padding: 20px 0;
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .nav-logo {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 24px;
+      letter-spacing: 0.15em;
+      color: var(--accent);
+    }
+
+    .nav-tag {
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.2em;
       text-transform: uppercase;
-      padding: 6px 14px;
-      border-radius: 100px;
-      border: 1.5px solid var(--o-bd);
-      margin-bottom: 18px;
-      box-shadow: 0 1px 4px rgba(224,123,57,0.15);
+      color: var(--text-dim);
+    }
+
+    /* ── HERO ────────────────────────────────────────────────── */
+    .hero {
+      padding: 80px 0 60px;
+      text-align: center;
+    }
+
+    .hero-eyebrow {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+    }
+
+    .hero-eyebrow::before,
+    .hero-eyebrow::after {
+      content: '';
+      width: 40px;
+      height: 1px;
+      background: var(--accent);
+      opacity: 0.5;
     }
 
     .hero h1 {
-      font-family: 'Lora', serif;
-      font-size: clamp(24px, 5.5vw, 36px);
-      font-weight: 600;
-      line-height: 1.2;
-      margin-bottom: 12px;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(64px, 14vw, 120px);
+      line-height: 0.9;
+      letter-spacing: 0.02em;
       color: var(--text);
+      margin-bottom: 8px;
     }
 
-    .hero h1 em { font-style: italic; color: var(--o); }
+    .hero h1 span { color: var(--accent); }
 
-    .hero p {
+    .hero-sub {
       font-size: 15px;
-      color: var(--mid);
+      font-weight: 300;
+      color: var(--text-dim);
+      letter-spacing: 0.05em;
       line-height: 1.7;
-      max-width: 400px;
-      margin: 0 auto 28px;
+      max-width: 440px;
+      margin: 24px auto 0;
     }
 
-    /* How it works */
-    .how {
+    /* ── HOW IT WORKS STRIP ──────────────────────────────────── */
+    .how-strip {
       display: flex;
-      align-items: flex-start;
+      align-items: center;
       justify-content: center;
-      gap: 4px;
-      background: rgba(255,255,255,0.6);
-      border-radius: var(--r-md);
-      padding: 16px 12px;
-      border: 1px solid var(--o-bd);
+      gap: 0;
+      padding: 28px 0 60px;
     }
 
-    .how-step { flex: 1; text-align: center; max-width: 130px; }
+    .how-item {
+      text-align: center;
+      flex: 1;
+    }
 
     .how-num {
-      width: 36px; height: 36px;
-      border-radius: 50%;
-      background: var(--o);
-      color: #fff;
-      font-size: 16px; font-weight: 900;
-      display: flex; align-items: center; justify-content: center;
-      margin: 0 auto 8px;
-      box-shadow: 0 3px 8px rgba(224,123,57,0.35);
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 48px;
+      color: rgba(232,197,71,0.2);
+      line-height: 1;
+      margin-bottom: 6px;
     }
 
-    .how-label { font-size: 12px; font-weight: 800; color: var(--text); line-height: 1.3; }
-    .how-sub   { font-size: 11px; color: var(--muted); margin-top: 3px; line-height: 1.3; }
-    .how-arr   { color: var(--o-bd); font-size: 20px; margin-top: 8px; flex-shrink: 0; font-weight: 900; }
-
-    /* ── SAMPLE ─────────────────────────────────────────────────── */
-    .sample {
-      background: var(--surf);
-      border: 1.5px solid var(--bord);
-      border-radius: var(--r-lg);
-      overflow: hidden;
-      margin-bottom: 14px;
-      box-shadow: var(--shadow);
+    .how-label {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--text-dim);
     }
 
-    .sample-head {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 14px 18px;
-      cursor: pointer; user-select: none;
-      background: var(--o-lt);
-      border-bottom: 1.5px solid var(--o-bd);
+    .how-divider {
+      width: 1px;
+      height: 40px;
+      background: rgba(255,255,255,0.08);
+      flex-shrink: 0;
     }
 
-    .sample-head-l { display: flex; align-items: center; gap: 10px; }
-    .sample-head-icon { font-size: 22px; }
-    .sample-head-title { font-size: 14px; font-weight: 800; color: var(--o); }
-    .sample-head-sub   { font-size: 12px; color: var(--muted); margin-top: 1px; }
-
-    .s-tog {
-      font-size: 12px; font-weight: 800; color: var(--o);
-      background: var(--surf); border: 1.5px solid var(--o-bd);
-      border-radius: 100px; padding: 5px 12px; cursor: pointer;
-      transition: all 0.15s;
-    }
-    .s-tog:hover { background: var(--o); color: #fff; }
-
-    .sample-body { padding: 16px; }
-
-    .s-meal {
-      display: flex; align-items: center; gap: 12px;
-      padding: 12px 14px;
-      background: var(--bg);
-      border: 1px solid var(--bord);
-      border-radius: var(--r-md);
-      margin-bottom: 10px;
-      transition: border-color 0.15s;
-    }
-    .s-meal:last-of-type { margin-bottom: 0; }
-    .s-meal:hover { border-color: var(--o-bd); }
-
-    .s-icon { font-size: 24px; flex-shrink: 0; }
-    .s-info { flex: 1; }
-    .s-type { font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); }
-    .s-name { font-size: 14px; font-weight: 800; color: var(--text); margin: 2px 0; }
-    .s-meta { font-size: 12px; color: var(--muted); }
-    .s-cost { font-size: 15px; font-weight: 900; color: var(--o); }
-
-    .s-note {
-      font-size: 12px; color: var(--muted); text-align: center;
-      margin-top: 14px; padding-top: 14px;
-      border-top: 1px dashed var(--bord);
-      font-weight: 700;
+    /* ── GLASS CARD ──────────────────────────────────────────── */
+    .glass {
+      background: var(--glass);
+      border: 1px solid var(--glass-border);
+      border-radius: 2px;
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      padding: 28px;
+      margin-bottom: 2px;
+      transition: background 0.2s, border-color 0.2s;
     }
 
-    /* ── DIVIDER ────────────────────────────────────────────────── */
-    .divider {
-      display: flex; align-items: center; gap: 12px;
-      margin: 20px 0 14px;
+    .glass:focus-within {
+      background: var(--glass-hover);
+      border-color: rgba(232,197,71,0.3);
     }
 
-    .divider-line { flex: 1; height: 1px; background: var(--bord); }
+    .glass:hover { background: rgba(255,255,255,0.09); }
 
-    .divider-label {
-      font-size: 11px; font-weight: 800;
-      text-transform: uppercase; letter-spacing: 0.1em;
-      color: var(--muted);
+    /* Section label */
+    .lbl {
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--text-dimmer);
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
     }
 
-    /* ── SECTION ────────────────────────────────────────────────── */
-    .sec {
-      background: var(--surf);
-      border: 1.5px solid var(--bord);
-      border-radius: var(--r-lg);
-      padding: 20px;
-      margin-bottom: 10px;
-      box-shadow: var(--shadow);
-      transition: border-color 0.2s;
+    .lbl::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: rgba(255,255,255,0.06);
     }
 
-    .sec:focus-within { border-color: var(--o-bd); }
-
-    .sec-label {
-      font-size: 12px; font-weight: 800;
-      text-transform: uppercase; letter-spacing: 0.08em;
-      color: var(--muted); margin-bottom: 14px;
-      display: flex; align-items: center; gap: 7px;
+    /* ── DIVIDER HEADING ─────────────────────────────────────── */
+    .section-heading {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 36px;
+      letter-spacing: 0.08em;
+      color: var(--text);
+      padding: 48px 0 4px;
+      opacity: 0.9;
     }
 
-    .sec-label .note { font-weight: 600; text-transform: none; letter-spacing: 0; color: var(--muted); font-size: 11px; }
+    .section-heading span { color: var(--accent); }
 
-    /* ── BUDGET ─────────────────────────────────────────────────── */
-    .budget-box {
-      display: flex; align-items: center;
-      background: var(--bg2);
-      border: 2px solid var(--bord);
-      border-radius: var(--r-md);
-      padding: 12px 18px; gap: 6px;
-      transition: border-color 0.2s, box-shadow 0.2s;
-    }
-    .budget-box:focus-within {
-      border-color: var(--o);
-      box-shadow: 0 0 0 4px rgba(224,123,57,0.1);
+    /* ── BUDGET ──────────────────────────────────────────────── */
+    .budget-row {
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
     }
 
     .cur-sym {
-      font-size: 32px; font-weight: 900; color: var(--o);
-      min-width: 28px; line-height: 1;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 52px;
+      color: var(--accent);
+      line-height: 1;
       transition: all 0.2s;
+      min-width: 32px;
     }
 
-    .bud-in {
-      font-family: 'Nunito', sans-serif;
-      font-size: 48px; font-weight: 900; color: var(--text);
-      border: none; background: transparent;
-      width: 150px; outline: none; line-height: 1;
+    .bud-input {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 72px;
+      line-height: 1;
+      color: var(--text);
+      background: transparent;
+      border: none;
+      outline: none;
+      width: 200px;
+      caret-color: var(--accent);
     }
 
-    .bud-in::-webkit-inner-spin-button,
-    .bud-in::-webkit-outer-spin-button { -webkit-appearance: none; }
+    .bud-input::-webkit-inner-spin-button,
+    .bud-input::-webkit-outer-spin-button { -webkit-appearance: none; }
 
-    .bud-r { margin-left: auto; text-align: right; }
-    .bud-per  { font-size: 13px; color: var(--muted); font-weight: 700; }
-    .cur-code { font-size: 12px; color: var(--o); font-weight: 800; margin-top: 3px; min-height: 16px; transition: all 0.2s; }
+    .bud-right {
+      margin-left: auto;
+      text-align: right;
+      padding-bottom: 8px;
+    }
 
-    /* ── TEXT INPUT ─────────────────────────────────────────────── */
+    .bud-per   { font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-dimmer); }
+    .cur-name  { font-size: 12px; color: var(--accent); font-weight: 500; margin-top: 4px; min-height: 16px; }
+
+    /* ── TEXT INPUT ──────────────────────────────────────────── */
     .txt-in {
-      font-family: 'Nunito', sans-serif;
-      font-size: 15px; font-weight: 700; color: var(--text);
-      border: 2px solid var(--bord);
-      background: var(--bg2);
-      border-radius: var(--r-md);
-      padding: 13px 16px; width: 100%; outline: none;
-      transition: border-color 0.2s, box-shadow 0.2s;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 15px;
+      font-weight: 400;
+      color: var(--text);
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 2px;
+      padding: 14px 16px;
+      width: 100%;
+      outline: none;
+      transition: all 0.2s;
+      letter-spacing: 0.02em;
     }
+
     .txt-in:focus {
-      border-color: var(--o);
-      box-shadow: 0 0 0 4px rgba(224,123,57,0.1);
+      background: rgba(255,255,255,0.08);
+      border-color: rgba(232,197,71,0.5);
     }
-    .txt-in::placeholder { color: var(--muted); font-weight: 600; }
+
+    .txt-in::placeholder { color: var(--text-dimmer); }
 
     .field-hint {
-      font-size: 12px; color: var(--muted); font-weight: 700;
-      margin-top: 9px; min-height: 17px; transition: all 0.2s;
-      display: flex; align-items: center; gap: 5px;
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      color: var(--text-dimmer);
+      margin-top: 10px;
+      min-height: 15px;
+      transition: color 0.2s;
+      text-transform: uppercase;
     }
 
-    /* ── PILLS ──────────────────────────────────────────────────── */
-    .pills { display: flex; flex-wrap: wrap; gap: 8px; }
+    /* ── PILLS ───────────────────────────────────────────────── */
+    .pills { display: flex; flex-wrap: wrap; gap: 6px; }
 
     .pill {
-      font-family: 'Nunito', sans-serif;
-      font-size: 13px; font-weight: 700;
-      padding: 8px 15px; border-radius: 100px;
-      border: 1.5px solid var(--bord);
-      color: var(--mid); background: var(--bg2);
-      cursor: pointer; transition: all 0.15s;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 8px 14px;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.04);
+      color: var(--text-dim);
+      cursor: pointer;
+      transition: all 0.15s;
+      border-radius: 1px;
       user-select: none;
     }
 
-    .pill:hover       { border-color: var(--o); color: var(--o); background: var(--o-lt); }
-    .pill.on          { background: var(--o); border-color: var(--o); color: #fff; box-shadow: 0 2px 8px rgba(224,123,57,0.3); }
-    .pill.multi.on    { background: var(--g); border-color: var(--g); color: #fff; box-shadow: 0 2px 8px rgba(42,92,42,0.25); }
-    .pill.multi:hover { border-color: var(--g); color: var(--g); background: var(--g-lt); }
-    .pill.al.on       { background: var(--r); border-color: var(--r); color: #fff; box-shadow: 0 2px 8px rgba(192,57,43,0.25); }
-    .pill.al:hover    { border-color: var(--r); color: var(--r); background: var(--r-lt); }
+    .pill:hover     { border-color: rgba(232,197,71,0.4); color: var(--accent); background: rgba(232,197,71,0.05); }
+    .pill.on        { background: rgba(232,197,71,0.15); border-color: var(--accent); color: var(--accent); }
+    .pill.multi.on  { background: rgba(200,240,160,0.12); border-color: var(--accent2); color: var(--accent2); }
+    .pill.multi:hover { border-color: rgba(200,240,160,0.5); color: var(--accent2); background: rgba(200,240,160,0.06); }
+    .pill.al.on     { background: var(--red-glass); border-color: var(--red-border); color: #FF8080; }
+    .pill.al:hover  { border-color: rgba(255,100,100,0.5); color: #FF8080; }
 
-    /* ── TWO COL ────────────────────────────────────────────────── */
-    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
-    .two-col .sec { margin-bottom: 0; }
+    /* ── TWO COL ─────────────────────────────────────────────── */
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; margin-bottom: 0; }
+    .two-col .glass { margin-bottom: 0; }
 
-    /* ── ALLERGY ────────────────────────────────────────────────── */
-    .allergy-input-wrap {
-      display: flex; gap: 8px; margin-top: 12px;
+    /* ── ALLERGY INPUT ───────────────────────────────────────── */
+    .a-input-row { display: flex; gap: 8px; margin-top: 12px; }
+
+    .a-input-row input {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 12px;
+      color: var(--text);
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 1px;
+      padding: 9px 13px;
+      flex: 1; outline: none;
+      transition: border-color 0.2s;
+      letter-spacing: 0.05em;
     }
 
-    .allergy-input-wrap input {
-      font-family: 'Nunito', sans-serif;
-      font-size: 13px; font-weight: 700;
-      border: 1.5px solid var(--bord);
-      background: var(--bg2);
-      border-radius: var(--r-sm);
-      padding: 9px 13px; flex: 1; outline: none;
-      color: var(--text); transition: border-color 0.2s;
-    }
-    .allergy-input-wrap input:focus { border-color: var(--r); }
-    .allergy-input-wrap input::placeholder { color: var(--muted); font-weight: 600; }
+    .a-input-row input:focus { border-color: rgba(255,100,100,0.5); }
+    .a-input-row input::placeholder { color: var(--text-dimmer); }
 
-    .allergy-add-btn {
-      font-family: 'Nunito', sans-serif;
-      font-size: 13px; font-weight: 800;
+    .a-add {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 11px; font-weight: 600;
+      letter-spacing: 0.15em; text-transform: uppercase;
       padding: 9px 14px;
-      background: var(--r-lt); border: 1.5px solid var(--r-bd);
-      border-radius: var(--r-sm); color: var(--r);
-      cursor: pointer; white-space: nowrap; transition: all 0.15s;
+      background: var(--red-glass);
+      border: 1px solid var(--red-border);
+      color: #FF9090; cursor: pointer;
+      border-radius: 1px; transition: all 0.15s;
+      white-space: nowrap;
     }
-    .allergy-add-btn:hover { background: var(--r); color: #fff; }
 
-    .allergy-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+    .a-add:hover { background: rgba(220,60,60,0.35); }
+
+    .a-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
 
     .a-tag {
-      font-size: 12px; font-weight: 700;
+      font-size: 11px; font-weight: 500;
+      letter-spacing: 0.1em; text-transform: uppercase;
       padding: 5px 10px 5px 12px;
-      background: var(--r-lt); border: 1px solid var(--r-bd);
-      border-radius: 100px; color: var(--r);
-      display: flex; align-items: center; gap: 6px; cursor: pointer;
-      transition: all 0.15s;
+      background: var(--red-glass); border: 1px solid var(--red-border);
+      color: #FF8080; display: flex; align-items: center; gap: 6px;
+      cursor: pointer; transition: all 0.15s; border-radius: 1px;
     }
-    .a-tag:hover { background: var(--r); color: #fff; }
-    .a-tag-x { font-size: 15px; font-weight: 900; line-height: 1; }
 
-    /* ── ADVANCED ───────────────────────────────────────────────── */
+    .a-tag:hover { background: rgba(220,60,60,0.35); }
+    .a-tag-x { font-size: 14px; font-weight: 700; }
+
+    /* ── ADVANCED TOGGLE ─────────────────────────────────────── */
     .adv-btn {
-      width: 100%; padding: 15px 20px;
-      background: var(--surf); border: 1.5px solid var(--bord);
-      border-radius: var(--r-lg);
-      font-family: 'Nunito', sans-serif;
-      font-size: 14px; font-weight: 800; color: var(--mid);
-      cursor: pointer; display: flex; align-items: center; justify-content: space-between;
-      margin-bottom: 10px; transition: all 0.15s;
-      box-shadow: var(--shadow);
+      width: 100%;
+      padding: 16px 28px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      color: var(--text-dim);
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 11px; font-weight: 500;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 2px;
+      transition: all 0.2s;
+      border-radius: 1px;
     }
-    .adv-btn:hover  { border-color: var(--o); color: var(--o); }
-    .adv-btn.open   { border-color: var(--o); color: var(--o); border-bottom-left-radius: 0; border-bottom-right-radius: 0; border-bottom-color: transparent; margin-bottom: 0; }
+
+    .adv-btn:hover  { border-color: rgba(232,197,71,0.3); color: var(--accent); }
+    .adv-btn.open   { border-color: rgba(232,197,71,0.3); color: var(--accent); border-bottom-color: transparent; margin-bottom: 0; }
 
     .adv-body {
-      background: var(--surf); border: 1.5px solid var(--o);
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(232,197,71,0.2);
       border-top: none;
-      border-bottom-left-radius: var(--r-lg); border-bottom-right-radius: var(--r-lg);
-      padding: 16px; margin-bottom: 10px; display: none;
+      padding: 4px 0 0;
+      display: none;
+      margin-bottom: 2px;
     }
 
-    .adv-body .sec { box-shadow: none; margin-bottom: 10px; }
-    .adv-body .sec:last-child { margin-bottom: 0; }
+    .adv-body .glass { border-radius: 0; margin-bottom: 0; border: none; border-bottom: 1px solid rgba(255,255,255,0.04); }
+    .adv-body .glass:last-child { border-bottom: none; }
 
     /* Macro sliders */
-    .macro-grid { display: flex; flex-direction: column; gap: 14px; }
+    .macro-grid { display: flex; flex-direction: column; gap: 16px; }
 
-    .macro-row { display: flex; align-items: center; gap: 12px; }
+    .macro-row  { display: flex; align-items: center; gap: 14px; }
 
-    .macro-lbl {
-      font-size: 13px; font-weight: 800; color: var(--mid);
-      width: 90px; flex-shrink: 0;
+    .macro-lbl  {
+      font-size: 11px; font-weight: 500;
+      letter-spacing: 0.15em; text-transform: uppercase;
+      color: var(--text-dim); width: 80px; flex-shrink: 0;
     }
 
     input[type=range] {
-      flex: 1; height: 6px; border-radius: 3px;
-      cursor: pointer; accent-color: var(--o);
+      flex: 1; height: 2px; cursor: pointer;
+      -webkit-appearance: none;
+      background: rgba(255,255,255,0.1);
+      border-radius: 1px; outline: none;
+    }
+
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 14px; height: 14px;
+      border-radius: 50%;
+      background: var(--accent);
+      cursor: pointer;
+      box-shadow: 0 0 8px rgba(232,197,71,0.5);
     }
 
     .macro-val {
-      font-size: 14px; font-weight: 900; color: var(--o);
-      width: 42px; text-align: right;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 20px; color: var(--accent);
+      width: 44px; text-align: right;
     }
 
-    .macro-note { font-size: 12px; color: var(--muted); font-weight: 700; margin-top: 10px; }
+    .macro-note {
+      font-size: 11px; color: var(--text-dimmer);
+      letter-spacing: 0.08em; margin-top: 12px;
+    }
 
-    /* ── GENERATE BUTTON ────────────────────────────────────────── */
+    /* ── SAMPLE PLAN ─────────────────────────────────────────── */
+    .sample-wrap {
+      margin-bottom: 2px;
+    }
+
+    .sample-toggle-btn {
+      width: 100%;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      color: var(--text-dim);
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 11px; font-weight: 500;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      padding: 14px 28px;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: space-between;
+      transition: all 0.2s; border-radius: 1px;
+    }
+
+    .sample-toggle-btn:hover { border-color: rgba(232,197,71,0.3); color: var(--accent); }
+
+    .sample-body { display: none; }
+
+    .sample-meal {
+      display: flex; align-items: center; gap: 14px;
+      padding: 14px 28px;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+      background: rgba(255,255,255,0.03);
+    }
+
+    .s-icon { font-size: 20px; flex-shrink: 0; }
+    .s-info { flex: 1; }
+    .s-type { font-size: 9px; font-weight: 500; letter-spacing: 0.25em; text-transform: uppercase; color: var(--text-dimmer); }
+    .s-name { font-size: 14px; font-weight: 500; color: var(--text); margin: 3px 0; }
+    .s-meta { font-size: 11px; color: var(--text-dimmer); letter-spacing: 0.05em; }
+    .s-cost { font-family: 'Bebas Neue', sans-serif; font-size: 22px; color: var(--accent); }
+
+    .s-note {
+      font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase;
+      color: var(--text-dimmer); text-align: center;
+      padding: 14px 28px;
+      background: rgba(255,255,255,0.02);
+      border-top: 1px solid rgba(255,255,255,0.04);
+    }
+
+    /* ── GENERATE BUTTON ─────────────────────────────────────── */
     .gen-btn {
-      width: 100%; padding: 20px;
-      background: linear-gradient(135deg, var(--o) 0%, var(--o-d) 100%);
-      color: #fff; border: none; border-radius: var(--r-md);
-      font-family: 'Nunito', sans-serif;
-      font-size: 18px; font-weight: 900;
-      cursor: pointer; margin-bottom: 16px;
-      transition: opacity 0.15s, transform 0.1s, box-shadow 0.15s;
+      width: 100%;
+      padding: 22px;
+      background: var(--accent);
+      color: #0A0A08;
+      border: none;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 22px;
+      letter-spacing: 0.2em;
+      cursor: pointer;
+      margin-top: 24px;
+      margin-bottom: 16px;
+      transition: all 0.2s;
       display: flex; align-items: center; justify-content: center; gap: 10px;
-      box-shadow: 0 4px 16px rgba(224,123,57,0.4);
-      letter-spacing: 0.01em;
+      border-radius: 1px;
     }
-    .gen-btn:hover:not(:disabled) { opacity: 0.92; box-shadow: 0 6px 20px rgba(224,123,57,0.5); transform: translateY(-1px); }
-    .gen-btn:active:not(:disabled) { transform: scale(0.985) translateY(0); }
-    .gen-btn:disabled { opacity: 0.45; cursor: not-allowed; box-shadow: none; }
 
-    /* ── STATUS ─────────────────────────────────────────────────── */
+    .gen-btn:hover:not(:disabled) {
+      background: #F5D860;
+      box-shadow: 0 8px 40px rgba(232,197,71,0.4);
+      transform: translateY(-1px);
+    }
+
+    .gen-btn:active:not(:disabled) { transform: scale(0.99); }
+    .gen-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+
+    /* ── STATUS ──────────────────────────────────────────────── */
     .status-wrap {
-      text-align: center; padding: 24px 20px;
+      text-align: center;
+      padding: 40px 20px;
       display: none;
     }
 
-    .status-spinner-wrap { margin-bottom: 14px; }
+    .status-icon { font-size: 40px; display: block; margin-bottom: 16px; animation: pulse 2s ease-in-out infinite; }
 
-    .status-bowl { font-size: 36px; animation: bounce 1s ease-in-out infinite; display: inline-block; }
-
-    @keyframes bounce {
-      0%, 100% { transform: translateY(0); }
-      50%       { transform: translateY(-8px); }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50%       { opacity: 0.6; transform: scale(0.95); }
     }
 
-    .status-title { font-size: 16px; font-weight: 800; color: var(--text); margin-bottom: 4px; }
-    .status-sub   { font-size: 13px; color: var(--muted); font-weight: 700; }
+    .status-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 28px; letter-spacing: 0.1em;
+      color: var(--text); margin-bottom: 8px;
+    }
 
-    .progress-bar-wrap { margin-top: 16px; background: var(--bord); border-radius: 100px; height: 4px; overflow: hidden; }
-    .progress-bar      { height: 100%; background: var(--o); border-radius: 100px; width: 0%; transition: width 0.3s ease; }
+    .status-sub { font-size: 12px; color: var(--text-dimmer); letter-spacing: 0.1em; text-transform: uppercase; }
 
-    /* ── ERROR / WARN ───────────────────────────────────────────── */
+    .progress-wrap { margin-top: 24px; height: 1px; background: rgba(255,255,255,0.08); }
+    .progress-fill { height: 100%; background: var(--accent); transition: width 0.3s ease; width: 0%; }
+
+    /* ── ERROR / WARN ────────────────────────────────────────── */
     .err-box {
-      background: var(--r-lt); border: 1.5px solid var(--r-bd); color: var(--r);
-      padding: 14px 18px; border-radius: var(--r-md);
-      font-size: 13px; font-weight: 700; margin-bottom: 16px; display: none;
+      background: var(--red-glass); border: 1px solid var(--red-border);
+      color: #FF9090; padding: 16px 20px;
+      font-size: 13px; font-weight: 500;
+      letter-spacing: 0.03em; margin-bottom: 16px; display: none;
+      border-radius: 1px;
     }
 
     .warn-box {
-      background: #FFFBEB; border: 1.5px solid #FDE68A; color: #92400E;
-      padding: 12px 16px; border-radius: var(--r-md);
-      font-size: 13px; font-weight: 700; margin-bottom: 12px; display: none;
+      background: rgba(200,160,20,0.15); border: 1px solid rgba(232,197,71,0.3);
+      color: var(--accent); padding: 14px 20px;
+      font-size: 12px; font-weight: 500;
+      letter-spacing: 0.05em; margin-bottom: 12px; display: none;
+      border-radius: 1px;
     }
 
-    /* ── RESULTS ────────────────────────────────────────────────── */
+    /* ── RESULTS ─────────────────────────────────────────────── */
     #results { display: none; }
 
-    .res-header {
-      background: linear-gradient(135deg, #FFF8F1 0%, #FFF3E5 100%);
-      border: 1.5px solid var(--o-bd);
-      border-radius: var(--r-lg);
-      padding: 22px 22px 18px;
-      margin-bottom: 14px;
-      box-shadow: var(--shadow);
+    .res-hero {
+      padding: 48px 0 32px;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      margin-bottom: 4px;
     }
 
-    .res-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 8px; }
-    .res-title { font-family: 'Lora', serif; font-size: 22px; font-weight: 600; color: var(--text); }
-
-    .cost-pill {
-      background: var(--o); color: #fff;
-      border-radius: 100px; padding: 7px 18px;
-      font-size: 17px; font-weight: 900; white-space: nowrap;
-      box-shadow: 0 3px 10px rgba(224,123,57,0.35);
+    .res-eyebrow {
+      font-size: 10px; letter-spacing: 0.3em; text-transform: uppercase;
+      color: var(--accent); margin-bottom: 12px;
     }
 
-    .res-meta { font-size: 13px; color: var(--mid); font-weight: 700; margin-bottom: 12px; }
+    .res-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(48px, 10vw, 80px);
+      line-height: 0.9; letter-spacing: 0.02em;
+      color: var(--text); margin-bottom: 20px;
+    }
 
+    .res-title span { color: var(--accent); }
+
+    .res-meta-row {
+      display: flex; align-items: center; gap: 24px; flex-wrap: wrap;
+    }
+
+    .res-stat {
+      display: flex; flex-direction: column; gap: 3px;
+    }
+
+    .res-stat-label { font-size: 9px; letter-spacing: 0.25em; text-transform: uppercase; color: var(--text-dimmer); }
+    .res-stat-value { font-family: 'Bebas Neue', sans-serif; font-size: 28px; color: var(--text); letter-spacing: 0.05em; }
+    .res-stat-value.accent { color: var(--accent); }
+
+    .res-divider { width: 1px; height: 40px; background: rgba(255,255,255,0.08); }
+
+    /* Budget badge */
     .budget-badge {
       display: inline-flex; align-items: center; gap: 8px;
-      padding: 10px 16px; border-radius: var(--r-sm);
-      font-size: 13px; font-weight: 800;
+      padding: 10px 16px; margin-top: 20px;
+      font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase;
+      border-radius: 1px;
     }
-    .budget-badge.ok   { background: var(--g-lt); border: 1.5px solid var(--g-bd); color: var(--g); }
-    .budget-badge.over { background: #FFF7ED; border: 1.5px solid #FED7AA; color: #92400E; }
 
-    .act-row { display: flex; gap: 8px; margin-top: 14px; }
+    .budget-badge.ok   { background: var(--green-glass); border: 1px solid var(--green-border); color: var(--accent2); }
+    .budget-badge.over { background: var(--red-glass); border: 1px solid var(--red-border); color: #FF9090; }
+
+    /* Action buttons */
+    .act-row { display: flex; gap: 4px; margin-top: 20px; }
 
     .act-btn {
-      flex: 1; padding: 11px 12px;
-      border: 1.5px solid var(--bord); border-radius: var(--r-sm);
-      background: var(--surf);
-      font-family: 'Nunito', sans-serif;
-      font-size: 13px; font-weight: 800; color: var(--mid);
+      flex: 1; padding: 12px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      color: var(--text-dim);
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 11px; font-weight: 500;
+      letter-spacing: 0.15em; text-transform: uppercase;
       cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px;
-      transition: all 0.15s;
+      transition: all 0.15s; border-radius: 1px;
     }
-    .act-btn:hover { border-color: var(--o); color: var(--o); background: var(--o-lt); }
-    .act-btn.done  { background: var(--g-lt); border-color: var(--g-bd); color: var(--g); }
+
+    .act-btn:hover { border-color: rgba(232,197,71,0.4); color: var(--accent); }
+    .act-btn.done  { background: var(--green-glass); border-color: var(--green-border); color: var(--accent2); }
 
     /* Day block */
-    .day-block { margin-bottom: 18px; }
+    .day-block { margin-bottom: 4px; }
 
     .day-head {
       display: flex; align-items: center; justify-content: space-between;
-      background: var(--o-lt); border: 1.5px solid var(--o-bd);
-      border-radius: var(--r-md); padding: 10px 16px; margin-bottom: 10px;
+      padding: 12px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      margin-bottom: 4px;
     }
-    .day-name { font-size: 13px; font-weight: 900; color: var(--o); text-transform: uppercase; letter-spacing: 0.08em; }
-    .day-info { font-size: 12px; color: var(--muted); font-weight: 700; }
 
-    .meals { display: flex; flex-direction: column; gap: 12px; margin-bottom: 14px; }
+    .day-name {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 22px; letter-spacing: 0.1em; color: var(--accent);
+    }
 
-    /* ── MEAL CARD ──────────────────────────────────────────────── */
+    .day-info { font-size: 11px; color: var(--text-dimmer); letter-spacing: 0.1em; text-transform: uppercase; }
+
+    .meals { display: flex; flex-direction: column; gap: 2px; margin-bottom: 4px; }
+
+    /* ── MEAL CARD ───────────────────────────────────────────── */
     .meal-card {
-      background: var(--surf);
-      border: 1.5px solid var(--bord);
-      border-radius: var(--r-lg);
+      background: var(--glass);
+      border: 1px solid var(--glass-border);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
       overflow: hidden;
-      box-shadow: var(--shadow);
-      transition: box-shadow 0.2s;
+      transition: background 0.2s;
+      border-radius: 1px;
     }
-    .meal-card:hover    { box-shadow: var(--shadow2); }
-    .meal-card.flagged  { border-color: #FED7AA; }
 
-    /* Meal top bar */
+    .meal-card:hover { background: var(--glass-hover); }
+    .meal-card.flagged { border-color: rgba(255,100,100,0.3); }
+
     .meal-head {
       display: flex; gap: 14px; align-items: flex-start;
-      padding: 16px 16px 12px;
+      padding: 18px 20px 14px;
     }
 
     .meal-ico {
-      width: 52px; height: 52px; border-radius: 14px;
+      width: 48px; height: 48px;
       display: flex; align-items: center; justify-content: center;
-      font-size: 26px; flex-shrink: 0;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+      font-size: 24px; flex-shrink: 0;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 1px;
     }
 
     .meal-info { flex: 1; min-width: 0; }
 
     .meal-type-lbl {
-      font-size: 10px; font-weight: 800;
-      text-transform: uppercase; letter-spacing: 0.12em;
-      color: var(--o); margin-bottom: 3px;
+      font-size: 9px; font-weight: 500;
+      letter-spacing: 0.3em; text-transform: uppercase;
+      color: var(--accent); margin-bottom: 4px;
     }
 
     .meal-name {
-      font-family: 'Lora', serif;
-      font-size: 17px; font-weight: 600; color: var(--text);
-      margin-bottom: 5px; line-height: 1.25;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 22px; letter-spacing: 0.04em;
+      color: var(--text); margin-bottom: 6px; line-height: 1;
     }
 
-    .meal-desc {
-      font-size: 13px; color: var(--mid);
-      line-height: 1.55; margin-bottom: 10px;
-    }
+    .meal-desc { font-size: 13px; color: var(--text-dim); line-height: 1.55; margin-bottom: 10px; font-weight: 300; }
 
-    .meal-tags { display: flex; flex-wrap: wrap; gap: 5px; }
+    .meal-tags { display: flex; flex-wrap: wrap; gap: 4px; }
 
     .tag {
-      font-size: 11px; font-weight: 700;
-      padding: 4px 10px; border-radius: 100px;
-      border: 1px solid var(--bord);
-      color: var(--mid); background: var(--bg2);
+      font-size: 10px; font-weight: 500;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      padding: 4px 10px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.04);
+      color: var(--text-dimmer);
+      border-radius: 1px;
     }
-    .tag.blue  { background: var(--b-lt); border-color: var(--b-bd); color: var(--b-txt); }
-    .tag.warn  { background: #FFF7ED; border-color: #FED7AA; color: #92400E; }
-    .tag.macro { background: #F3F4F6; border-color: #D1D5DB; color: #374151; }
+
+    .tag.blue { border-color: rgba(100,160,255,0.3); color: #88AAFF; background: rgba(100,160,255,0.08); }
+    .tag.warn { border-color: rgba(255,100,100,0.3); color: #FF9090; }
+    .tag.macro { border-color: rgba(255,255,255,0.06); color: var(--text-dimmer); }
 
     .meal-price {
-      font-size: 17px; font-weight: 900; color: var(--o);
-      white-space: nowrap; padding-top: 3px;
-      text-align: right;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 28px; color: var(--accent);
+      white-space: nowrap; padding-top: 4px;
+      letter-spacing: 0.05em;
     }
 
-    /* Ingredients strip */
+    /* Ingredients */
     .meal-ings {
-      border-top: 1px solid var(--bord);
-      padding: 13px 16px;
-      background: linear-gradient(to bottom, #FFFBF7, #FFF8F2);
+      border-top: 1px solid rgba(255,255,255,0.06);
+      padding: 14px 20px;
+      background: rgba(0,0,0,0.1);
     }
 
     .strip-lbl {
-      font-size: 10px; font-weight: 800;
-      text-transform: uppercase; letter-spacing: 0.1em;
-      color: var(--muted); margin-bottom: 9px;
-      display: flex; align-items: center; gap: 5px;
+      font-size: 9px; font-weight: 500;
+      letter-spacing: 0.25em; text-transform: uppercase;
+      color: var(--text-dimmer); margin-bottom: 10px;
     }
 
-    .ing-list { display: flex; flex-wrap: wrap; gap: 6px; }
+    .ing-list { display: flex; flex-wrap: wrap; gap: 5px; }
 
     .ing {
-      font-size: 12px; font-weight: 700;
+      font-size: 11px; font-weight: 400;
       padding: 5px 11px;
-      background: var(--surf); border: 1.5px solid var(--o-bd);
-      border-radius: 100px; color: #7A4720;
+      background: rgba(232,197,71,0.07);
+      border: 1px solid rgba(232,197,71,0.2);
+      color: rgba(232,197,71,0.8);
+      letter-spacing: 0.03em;
+      border-radius: 1px;
     }
 
-    /* Steps — improved visual recipe guide */
+    /* Steps */
     .meal-steps {
-      border-top: 1px solid var(--bord);
-      padding: 16px;
-      background: var(--bg);
+      border-top: 1px solid rgba(255,255,255,0.06);
+      padding: 16px 20px;
     }
 
-    .steps-list { display: flex; flex-direction: column; gap: 0; }
+    .steps-list { display: flex; flex-direction: column; }
 
     .step-row {
       display: flex; gap: 14px; align-items: flex-start;
@@ -621,245 +767,269 @@
 
     .step-row:last-child { padding-bottom: 0; }
 
-    /* Connector line */
     .step-row:not(:last-child)::before {
       content: '';
-      position: absolute; left: 16px; top: 34px; bottom: 0;
-      width: 2px;
-      background: linear-gradient(to bottom, var(--o-bd), transparent);
-      border-radius: 2px;
+      position: absolute; left: 13px; top: 30px; bottom: 0;
+      width: 1px;
+      background: linear-gradient(to bottom, rgba(232,197,71,0.3), transparent);
     }
 
     .step-num {
-      width: 34px; height: 34px; border-radius: 50%;
-      background: linear-gradient(135deg, var(--o), var(--o-d));
-      color: #fff; font-size: 14px; font-weight: 900;
+      width: 28px; height: 28px;
+      background: rgba(232,197,71,0.15);
+      border: 1px solid rgba(232,197,71,0.3);
+      color: var(--accent);
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 14px; letter-spacing: 0.05em;
       display: flex; align-items: center; justify-content: center;
       flex-shrink: 0; position: relative; z-index: 1;
-      box-shadow: 0 3px 8px rgba(224,123,57,0.35);
+      border-radius: 1px;
     }
 
-    .step-body  { flex: 1; padding-top: 6px; }
-    .step-text  { font-size: 14px; font-weight: 700; color: var(--text); line-height: 1.55; }
+    .step-body  { flex: 1; padding-top: 4px; }
+    .step-text  { font-size: 13px; font-weight: 400; color: var(--text-dim); line-height: 1.6; letter-spacing: 0.02em; }
 
-    /* ── SHOPPING CARD ──────────────────────────────────────────── */
+    /* Shopping list */
     .shop-card {
-      background: linear-gradient(145deg, #F2FAF2 0%, #EAF6EA 100%);
-      border: 1.5px solid var(--g-bd);
-      border-radius: var(--r-lg); padding: 20px; margin-bottom: 12px;
-      box-shadow: var(--shadow);
+      background: rgba(80,160,80,0.06);
+      border: 1px solid rgba(120,200,120,0.15);
+      padding: 24px;
+      margin-top: 4px;
+      border-radius: 1px;
     }
 
     .shop-title {
-      font-family: 'Lora', serif;
-      font-size: 17px; font-weight: 600; color: var(--g); margin-bottom: 16px;
-      display: flex; align-items: center; gap: 8px;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 28px; letter-spacing: 0.08em;
+      color: var(--accent2); margin-bottom: 20px;
     }
 
-    .shop-cat { margin-bottom: 14px; }
+    .shop-cat { margin-bottom: 16px; }
     .shop-cat:last-child { margin-bottom: 0; }
 
     .shop-cat-lbl {
-      font-size: 10px; font-weight: 800;
-      text-transform: uppercase; letter-spacing: 0.1em;
-      color: #3A7A3A; margin-bottom: 8px;
+      font-size: 9px; font-weight: 500;
+      letter-spacing: 0.25em; text-transform: uppercase;
+      color: rgba(200,240,160,0.4); margin-bottom: 8px;
     }
 
-    .shop-items { display: flex; flex-wrap: wrap; gap: 7px; }
+    .shop-items { display: flex; flex-wrap: wrap; gap: 5px; }
 
     .shop-item {
-      font-size: 13px; font-weight: 700;
-      padding: 8px 14px;
-      background: var(--surf); border: 1.5px solid var(--g-bd);
-      border-radius: var(--r-sm); color: var(--g);
+      font-size: 12px; font-weight: 400;
+      padding: 7px 13px;
+      background: rgba(200,240,160,0.06);
+      border: 1px solid rgba(200,240,160,0.15);
+      color: rgba(200,240,160,0.8);
       display: flex; align-items: center; gap: 7px;
-      transition: all 0.15s;
+      letter-spacing: 0.03em; transition: all 0.15s;
+      border-radius: 1px;
     }
-    .shop-item:hover { background: var(--g-lt); border-color: var(--g); }
+
+    .shop-item:hover { background: rgba(200,240,160,0.12); border-color: rgba(200,240,160,0.3); }
 
     .shop-item::before {
-      content: ''; width: 7px; height: 7px;
-      border-radius: 50%; background: #4CAF50; flex-shrink: 0;
+      content: ''; width: 4px; height: 4px;
+      border-radius: 50%; background: var(--accent2); flex-shrink: 0;
     }
 
-    /* ── STORES CARD ────────────────────────────────────────────── */
+    /* Stores card */
     .stores-card {
-      background: linear-gradient(145deg, #EFF6FF, #E8F2FF);
-      border: 1.5px solid var(--b-bd);
-      border-radius: var(--r-lg); padding: 18px; margin-bottom: 12px;
-      box-shadow: var(--shadow);
+      background: rgba(100,160,255,0.06);
+      border: 1px solid rgba(100,160,255,0.15);
+      padding: 20px; margin-top: 4px;
+      border-radius: 1px;
     }
 
     .stores-title {
-      font-size: 13px; font-weight: 900; color: var(--b-txt);
-      margin-bottom: 10px; display: flex; align-items: center; gap: 7px;
+      font-size: 10px; font-weight: 500;
+      letter-spacing: 0.25em; text-transform: uppercase;
+      color: #88AAFF; margin-bottom: 10px;
     }
 
-    .stores-text { font-size: 13px; font-weight: 700; color: #374151; line-height: 1.65; }
+    .stores-text { font-size: 13px; color: var(--text-dim); line-height: 1.65; font-weight: 300; }
 
-    .store-pill {
-      display: inline-block;
-      font-size: 12px; font-weight: 800;
-      padding: 3px 10px;
-      background: var(--surf); border: 1px solid var(--b-bd);
-      border-radius: 100px; color: var(--b-txt);
-      margin: 2px;
+    .store-chip {
+      display: inline-block; font-size: 11px; font-weight: 500;
+      padding: 3px 9px;
+      background: rgba(100,160,255,0.1);
+      border: 1px solid rgba(100,160,255,0.2);
+      color: #88AAFF; margin: 2px;
+      letter-spacing: 0.05em; border-radius: 1px;
     }
 
-    /* ── TIP CARD ───────────────────────────────────────────────── */
+    /* Tip */
     .tip-card {
-      background: linear-gradient(145deg, #FFFCEB, #FFF8DB);
-      border: 1.5px solid #F5D76E;
-      border-radius: var(--r-lg); padding: 16px 18px;
-      font-size: 14px; font-weight: 700; color: #78350F;
-      line-height: 1.65; margin-bottom: 14px;
-      box-shadow: var(--shadow);
+      background: rgba(232,197,71,0.06);
+      border: 1px solid rgba(232,197,71,0.15);
+      padding: 18px 20px; margin-top: 4px;
+      font-size: 13px; font-weight: 300;
+      color: rgba(232,197,71,0.8);
+      line-height: 1.65; letter-spacing: 0.02em;
       display: flex; align-items: flex-start; gap: 10px;
+      border-radius: 1px;
     }
 
-    .tip-icon { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
+    .tip-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
 
     /* Spinner */
     @keyframes spin { to { transform: rotate(360deg); } }
     .spin {
       display: inline-block; width: 20px; height: 20px;
-      border: 3px solid rgba(255,255,255,0.35);
-      border-top-color: #fff; border-radius: 50%;
+      border: 2px solid rgba(10,10,8,0.3);
+      border-top-color: #0A0A08; border-radius: 50%;
       animation: spin 0.65s linear infinite;
       vertical-align: middle; margin-right: 8px;
     }
 
     @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(10px); }
+      from { opacity: 0; transform: translateY(14px); }
       to   { opacity: 1; transform: translateY(0); }
     }
-    .fade { animation: fadeUp 0.35s ease forwards; }
+    .fade { animation: fadeUp 0.4s ease forwards; }
 
+    /* Footer */
     footer {
-      text-align: center; font-size: 12px; color: var(--muted);
-      font-weight: 700; margin-top: 56px;
-      padding-top: 20px; border-top: 1px solid var(--bord);
+      text-align: center;
+      padding: 40px 0 20px;
+      border-top: 1px solid rgba(255,255,255,0.05);
+      margin-top: 60px;
     }
 
-    /* ── RESPONSIVE ─────────────────────────────────────────────── */
+    .footer-logo {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 20px; letter-spacing: 0.2em;
+      color: rgba(232,197,71,0.3);
+      margin-bottom: 8px;
+    }
+
+    .footer-text {
+      font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase;
+      color: var(--text-dimmer);
+    }
+
+    /* Mobile */
     @media (max-width: 480px) {
       .two-col { grid-template-columns: 1fr; }
-      .how-arr { display: none; }
-      .meal-name { font-size: 15px; }
+      .how-strip { flex-wrap: wrap; }
+      .how-divider { display: none; }
+      .bud-input { font-size: 56px; width: 160px; }
     }
 
     @media print {
-      .gen-btn, .act-row, .adv-btn, .adv-body, .sample, .badge, .how { display: none !important; }
-      body { background: white; padding: 0; font-size: 12px; }
-      .meal-card { break-inside: avoid; box-shadow: none; border: 1px solid #ccc; }
-      .hero { box-shadow: none; }
+      .bg-scene, .orb, nav, .gen-btn, .act-row, .adv-btn, .adv-body, .sample-wrap, .how-strip { display: none !important; }
+      body { background: white; color: black; }
+      .glass, .meal-card { background: #f9f9f9 !important; border: 1px solid #ddd !important; }
     }
   </style>
 </head>
 <body>
-<div class="wrap">
+
+<!-- Background -->
+<div class="bg-scene"></div>
+<div class="orb orb1"></div>
+<div class="orb orb2"></div>
+<div class="orb orb3"></div>
+
+<div class="page">
+
+  <!-- NAV -->
+  <nav>
+    <div class="nav-logo">Mealzy</div>
+    <div class="nav-tag">Free · No account needed</div>
+  </nav>
 
   <!-- HERO -->
   <div class="hero">
-    <div class="hero-inner">
-      <div class="badge">🥗 Free · No signup · No ads</div>
-      <h1>Your personal meal plan,<br/><em>built for your budget</em></h1>
-      <p>Tell us your budget, kitchen and preferences — get a full plan with step-by-step recipes, exact quantities and a shopping list in seconds.</p>
+    <div class="hero-eyebrow">Personalised Meal Planning</div>
+    <h1>EAT WELL.<br/><span>SPEND LESS.</span></h1>
+    <p class="hero-sub">Enter your budget and preferences. Get a full meal plan with step-by-step recipes, exact quantities and a shopping list — in seconds.</p>
+  </div>
 
-      <div class="how">
-        <div class="how-step">
-          <div class="how-num">1</div>
-          <div class="how-label">Fill in<br/>your details</div>
-          <div class="how-sub">Budget, diet & kitchen</div>
-        </div>
-        <div class="how-arr">→</div>
-        <div class="how-step">
-          <div class="how-num">2</div>
-          <div class="how-label">Generate<br/>your plan</div>
-          <div class="how-sub">AI builds it in seconds</div>
-        </div>
-        <div class="how-arr">→</div>
-        <div class="how-step">
-          <div class="how-num">3</div>
-          <div class="how-label">Shop &<br/>cook</div>
-          <div class="how-sub">Save money every week</div>
-        </div>
-      </div>
+  <!-- HOW IT WORKS -->
+  <div class="how-strip">
+    <div class="how-item">
+      <div class="how-num">01</div>
+      <div class="how-label">Fill in your details</div>
+    </div>
+    <div class="how-divider"></div>
+    <div class="how-item">
+      <div class="how-num">02</div>
+      <div class="how-label">Generate your plan</div>
+    </div>
+    <div class="how-divider"></div>
+    <div class="how-item">
+      <div class="how-num">03</div>
+      <div class="how-label">Shop & cook</div>
     </div>
   </div>
 
   <!-- SAMPLE PLAN -->
-  <div class="sample">
-    <div class="sample-head" onclick="toggleSample()">
-      <div class="sample-head-l">
-        <span class="sample-head-icon">👀</span>
-        <div>
-          <div class="sample-head-title">See an example output</div>
-          <div class="sample-head-sub">kr 100/day · Sweden · Stovetop · 3 meals</div>
-        </div>
-      </div>
-      <button class="s-tog" id="sBtn">Hide ▲</button>
-    </div>
+  <div class="sample-wrap">
+    <button class="sample-toggle-btn" onclick="toggleSample()">
+      <span>View example output</span>
+      <span id="sBtn">+ Show</span>
+    </button>
     <div class="sample-body" id="sBody">
-      <div class="s-meal">
+      <div class="sample-meal">
         <span class="s-icon">🌅</span>
         <div class="s-info">
           <div class="s-type">Breakfast</div>
           <div class="s-name">Oat porridge with banana & honey</div>
-          <div class="s-meta">⏱ 8–12 mins · 🔥 ~390 kcal · ⚖️ 350g · 🍳 Stovetop</div>
+          <div class="s-meta">⏱ 8–12 mins · 🔥 ~390 kcal · ⚖️ 350g · Stovetop</div>
         </div>
         <div class="s-cost">kr 14</div>
       </div>
-      <div class="s-meal">
+      <div class="sample-meal">
         <span class="s-icon">☀️</span>
         <div class="s-info">
           <div class="s-type">Lunch</div>
           <div class="s-name">Red lentil soup with rye crispbread</div>
-          <div class="s-meta">⏱ 25–30 mins · 🔥 ~510 kcal · ⚖️ 420g · 🍳 Simmered</div>
+          <div class="s-meta">⏱ 25–30 mins · 🔥 ~510 kcal · ⚖️ 420g · Simmered</div>
         </div>
         <div class="s-cost">kr 24</div>
       </div>
-      <div class="s-meal">
+      <div class="sample-meal">
         <span class="s-icon">🌙</span>
         <div class="s-info">
           <div class="s-type">Dinner</div>
           <div class="s-name">Penne with tuna, tomato & spinach</div>
-          <div class="s-meta">⏱ 20–25 mins · 🔥 ~640 kcal · ⚖️ 450g · 🍳 Boiled + pan</div>
+          <div class="s-meta">⏱ 20–25 mins · 🔥 ~640 kcal · ⚖️ 450g · Boiled</div>
         </div>
         <div class="s-cost">kr 36</div>
       </div>
-      <div class="s-note">💡 Example only — your real plan is built around your exact country, budget & preferences</div>
+      <div class="s-note">Example only — your plan is built around your exact inputs</div>
     </div>
   </div>
 
-  <div class="divider"><div class="divider-line"></div><div class="divider-label">Your preferences</div><div class="divider-line"></div></div>
+  <div class="section-heading">Your <span>Preferences</span></div>
 
   <!-- BUDGET -->
-  <div class="sec">
-    <div class="sec-label">💰 Daily budget</div>
-    <div class="budget-box">
+  <div class="glass">
+    <div class="lbl">Daily budget</div>
+    <div class="budget-row">
       <span class="cur-sym" id="sym">€</span>
-      <input class="bud-in" type="number" id="budget" value="10" min="1" max="9999"/>
-      <div class="bud-r">
+      <input class="bud-input" type="number" id="budget" value="10" min="1" max="9999"/>
+      <div class="bud-right">
         <div class="bud-per">per day</div>
-        <div class="cur-code" id="curCode"></div>
+        <div class="cur-name" id="curName"></div>
       </div>
     </div>
   </div>
 
   <!-- COUNTRY -->
-  <div class="sec">
-    <div class="sec-label">🌍 Your country</div>
+  <div class="glass">
+    <div class="lbl">Your country</div>
     <input class="txt-in" type="text" id="country"
-      placeholder="e.g. Sweden, Germany, USA, Japan..."
+      placeholder="Sweden, Germany, USA, Japan..."
       oninput="onCountry()" onchange="onCountry()" onblur="onCountry()"/>
-    <div class="field-hint" id="cHint">Enter your country — we'll use local prices and currency</div>
+    <div class="field-hint" id="cHint">Enter your country — local prices & currency will be used</div>
   </div>
 
   <!-- DURATION + MEALS -->
   <div class="two-col">
-    <div class="sec">
-      <div class="sec-label">📅 Duration</div>
+    <div class="glass">
+      <div class="lbl">Duration</div>
       <div class="pills" id="dur">
         <span class="pill on" data-v="1">1 day</span>
         <span class="pill" data-v="3">3 days</span>
@@ -867,8 +1037,8 @@
         <span class="pill" data-v="7">7 days</span>
       </div>
     </div>
-    <div class="sec">
-      <div class="sec-label">🍽 Meals/day</div>
+    <div class="glass">
+      <div class="lbl">Meals per day</div>
       <div class="pills" id="mpp">
         <span class="pill" data-v="2">2</span>
         <span class="pill on" data-v="3">3</span>
@@ -879,8 +1049,8 @@
   </div>
 
   <!-- GOAL -->
-  <div class="sec">
-    <div class="sec-label">🎯 Goal</div>
+  <div class="glass">
+    <div class="lbl">Goal</div>
     <div class="pills" id="goal">
       <span class="pill on" data-v="maintain">Maintain weight</span>
       <span class="pill" data-v="lose">Lose weight</span>
@@ -892,8 +1062,8 @@
   </div>
 
   <!-- DIET -->
-  <div class="sec">
-    <div class="sec-label">🥦 Diet type</div>
+  <div class="glass">
+    <div class="lbl">Diet type</div>
     <div class="pills" id="diet">
       <span class="pill on" data-v="none">No restriction</span>
       <span class="pill" data-v="vegetarian">Vegetarian</span>
@@ -908,48 +1078,48 @@
   </div>
 
   <!-- ALLERGIES -->
-  <div class="sec">
-    <div class="sec-label">⚠️ Allergies & intolerances <span class="note">(select all that apply)</span></div>
+  <div class="glass">
+    <div class="lbl">Allergies & intolerances</div>
     <div class="pills" id="allergy">
-      <span class="pill al multi" data-v="gluten">🌾 Gluten</span>
-      <span class="pill al multi" data-v="dairy">🥛 Dairy</span>
+      <span class="pill al multi" data-v="gluten">Gluten</span>
+      <span class="pill al multi" data-v="dairy">Dairy</span>
       <span class="pill al multi" data-v="lactose">Lactose</span>
-      <span class="pill al multi" data-v="eggs">🥚 Eggs</span>
-      <span class="pill al multi" data-v="nuts">🥜 Nuts</span>
+      <span class="pill al multi" data-v="eggs">Eggs</span>
+      <span class="pill al multi" data-v="nuts">Nuts</span>
       <span class="pill al multi" data-v="peanuts">Peanuts</span>
       <span class="pill al multi" data-v="soy">Soy</span>
-      <span class="pill al multi" data-v="shellfish">🦐 Shellfish</span>
-      <span class="pill al multi" data-v="fish">🐟 Fish</span>
-      <span class="pill al multi" data-v="pork">🐷 Pork</span>
-      <span class="pill al multi" data-v="beef">🥩 Beef</span>
+      <span class="pill al multi" data-v="shellfish">Shellfish</span>
+      <span class="pill al multi" data-v="fish">Fish</span>
+      <span class="pill al multi" data-v="pork">Pork</span>
+      <span class="pill al multi" data-v="beef">Beef</span>
     </div>
-    <div class="allergy-input-wrap">
-      <input type="text" id="aIn" placeholder="Other? Type and press Enter or Add..."/>
-      <button class="allergy-add-btn" onclick="addAllergy()">+ Add</button>
+    <div class="a-input-row">
+      <input type="text" id="aIn" placeholder="Other allergy — type and press Enter"/>
+      <button class="a-add" onclick="addAllergy()">+ Add</button>
     </div>
-    <div class="allergy-tags" id="aTags"></div>
+    <div class="a-tags" id="aTags"></div>
   </div>
 
   <!-- APPLIANCES -->
-  <div class="sec">
-    <div class="sec-label">🔌 Your appliances <span class="note">(select everything you own)</span></div>
+  <div class="glass">
+    <div class="lbl">Your appliances — select only what you own</div>
     <div class="warn-box" id="appWarn"></div>
     <div class="pills" id="apps">
-      <span class="pill multi" data-v="stovetop"  data-m="boiled,pan-fried,fried,sauteed,sautéed,simmered,steamed,poached">🍳 Stovetop</span>
-      <span class="pill multi" data-v="microwave" data-m="microwaved,microwave">📡 Microwave</span>
-      <span class="pill multi" data-v="oven"      data-m="baked,roasted,grilled,broiled">🔥 Oven</span>
-      <span class="pill multi" data-v="kettle"    data-m="kettle,hot water">☕ Kettle</span>
-      <span class="pill multi" data-v="blender"   data-m="blended,blender">🥤 Blender</span>
-      <span class="pill multi" data-v="air fryer" data-m="air-fried,air fried,air fryer">💨 Air fryer</span>
+      <span class="pill multi" data-v="stovetop"  data-m="boiled,pan-fried,fried,sauteed,sautéed,simmered,steamed,poached">Stovetop</span>
+      <span class="pill multi" data-v="microwave" data-m="microwaved,microwave">Microwave</span>
+      <span class="pill multi" data-v="oven"      data-m="baked,roasted,grilled,broiled">Oven</span>
+      <span class="pill multi" data-v="kettle"    data-m="kettle,hot water">Kettle</span>
+      <span class="pill multi" data-v="blender"   data-m="blended,blender">Blender</span>
+      <span class="pill multi" data-v="air fryer" data-m="air-fried,air fried,air fryer">Air fryer</span>
     </div>
-    <p style="font-size:12px;color:var(--muted);margin-top:10px;font-weight:700;">
-      ⚠️ Only select what you actually own — every meal will be built around your exact kitchen setup.
-    </p>
+    <div style="font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:var(--text-dimmer);margin-top:12px;">
+      Every meal is built exclusively around your selected appliances
+    </div>
   </div>
 
   <!-- SKILL -->
-  <div class="sec">
-    <div class="sec-label">👨‍🍳 Cooking skill</div>
+  <div class="glass">
+    <div class="lbl">Cooking skill</div>
     <div class="pills" id="skill">
       <span class="pill on" data-v="beginner">Beginner</span>
       <span class="pill" data-v="intermediate">Intermediate</span>
@@ -957,103 +1127,103 @@
     </div>
   </div>
 
-  <!-- ADVANCED OPTIONS -->
+  <!-- ADVANCED -->
   <button class="adv-btn" id="advBtn" onclick="toggleAdv()">
-    <span>⚙️ Advanced options — cuisine, proteins, macros & more</span>
-    <span id="advArr">▼</span>
+    <span>Advanced options — cuisine, proteins, macros</span>
+    <span id="advArr">+</span>
   </button>
 
   <div class="adv-body" id="advBody">
 
-    <div class="sec">
-      <div class="sec-label">🍜 Cuisine style <span class="note">(optional)</span></div>
+    <div class="glass">
+      <div class="lbl">Cuisine style</div>
       <div class="pills" id="cuisine">
-        <span class="pill on" data-v="any">Any cuisine</span>
-        <span class="pill" data-v="italian">🇮🇹 Italian</span>
-        <span class="pill" data-v="asian">🥢 Asian</span>
-        <span class="pill" data-v="mexican">🌮 Mexican</span>
-        <span class="pill" data-v="mediterranean">🫒 Mediterranean</span>
-        <span class="pill" data-v="nordic">🐟 Nordic / Scandinavian</span>
-        <span class="pill" data-v="indian">🍛 Indian</span>
-        <span class="pill" data-v="american">🍔 American</span>
-        <span class="pill" data-v="middle-eastern">🧆 Middle Eastern</span>
-        <span class="pill" data-v="japanese">🍱 Japanese</span>
-        <span class="pill" data-v="greek">🫒 Greek</span>
+        <span class="pill on" data-v="any">Any</span>
+        <span class="pill" data-v="italian">Italian</span>
+        <span class="pill" data-v="asian">Asian</span>
+        <span class="pill" data-v="mexican">Mexican</span>
+        <span class="pill" data-v="mediterranean">Mediterranean</span>
+        <span class="pill" data-v="nordic">Nordic</span>
+        <span class="pill" data-v="indian">Indian</span>
+        <span class="pill" data-v="american">American</span>
+        <span class="pill" data-v="middle-eastern">Middle Eastern</span>
+        <span class="pill" data-v="japanese">Japanese</span>
+        <span class="pill" data-v="greek">Greek</span>
       </div>
     </div>
 
-    <div class="sec">
-      <div class="sec-label">🥩 Preferred protein sources <span class="note">(select all you enjoy)</span></div>
+    <div class="glass">
+      <div class="lbl">Preferred protein sources</div>
       <div class="pills" id="proteins">
-        <span class="pill multi on" data-v="chicken">🐔 Chicken</span>
-        <span class="pill multi on" data-v="eggs">🥚 Eggs</span>
-        <span class="pill multi on" data-v="lentils">🌱 Lentils</span>
-        <span class="pill multi on" data-v="chickpeas">🫘 Chickpeas</span>
-        <span class="pill multi on" data-v="beans">🫘 Beans</span>
-        <span class="pill multi" data-v="tuna">🐟 Tuna</span>
-        <span class="pill multi" data-v="salmon">🐠 Salmon</span>
-        <span class="pill multi" data-v="beef mince">🥩 Beef mince</span>
-        <span class="pill multi" data-v="pork">🐷 Pork</span>
-        <span class="pill multi" data-v="tofu">🟦 Tofu</span>
-        <span class="pill multi" data-v="greek yogurt">🍶 Greek yogurt</span>
-        <span class="pill multi" data-v="cottage cheese">🧀 Cottage cheese</span>
-        <span class="pill multi" data-v="quorn">🌿 Quorn / Mycoprotein</span>
-        <span class="pill multi" data-v="edamame">🟢 Edamame</span>
+        <span class="pill multi on" data-v="chicken">Chicken</span>
+        <span class="pill multi on" data-v="eggs">Eggs</span>
+        <span class="pill multi on" data-v="lentils">Lentils</span>
+        <span class="pill multi on" data-v="chickpeas">Chickpeas</span>
+        <span class="pill multi on" data-v="beans">Beans</span>
+        <span class="pill multi" data-v="tuna">Tuna</span>
+        <span class="pill multi" data-v="salmon">Salmon</span>
+        <span class="pill multi" data-v="beef mince">Beef mince</span>
+        <span class="pill multi" data-v="pork">Pork</span>
+        <span class="pill multi" data-v="tofu">Tofu</span>
+        <span class="pill multi" data-v="greek yogurt">Greek yogurt</span>
+        <span class="pill multi" data-v="cottage cheese">Cottage cheese</span>
+        <span class="pill multi" data-v="quorn">Quorn</span>
+        <span class="pill multi" data-v="edamame">Edamame</span>
       </div>
     </div>
 
-    <div class="sec">
-      <div class="sec-label">🌾 Preferred carbohydrates <span class="note">(select all you enjoy)</span></div>
+    <div class="glass">
+      <div class="lbl">Preferred carbohydrates</div>
       <div class="pills" id="carbs">
-        <span class="pill multi on" data-v="pasta">🍝 Pasta</span>
-        <span class="pill multi on" data-v="potatoes">🥔 Potatoes</span>
-        <span class="pill multi on" data-v="oats">🥣 Oats</span>
-        <span class="pill multi on" data-v="bread">🍞 Bread</span>
-        <span class="pill multi" data-v="rice">🍚 Rice</span>
-        <span class="pill multi" data-v="sweet potato">🍠 Sweet potato</span>
+        <span class="pill multi on" data-v="pasta">Pasta</span>
+        <span class="pill multi on" data-v="potatoes">Potatoes</span>
+        <span class="pill multi on" data-v="oats">Oats</span>
+        <span class="pill multi on" data-v="bread">Bread</span>
+        <span class="pill multi" data-v="rice">Rice</span>
+        <span class="pill multi" data-v="sweet potato">Sweet potato</span>
         <span class="pill multi" data-v="quinoa">Quinoa</span>
         <span class="pill multi" data-v="couscous">Couscous</span>
-        <span class="pill multi" data-v="bulgur">Bulgur wheat</span>
-        <span class="pill multi" data-v="wraps">🌯 Wraps / tortillas</span>
-        <span class="pill multi" data-v="rye crispbread">🍞 Rye crispbread</span>
+        <span class="pill multi" data-v="bulgur">Bulgur</span>
+        <span class="pill multi" data-v="wraps">Wraps</span>
+        <span class="pill multi" data-v="rye crispbread">Rye crispbread</span>
       </div>
     </div>
 
-    <div class="sec">
-      <div class="sec-label">📊 Macro targets <span class="note">(drag to adjust — approximate)</span></div>
+    <div class="glass">
+      <div class="lbl">Macro targets</div>
       <div class="macro-grid">
         <div class="macro-row">
-          <div class="macro-lbl">🍗 Protein</div>
+          <div class="macro-lbl">Protein</div>
           <input type="range" id="mP" min="10" max="50" value="25" step="5" oninput="updateMacro()"/>
           <div class="macro-val" id="mPv">25%</div>
         </div>
         <div class="macro-row">
-          <div class="macro-lbl">🌾 Carbs</div>
+          <div class="macro-lbl">Carbs</div>
           <input type="range" id="mC" min="10" max="70" value="50" step="5" oninput="updateMacro()"/>
           <div class="macro-val" id="mCv">50%</div>
         </div>
         <div class="macro-row">
-          <div class="macro-lbl">🥑 Fat</div>
+          <div class="macro-lbl">Fat</div>
           <input type="range" id="mF" min="10" max="50" value="25" step="5" oninput="updateMacro()"/>
           <div class="macro-val" id="mFv">25%</div>
         </div>
       </div>
-      <div class="macro-note" id="macroNote">Total: 100% ✅</div>
+      <div class="macro-note" id="macroNote">Total: 100%</div>
     </div>
 
-  </div><!-- end adv-body -->
+  </div>
 
   <!-- GENERATE -->
-  <button class="gen-btn" id="genBtn" onclick="generate()">✨ Generate My Meal Plan</button>
+  <button class="gen-btn" id="genBtn" onclick="generate()">
+    Generate My Meal Plan
+  </button>
 
   <!-- STATUS -->
   <div class="status-wrap" id="statusWrap">
-    <div class="status-spinner-wrap">
-      <span class="status-bowl">🥘</span>
-    </div>
-    <div class="status-title" id="sTxt">Building your meal plan...</div>
-    <div class="status-sub" id="sSub">Usually 5–15 seconds</div>
-    <div class="progress-bar-wrap"><div class="progress-bar" id="pBar"></div></div>
+    <span class="status-icon">🥘</span>
+    <div class="status-title" id="sTxt">Building your plan</div>
+    <div class="status-sub" id="sSub">5–15 seconds</div>
+    <div class="progress-wrap"><div class="progress-fill" id="pBar"></div></div>
   </div>
 
   <div class="err-box"  id="errBox"></div>
@@ -1063,247 +1233,230 @@
 </div>
 
 <footer>
-  Mealzy · Powered by Claude AI · Free forever · No account needed<br/>
-  <span style="font-size:11px;font-weight:600;">Prices are estimates — always check your local supermarket for exact costs.</span>
+  <div class="footer-logo">Mealzy</div>
+  <div class="footer-text">Free forever · No account · Powered by Claude AI</div>
+  <div style="font-size:10px;letter-spacing:0.1em;color:rgba(245,240,232,0.15);margin-top:6px;">Prices are estimates — verify at your local supermarket</div>
 </footer>
 
 <script>
-// ── CURRENCIES ────────────────────────────────────────────────────
-const CURR = [
-  { k:['sweden','sverige'],                                                          s:'kr',  c:'SEK', n:'Swedish Krona' },
-  { k:['norway','norge'],                                                            s:'kr',  c:'NOK', n:'Norwegian Krone' },
-  { k:['denmark','danmark'],                                                         s:'kr',  c:'DKK', n:'Danish Krone' },
-  { k:['finland','suomi'],                                                           s:'€',   c:'EUR', n:'Euro' },
-  { k:['uk','united kingdom','england','britain','scotland','wales'],               s:'£',   c:'GBP', n:'British Pound' },
-  { k:['usa','united states','america'],                                             s:'$',   c:'USD', n:'US Dollar' },
-  { k:['canada'],                                                                    s:'CA$', c:'CAD', n:'Canadian Dollar' },
-  { k:['australia'],                                                                 s:'A$',  c:'AUD', n:'Australian Dollar' },
-  { k:['new zealand'],                                                               s:'NZ$', c:'NZD', n:'New Zealand Dollar' },
-  { k:['japan'],                                                                     s:'¥',   c:'JPY', n:'Japanese Yen' },
-  { k:['china'],                                                                     s:'¥',   c:'CNY', n:'Chinese Yuan' },
-  { k:['south korea','korea'],                                                       s:'₩',   c:'KRW', n:'South Korean Won' },
-  { k:['india'],                                                                     s:'₹',   c:'INR', n:'Indian Rupee' },
-  { k:['brazil'],                                                                    s:'R$',  c:'BRL', n:'Brazilian Real' },
-  { k:['mexico'],                                                                    s:'MX$', c:'MXN', n:'Mexican Peso' },
-  { k:['switzerland'],                                                               s:'CHF', c:'CHF', n:'Swiss Franc' },
-  { k:['poland'],                                                                    s:'zł',  c:'PLN', n:'Polish Zloty' },
-  { k:['czech'],                                                                     s:'Kč',  c:'CZK', n:'Czech Koruna' },
-  { k:['hungary'],                                                                   s:'Ft',  c:'HUF', n:'Hungarian Forint' },
-  { k:['romania'],                                                                   s:'lei', c:'RON', n:'Romanian Leu' },
-  { k:['turkey','türkiye'],                                                          s:'₺',   c:'TRY', n:'Turkish Lira' },
-  { k:['south africa'],                                                              s:'R',   c:'ZAR', n:'South African Rand' },
-  { k:['singapore'],                                                                 s:'S$',  c:'SGD', n:'Singapore Dollar' },
-  { k:['germany','france','spain','italy','netherlands','belgium','portugal',
-       'austria','ireland','greece','croatia','slovakia','slovenia',
-       'estonia','latvia','lithuania','luxembourg','malta','cyprus','europe'],       s:'€',   c:'EUR', n:'Euro' },
+// ── CURRENCIES ─────────────────────────────────────────────────────
+const CURR=[
+  {k:['sweden','sverige'],s:'kr',c:'SEK',n:'Swedish Krona'},
+  {k:['norway','norge'],s:'kr',c:'NOK',n:'Norwegian Krone'},
+  {k:['denmark','danmark'],s:'kr',c:'DKK',n:'Danish Krone'},
+  {k:['uk','united kingdom','england','britain','scotland','wales'],s:'£',c:'GBP',n:'British Pound'},
+  {k:['usa','united states','america'],s:'$',c:'USD',n:'US Dollar'},
+  {k:['canada'],s:'CA$',c:'CAD',n:'Canadian Dollar'},
+  {k:['australia'],s:'A$',c:'AUD',n:'Australian Dollar'},
+  {k:['new zealand'],s:'NZ$',c:'NZD',n:'New Zealand Dollar'},
+  {k:['japan'],s:'¥',c:'JPY',n:'Japanese Yen'},
+  {k:['china'],s:'¥',c:'CNY',n:'Chinese Yuan'},
+  {k:['south korea','korea'],s:'₩',c:'KRW',n:'South Korean Won'},
+  {k:['india'],s:'₹',c:'INR',n:'Indian Rupee'},
+  {k:['brazil'],s:'R$',c:'BRL',n:'Brazilian Real'},
+  {k:['mexico'],s:'MX$',c:'MXN',n:'Mexican Peso'},
+  {k:['switzerland'],s:'CHF',c:'CHF',n:'Swiss Franc'},
+  {k:['poland'],s:'zł',c:'PLN',n:'Polish Zloty'},
+  {k:['czech'],s:'Kč',c:'CZK',n:'Czech Koruna'},
+  {k:['hungary'],s:'Ft',c:'HUF',n:'Hungarian Forint'},
+  {k:['romania'],s:'lei',c:'RON',n:'Romanian Leu'},
+  {k:['turkey','türkiye'],s:'₺',c:'TRY',n:'Turkish Lira'},
+  {k:['south africa'],s:'R',c:'ZAR',n:'South African Rand'},
+  {k:['singapore'],s:'S$',c:'SGD',n:'Singapore Dollar'},
+  {k:['germany','france','spain','italy','netherlands','belgium','portugal',
+      'austria','finland','ireland','greece','croatia','slovakia','slovenia',
+      'estonia','latvia','lithuania','luxembourg','malta','cyprus','europe'],s:'€',c:'EUR',n:'Euro'},
 ];
 
-const EUR = { s:'€', c:'EUR', n:'Euro' };
-let cur = EUR;
+const EUR={s:'€',c:'EUR',n:'Euro'};
+let cur=EUR;
 
-function getCurrency(txt) {
-  const lo = txt.toLowerCase().trim();
-  if (!lo) return EUR;
-  for (const e of CURR) { if (e.k.some(k => lo.includes(k))) return { s:e.s, c:e.c, n:e.n }; }
+function getCurrency(txt){
+  const lo=txt.toLowerCase().trim();
+  if(!lo) return EUR;
+  for(const e of CURR){if(e.k.some(k=>lo.includes(k))) return {s:e.s,c:e.c,n:e.n};}
   return EUR;
 }
 
-function onCountry() {
-  const v = document.getElementById('country').value;
-  cur = getCurrency(v);
-  document.getElementById('sym').textContent    = cur.s;
-  document.getElementById('curCode').textContent = v.trim() ? cur.c : '';
-  const h = document.getElementById('cHint');
-  if (v.trim()) {
-    h.innerHTML   = `<span>💱</span> Prices will be shown in ${cur.n} (${cur.c})`;
-    h.style.color = 'var(--o)';
-  } else {
-    h.textContent = 'Enter your country — we\'ll use local prices and currency';
-    h.style.color = 'var(--muted)';
-  }
+function onCountry(){
+  const v=document.getElementById('country').value;
+  cur=getCurrency(v);
+  document.getElementById('sym').textContent=cur.s;
+  document.getElementById('curName').textContent=v.trim()?`${cur.n} (${cur.c})`:'';
+  const h=document.getElementById('cHint');
+  if(v.trim()){h.textContent=`Prices in ${cur.n} · ${cur.c}`;h.style.color='rgba(232,197,71,0.7)';}
+  else{h.textContent='Enter your country — local prices & currency will be used';h.style.color='';}
 }
 
-// ── CHEAP STORES DATABASE ─────────────────────────────────────────
-function getStores(country) {
-  const lo = (country||'').toLowerCase();
-  const stores = {
-    sweden:      { tip:'Sweden',       chains:['Lidl','Willys','Netto','Aldi'],                extra:'Willys is often cheapest for basics. Avoid ICA for staples.' },
-    norway:      { tip:'Norway',       chains:['Rema 1000','Kiwi','Coop Extra'],               extra:'Rema 1000 and Kiwi typically beat others on price.' },
-    denmark:     { tip:'Denmark',      chains:['Netto','Lidl','Aldi','Rema 1000'],             extra:'Netto own-brand products are great value.' },
-    germany:     { tip:'Germany',      chains:['Aldi','Lidl','Netto','Penny','Kaufland'],      extra:'Aldi and Lidl own-brands are excellent quality.' },
-    uk:          { tip:'UK',           chains:['Aldi','Lidl','Asda','Tesco','Iceland'],        extra:'Aldi and Lidl are consistently cheapest. Tesco Basics range for pantry staples.' },
-    france:      { tip:'France',       chains:['Lidl','Aldi','Netto','Leader Price'],          extra:'Lidl France has excellent quality frozen veg and proteins.' },
-    spain:       { tip:'Spain',        chains:['Mercadona','Lidl','Aldi','Dia'],               extra:'Mercadona Hacendado own-brand is superb value.' },
-    usa:         { tip:'USA',          chains:['Aldi','Lidl','Walmart','Trader Joe\'s'],       extra:'Aldi is typically 30–40% cheaper than mainstream stores.' },
-    canada:      { tip:'Canada',       chains:['No Frills','Food Basics','Walmart','FreshCo'],extra:'No Frills is consistently cheapest for groceries.' },
-    australia:   { tip:'Australia',    chains:['Aldi','Woolworths Essentials','Coles Smart Buy'],extra:'Aldi is significantly cheaper than Coles/Woolworths.' },
-    netherlands: { tip:'Netherlands',  chains:['Lidl','Aldi','Dirk','Jumbo'],                  extra:'Dirk is a local budget favourite.' },
-    poland:      { tip:'Poland',       chains:['Biedronka','Lidl','Aldi','Netto'],             extra:'Biedronka is Poland\'s cheapest major supermarket.' },
-    italy:       { tip:'Italy',        chains:['Lidl','Aldi','Eurospin','In\'s Mercato'],      extra:'Eurospin is Italy\'s best budget option.' },
-    finland:     { tip:'Finland',      chains:['Lidl','Tokmanni','K-Market'],                  extra:'Lidl Finland is typically 20% cheaper than S-Group.' },
-    portugal:    { tip:'Portugal',     chains:['Lidl','Aldi','Pingo Doce','Minipreço'],        extra:'Pingo Doce has excellent weekly deals.' },
+// ── STORES DATABASE ─────────────────────────────────────────────────
+function getStores(country){
+  const lo=(country||'').toLowerCase();
+  const db={
+    sweden:{n:'Sweden',c:['Lidl','Willys','Netto','Aldi'],t:'Willys typically cheapest for basics. Avoid ICA Maxi for staples.'},
+    norway:{n:'Norway',c:['Rema 1000','Kiwi','Coop Extra'],t:'Rema 1000 and Kiwi consistently beat others on price.'},
+    denmark:{n:'Denmark',c:['Netto','Lidl','Aldi','Rema 1000'],t:'Netto own-brand products offer exceptional value.'},
+    germany:{n:'Germany',c:['Aldi','Lidl','Netto','Penny','Kaufland'],t:'Aldi and Lidl own-brands are excellent quality at low cost.'},
+    uk:{n:'UK',c:['Aldi','Lidl','Asda','Tesco','Iceland'],t:'Aldi and Lidl are consistently cheapest. Tesco Basics for pantry staples.'},
+    france:{n:'France',c:['Lidl','Aldi','Netto','Leader Price'],t:'Lidl France has excellent quality frozen veg and proteins.'},
+    spain:{n:'Spain',c:['Mercadona','Lidl','Aldi','Dia'],t:'Mercadona Hacendado own-brand is superb value.'},
+    usa:{n:'USA',c:['Aldi','Lidl','Walmart','Trader Joe\'s'],t:'Aldi is typically 30–40% cheaper than mainstream stores.'},
+    canada:{n:'Canada',c:['No Frills','Food Basics','Walmart','FreshCo'],t:'No Frills consistently cheapest for groceries.'},
+    australia:{n:'Australia',c:['Aldi','Woolworths Essentials','Coles Smart Buy'],t:'Aldi significantly cheaper than Coles/Woolworths.'},
+    netherlands:{n:'Netherlands',c:['Lidl','Aldi','Dirk','Jumbo'],t:'Dirk is a local budget favourite with great deals.'},
+    poland:{n:'Poland',c:['Biedronka','Lidl','Aldi','Netto'],t:"Biedronka is Poland's cheapest major supermarket."},
+    italy:{n:'Italy',c:['Lidl','Aldi','Eurospin','In\'s Mercato'],t:'Eurospin is the best budget option across Italy.'},
+    finland:{n:'Finland',c:['Lidl','Tokmanni','K-Market'],t:'Lidl Finland typically 20% cheaper than S-Group.'},
+    portugal:{n:'Portugal',c:['Lidl','Aldi','Pingo Doce','Minipreço'],t:'Pingo Doce has excellent weekly deals.'},
   };
-  for (const [k,v] of Object.entries(stores)) {
-    if (lo.includes(k) || (k==='uk' && (lo.includes('england')||lo.includes('britain')||lo.includes('united kingdom')))) {
+  for(const[k,v]of Object.entries(db)){
+    if(lo.includes(k)||(k==='uk'&&(lo.includes('england')||lo.includes('britain')||lo.includes('united kingdom')))){
       return v;
     }
   }
   return null;
 }
 
-// ── SAMPLE TOGGLE ─────────────────────────────────────────────────
-function toggleSample() {
-  const b = document.getElementById('sBody');
-  const btn = document.getElementById('sBtn');
-  const open = b.style.display !== 'none';
-  b.style.display = open ? 'none' : 'block';
-  btn.textContent = open ? 'Show ▼' : 'Hide ▲';
+// ── TOGGLES ─────────────────────────────────────────────────────────
+function toggleSample(){
+  const b=document.getElementById('sBody');
+  const btn=document.getElementById('sBtn');
+  const open=b.style.display!=='none';
+  b.style.display=open?'none':'block';
+  btn.textContent=open?'+ Show':'− Hide';
 }
 
-// ── ADVANCED TOGGLE ───────────────────────────────────────────────
-function toggleAdv() {
-  const b   = document.getElementById('advBody');
-  const btn = document.getElementById('advBtn');
-  const arr = document.getElementById('advArr');
-  const open = b.style.display === 'block';
-  b.style.display = open ? 'none' : 'block';
-  btn.classList.toggle('open', !open);
-  arr.textContent = open ? '▼' : '▲';
+function toggleAdv(){
+  const b=document.getElementById('advBody');
+  const btn=document.getElementById('advBtn');
+  const arr=document.getElementById('advArr');
+  const open=b.style.display==='block';
+  b.style.display=open?'none':'block';
+  btn.classList.toggle('open',!open);
+  arr.textContent=open?'+':'−';
 }
 
-// ── MACRO UPDATE ──────────────────────────────────────────────────
-function updateMacro() {
-  const p = +document.getElementById('mP').value;
-  const c = +document.getElementById('mC').value;
-  const f = +document.getElementById('mF').value;
-  document.getElementById('mPv').textContent = p + '%';
-  document.getElementById('mCv').textContent = c + '%';
-  document.getElementById('mFv').textContent = f + '%';
-  const tot = p + c + f;
-  const n = document.getElementById('macroNote');
-  n.textContent = tot === 100 ? `Total: ${tot}% ✅` : `Total: ${tot}% — Claude will approximate.`;
-  n.style.color = tot === 100 ? 'var(--g)' : 'var(--muted)';
+// ── MACROS ───────────────────────────────────────────────────────────
+function updateMacro(){
+  const p=+document.getElementById('mP').value;
+  const c=+document.getElementById('mC').value;
+  const f=+document.getElementById('mF').value;
+  document.getElementById('mPv').textContent=p+'%';
+  document.getElementById('mCv').textContent=c+'%';
+  document.getElementById('mFv').textContent=f+'%';
+  const tot=p+c+f;
+  const n=document.getElementById('macroNote');
+  n.textContent=`Total: ${tot}%${tot===100?' ✓':''}`;
+  n.style.color=tot===100?'rgba(200,240,160,0.6)':'';
 }
 
-// ── CUSTOM ALLERGIES ──────────────────────────────────────────────
-const customA = new Set();
-
-function addAllergy() {
-  const inp = document.getElementById('aIn');
-  const v   = inp.value.trim();
-  if (!v || customA.has(v.toLowerCase())) { inp.value = ''; return; }
-  customA.add(v.toLowerCase());
-  renderATags();
-  inp.value = '';
+// ── ALLERGIES ────────────────────────────────────────────────────────
+const customA=new Set();
+function addAllergy(){
+  const inp=document.getElementById('aIn');
+  const v=inp.value.trim();
+  if(!v||customA.has(v.toLowerCase())){inp.value='';return;}
+  customA.add(v.toLowerCase());renderATags();inp.value='';
+}
+document.getElementById('aIn').addEventListener('keydown',e=>{if(e.key==='Enter')addAllergy();});
+function removeA(v){customA.delete(v);renderATags();}
+function renderATags(){
+  document.getElementById('aTags').innerHTML=
+    [...customA].map(a=>`<span class="a-tag" onclick="removeA('${a}')"><span>${a}</span><span class="a-tag-x">×</span></span>`).join('');
 }
 
-document.getElementById('aIn').addEventListener('keydown', e => { if (e.key === 'Enter') addAllergy(); });
-
-function removeA(v) { customA.delete(v); renderATags(); }
-
-function renderATags() {
-  document.getElementById('aTags').innerHTML =
-    [...customA].map(a => `<span class="a-tag" onclick="removeA('${a}')"><span>${a}</span><span class="a-tag-x">×</span></span>`).join('');
-}
-
-// ── PILL LOGIC ────────────────────────────────────────────────────
-['dur','mpp','goal','diet','skill','cuisine'].forEach(id => {
-  document.getElementById(id).addEventListener('click', e => {
-    const p = e.target.closest('.pill');
-    if (!p) return;
-    document.querySelectorAll(`#${id} .pill`).forEach(x => x.classList.remove('on'));
+// ── PILLS ────────────────────────────────────────────────────────────
+['dur','mpp','goal','diet','skill','cuisine'].forEach(id=>{
+  document.getElementById(id).addEventListener('click',e=>{
+    const p=e.target.closest('.pill');
+    if(!p)return;
+    document.querySelectorAll(`#${id} .pill`).forEach(x=>x.classList.remove('on'));
     p.classList.add('on');
   });
 });
 
-['apps','allergy','proteins','carbs'].forEach(id => {
-  document.getElementById(id).addEventListener('click', e => {
-    const p = e.target.closest('.pill');
-    if (p) p.classList.toggle('on');
+['apps','allergy','proteins','carbs'].forEach(id=>{
+  document.getElementById(id).addEventListener('click',e=>{
+    const p=e.target.closest('.pill');
+    if(p)p.classList.toggle('on');
   });
 });
 
-function sel(id)    { const p = document.querySelector(`#${id} .pill.on`); return p ? p.dataset.v : null; }
-function multiSel(id) { return [...document.querySelectorAll(`#${id} .pill.on`)].map(p => p.dataset.v); }
+function sel(id){const p=document.querySelector(`#${id} .pill.on`);return p?p.dataset.v:null;}
+function multiSel(id){return[...document.querySelectorAll(`#${id} .pill.on`)].map(p=>p.dataset.v);}
 
-// ── APPLIANCE VALIDATION ──────────────────────────────────────────
-function allowedMethods() {
-  const m = new Set(['no-cook','no cook','raw','assembled','cold','none','mixed']);
-  document.querySelectorAll('#apps .pill.on').forEach(p => {
-    (p.dataset.m||'').split(',').forEach(x => m.add(x.trim().toLowerCase()));
+// ── APPLIANCES ───────────────────────────────────────────────────────
+function allowedMethods(){
+  const m=new Set(['no-cook','no cook','raw','assembled','cold','none','mixed']);
+  document.querySelectorAll('#apps .pill.on').forEach(p=>{
+    (p.dataset.m||'').split(',').forEach(x=>m.add(x.trim().toLowerCase()));
   });
   return m;
 }
 
-function methodOk(method, allowed) {
-  if (!method) return true;
-  const m = method.toLowerCase();
-  for (const a of allowed) { if (m.includes(a)) return true; }
+function methodOk(method,allowed){
+  if(!method)return true;
+  const m=method.toLowerCase();
+  for(const a of allowed){if(m.includes(a))return true;}
   return false;
 }
 
-function appPrompt(selected) {
-  const dets = {
-    'stovetop':  'stovetop/hob — boiling, frying, sautéing, simmering, steaming',
-    'microwave': 'microwave — reheating and microwaving only',
-    'oven':      'oven — baking, roasting, grilling',
-    'kettle':    'kettle — boiling water only (oats, instant noodles, couscous)',
-    'blender':   'blender — blending, smoothies',
-    'air fryer': 'air fryer — air-frying (chicken, chips, vegetables, reheating)'
+function appPrompt(selected){
+  const dets={
+    'stovetop':'stovetop/hob — boiling, frying, sautéing, simmering, steaming',
+    'microwave':'microwave — reheating and microwaving only',
+    'oven':'oven — baking, roasting, grilling',
+    'kettle':'kettle — boiling water only (oats, noodles, couscous)',
+    'blender':'blender — blending, smoothies',
+    'air fryer':'air fryer — air-frying chicken, chips, vegetables'
   };
-  const have = selected.map(a => dets[a]||a);
-  const miss  = Object.keys(dets).filter(a => !selected.includes(a)).map(a => dets[a]||a);
-  return `APPLIANCE RULE — THE SINGLE MOST IMPORTANT RULE:
+  const have=selected.map(a=>dets[a]||a);
+  const miss=Object.keys(dets).filter(a=>!selected.includes(a)).map(a=>dets[a]||a);
+  return `APPLIANCE RULE — ABSOLUTE PRIORITY:
 User ONLY has: ${have.join('; ')}.
 Does NOT have: ${miss.length?miss.join('; '):'nothing else'}.
-- Every meal MUST be cookable with ONLY the appliances listed.
-- NEVER suggest a meal needing an appliance not listed.
-- cookingMethod must match an available appliance.
-- Air fryer only → all meals must be air-fried or no-cook.
-- Kettle only → all meals must use boiling water or be no-cook.
-- No stovetop → never boil, fry or sauté anything.`;
+Every single meal MUST be cookable ONLY with listed appliances. No exceptions.
+cookingMethod must match an available appliance.`;
 }
 
-// ── HELPER FUNCTIONS ──────────────────────────────────────────────
-function mealIcon(type) {
-  const t = type.toLowerCase();
-  if (t.includes('break'))  return { e:'🌅', bg:'#FFF9DB' };
-  if (t.includes('lunch'))  return { e:'☀️',  bg:'#DCFCE7' };
-  if (t.includes('dinner')) return { e:'🌙', bg:'#DBEAFE' };
-  if (t.includes('snack'))  return { e:'🍎', bg:'#FFE4E6' };
-  return { e:'🍴', bg:'#F3F4F6' };
+// ── UI HELPERS ───────────────────────────────────────────────────────
+function mealIcon(type){
+  const t=type.toLowerCase();
+  if(t.includes('break'))return{e:'🌅',bg:'rgba(255,200,50,0.08)'};
+  if(t.includes('lunch'))return{e:'☀️',bg:'rgba(80,200,120,0.08)'};
+  if(t.includes('dinner'))return{e:'🌙',bg:'rgba(100,140,255,0.08)'};
+  if(t.includes('snack'))return{e:'🍎',bg:'rgba(255,100,100,0.08)'};
+  return{e:'🍴',bg:'rgba(255,255,255,0.04)'};
 }
 
-function catIcon(c) {
-  return {produce:'🥬',dairy:'🥛',grains:'🌾',protein:'🥩',other:'🛒',
-          pantry:'🫙',frozen:'🧊',bakery:'🍞',beverages:'🧃'}[c.toLowerCase()]||'🛒';
+function catIcon(c){
+  return{produce:'Produce',dairy:'Dairy',grains:'Grains',protein:'Protein',
+         other:'Other',pantry:'Pantry',frozen:'Frozen',bakery:'Bakery',beverages:'Beverages'}[c]||c;
 }
 
-function budgetBadge(totalStr, budget, days, sym) {
-  const spent = parseFloat(totalStr.replace(/[^0-9.]/g,''));
-  const limit = parseFloat(budget) * days;
-  const ok    = spent <= limit;
-  const diff  = Math.abs(limit - spent).toFixed(2);
-  const lbl   = days > 1 ? `${sym}${budget}/day × ${days} = ${sym}${limit.toFixed(2)}` : `${sym}${budget}`;
-  return `<div class="budget-badge ${ok?'ok':'over'}">
-    ${ok ? `✅ Fits your budget (${lbl}) — ${sym}${diff} to spare` : `⚠️ Over budget (${lbl}) by ${sym}${diff}`}
+function budgetBadge(totalStr,budget,days,sym){
+  const spent=parseFloat(totalStr.replace(/[^0-9.]/g,''));
+  const limit=parseFloat(budget)*days;
+  const ok=spent<=limit;
+  const diff=Math.abs(limit-spent).toFixed(2);
+  const lbl=days>1?`${sym}${budget}/day × ${days} = ${sym}${limit.toFixed(2)}`:`${sym}${budget}`;
+  return`<div class="budget-badge ${ok?'ok':'over'}">
+    ${ok?`✓ Fits budget (${lbl}) — ${sym}${diff} to spare`:`⚠ Over budget (${lbl}) by ${sym}${diff}`}
   </div>`;
 }
 
-// ── MEAL CARD HTML ────────────────────────────────────────────────
-function mealCard(meal, allowed) {
-  const ic      = mealIcon(meal.type);
-  const flagged = meal.cookingMethod && !methodOk(meal.cookingMethod, allowed);
+function mealCard(meal,allowed){
+  const ic=mealIcon(meal.type);
+  const flagged=meal.cookingMethod&&!methodOk(meal.cookingMethod,allowed);
 
-  const ings = meal.ingredients?.length
-    ? `<div class="meal-ings">
-        <div class="strip-lbl">🧺 Ingredients with quantities</div>
+  const ings=meal.ingredients?.length
+    ?`<div class="meal-ings">
+        <div class="strip-lbl">Ingredients with quantities</div>
         <div class="ing-list">${meal.ingredients.map(i=>`<span class="ing">${i}</span>`).join('')}</div>
-       </div>` : '';
+      </div>`:'' ;
 
-  const steps = meal.steps?.length
-    ? `<div class="meal-steps">
-        <div class="strip-lbl">📋 Step-by-step guide</div>
+  const steps=meal.steps?.length
+    ?`<div class="meal-steps">
+        <div class="strip-lbl">Step-by-step guide</div>
         <div class="steps-list">
           ${meal.steps.map((s,i)=>`
             <div class="step-row">
@@ -1311,14 +1464,14 @@ function mealCard(meal, allowed) {
               <div class="step-body"><div class="step-text">${s}</div></div>
             </div>`).join('')}
         </div>
-       </div>` : '';
+      </div>`:'' ;
 
-  const macroTags = meal.macros
-    ? `<span class="tag macro">P ${meal.macros.protein||'?'}</span>
-       <span class="tag macro">C ${meal.macros.carbs||'?'}</span>
-       <span class="tag macro">F ${meal.macros.fat||'?'}</span>` : '';
+  const macroTags=meal.macros
+    ?`<span class="tag macro">P ${meal.macros.protein||'?'}</span>
+      <span class="tag macro">C ${meal.macros.carbs||'?'}</span>
+      <span class="tag macro">F ${meal.macros.fat||'?'}</span>`:'';
 
-  return `<div class="meal-card ${flagged?'flagged':''}">
+  return`<div class="meal-card ${flagged?'flagged':''}">
     <div class="meal-head">
       <div class="meal-ico" style="background:${ic.bg}">${ic.e}</div>
       <div class="meal-info">
@@ -1326,10 +1479,10 @@ function mealCard(meal, allowed) {
         <div class="meal-name">${meal.name}</div>
         <div class="meal-desc">${meal.description}</div>
         <div class="meal-tags">
-          ${meal.cookingMethod?`<span class="tag ${flagged?'warn':'blue'}">${flagged?'⚠️':'🍳'} ${meal.cookingMethod}</span>`:''}
-          ${meal.prepTime ?`<span class="tag">⏱ ${meal.prepTime}</span>`:''}
-          ${meal.portion  ?`<span class="tag">⚖️ ${meal.portion}</span>`:''}
-          ${meal.calories ?`<span class="tag">🔥 ${meal.calories}</span>`:''}
+          ${meal.cookingMethod?`<span class="tag ${flagged?'warn':'blue'}">${meal.cookingMethod}</span>`:''}
+          ${meal.prepTime?`<span class="tag">${meal.prepTime}</span>`:''}
+          ${meal.portion?`<span class="tag">${meal.portion}</span>`:''}
+          ${meal.calories?`<span class="tag">${meal.calories}</span>`:''}
           ${macroTags}
         </div>
       </div>
@@ -1339,188 +1492,183 @@ function mealCard(meal, allowed) {
   </div>`;
 }
 
-function shopHTML(list) {
-  if (!list) return '';
-  if (typeof list==='object' && !Array.isArray(list)) {
+function shopHTML(list){
+  if(!list)return'';
+  if(typeof list==='object'&&!Array.isArray(list)){
     return Object.entries(list).map(([cat,items])=>{
-      if (!items?.length) return '';
-      return `<div class="shop-cat">
-        <div class="shop-cat-lbl">${catIcon(cat)} ${cat}</div>
+      if(!items?.length)return'';
+      return`<div class="shop-cat">
+        <div class="shop-cat-lbl">${catIcon(cat)}</div>
         <div class="shop-items">${items.map(i=>`<div class="shop-item">${i}</div>`).join('')}</div>
       </div>`;
     }).join('');
   }
-  return `<div class="shop-items">${list.map(i=>`<div class="shop-item">${i}</div>`).join('')}</div>`;
+  return`<div class="shop-items">${list.map(i=>`<div class="shop-item">${i}</div>`).join('')}</div>`;
 }
 
-function actRow() {
-  return `<div class="act-row">
-    <button class="act-btn copy-btn" onclick="copyPlan()">📋 Copy plan</button>
-    <button class="act-btn" onclick="printPlan()">🖨️ Print</button>
+function storesHTML(country){
+  const s=getStores(country);
+  if(!s)return`<div class="stores-card">
+    <div class="stores-title">Budget shopping</div>
+    <div class="stores-text">Look for discount supermarket chains — own-brand products typically save 20–40% vs branded items.</div>
   </div>`;
-}
-
-function copyPlan() {
-  navigator.clipboard.writeText(document.getElementById('results').innerText).then(()=>{
-    document.querySelectorAll('.copy-btn').forEach(b=>{
-      b.textContent='✅ Copied!'; b.classList.add('done');
-      setTimeout(()=>{ b.textContent='📋 Copy plan'; b.classList.remove('done'); }, 2500);
-    });
-  });
-}
-
-function printPlan() { window.print(); }
-
-// ── STORES HTML ───────────────────────────────────────────────────
-function storesHTML(country) {
-  const s = getStores(country);
-  if (!s) return `<div class="stores-card">
-    <div class="stores-title">🏪 Budget shopping tip</div>
-    <div class="stores-text">Look for discount supermarket chains in ${country||'your country'} — own-brand products typically save 20–40% vs branded items.</div>
-  </div>`;
-  return `<div class="stores-card">
-    <div class="stores-title">🏪 Cheapest supermarkets in ${s.tip}</div>
+  return`<div class="stores-card">
+    <div class="stores-title">Cheapest supermarkets — ${s.n}</div>
     <div class="stores-text">
-      Best value stores: ${s.chains.map(c=>`<span class="store-pill">${c}</span>`).join('')}<br/>
-      <span style="color:var(--muted);font-size:12px;margin-top:4px;display:block;">${s.extra}</span>
+      ${s.c.map(c=>`<span class="store-chip">${c}</span>`).join('')}
+      <span style="display:block;margin-top:10px;font-size:12px;color:rgba(245,240,232,0.35);">${s.t}</span>
     </div>
   </div>`;
 }
 
-// ── DISPLAY RESULTS ───────────────────────────────────────────────
-function showResults(plan, budget, sym, allowed, days, country) {
-  const isMulti = days > 1;
-  let inner = '';
+function actRow(){
+  return`<div class="act-row">
+    <button class="act-btn copy-btn" onclick="copyPlan()">Copy plan</button>
+    <button class="act-btn" onclick="printPlan()">Print</button>
+  </div>`;
+}
 
-  if (isMulti) {
-    const daysH = plan.days.map(d=>`
+function copyPlan(){
+  navigator.clipboard.writeText(document.getElementById('results').innerText).then(()=>{
+    document.querySelectorAll('.copy-btn').forEach(b=>{
+      b.textContent='Copied ✓';b.classList.add('done');
+      setTimeout(()=>{b.textContent='Copy plan';b.classList.remove('done');},2500);
+    });
+  });
+}
+
+function printPlan(){window.print();}
+
+// ── DISPLAY ──────────────────────────────────────────────────────────
+function showResults(plan,budget,sym,allowed,days,country){
+  const isMulti=days>1;
+  let inner='';
+
+  if(isMulti){
+    const daysH=plan.days.map(d=>`
       <div class="day-block">
         <div class="day-head">
-          <div class="day-name">📅 ${d.day}</div>
+          <div class="day-name">${d.day}</div>
           <div class="day-info">${d.dailyCost} · ${d.calories||''}</div>
         </div>
         <div class="meals">${d.meals.map(m=>mealCard(m,allowed)).join('')}</div>
       </div>`).join('');
 
-    inner = `<div class="res-header">
-      <div class="res-top">
-        <div class="res-title">Your ${days}-day plan</div>
-        <div class="cost-pill">${plan.totalCost} total</div>
+    inner=`<div class="res-hero">
+      <div class="res-eyebrow">Your personalised plan</div>
+      <div class="res-title">YOUR<br/><span>${days}-DAY PLAN</span></div>
+      <div class="res-meta-row">
+        <div class="res-stat"><div class="res-stat-label">Total cost</div><div class="res-stat-value accent">${plan.totalCost}</div></div>
+        <div class="res-divider"></div>
+        <div class="res-stat"><div class="res-stat-label">Daily budget</div><div class="res-stat-value">${sym}${budget}</div></div>
+        <div class="res-divider"></div>
+        <div class="res-stat"><div class="res-stat-label">Duration</div><div class="res-stat-value">${days} days</div></div>
       </div>
-      <div class="res-meta">Budget: ${sym}${budget}/day · ${sym}${(parseFloat(budget)*days).toFixed(2)} total</div>
-      ${budgetBadge(plan.totalCost, budget, days, sym)}
+      ${budgetBadge(plan.totalCost,budget,days,sym)}
       ${actRow()}
     </div>
     ${daysH}`;
   } else {
-    inner = `<div class="res-header">
-      <div class="res-top">
-        <div class="res-title">Your meal plan</div>
-        <div class="cost-pill">${plan.totalCost} / day</div>
+    inner=`<div class="res-hero">
+      <div class="res-eyebrow">Your personalised plan</div>
+      <div class="res-title">YOUR<br/><span>MEAL PLAN</span></div>
+      <div class="res-meta-row">
+        <div class="res-stat"><div class="res-stat-label">Total cost</div><div class="res-stat-value accent">${plan.totalCost}</div></div>
+        <div class="res-divider"></div>
+        <div class="res-stat"><div class="res-stat-label">Calories</div><div class="res-stat-value">${plan.calories||'—'}</div></div>
+        <div class="res-divider"></div>
+        <div class="res-stat"><div class="res-stat-label">Budget</div><div class="res-stat-value">${sym}${budget}</div></div>
       </div>
-      <div class="res-meta">${plan.calories||''} · Budget: ${sym}${budget}</div>
-      ${budgetBadge(plan.totalCost, budget, 1, sym)}
+      ${budgetBadge(plan.totalCost,budget,1,sym)}
       ${actRow()}
     </div>
     <div class="meals">${plan.meals.map(m=>mealCard(m,allowed)).join('')}</div>`;
   }
 
-  document.getElementById('results').innerHTML = `<div class="fade">
+  document.getElementById('results').innerHTML=`<div class="fade">
     ${inner}
     <div class="shop-card">
-      <div class="shop-title">🛒 ${isMulti?`${days}-day `:''} Shopping list</div>
+      <div class="shop-title">${isMulti?`${days}-Day `:''}Shopping List</div>
       ${shopHTML(plan.shoppingList)}
     </div>
     ${storesHTML(country)}
-    <div class="tip-card"><span class="tip-icon">💡</span><span>${plan.tip}</span></div>
+    <div class="tip-card"><span class="tip-icon">→</span><span>${plan.tip}</span></div>
     ${actRow()}
   </div>`;
 }
 
-// ── PROGRESS BAR ──────────────────────────────────────────────────
-let progressInterval = null;
-
-function startProgress(days) {
-  const bar  = document.getElementById('pBar');
-  const total = days > 1 ? 35000 : 12000;
-  const step  = 100 / (total / 200);
-  let pct = 0;
-  bar.style.width = '0%';
-  clearInterval(progressInterval);
-  progressInterval = setInterval(()=>{
-    pct = Math.min(pct + step * (1 - pct/110), 92);
-    bar.style.width = pct + '%';
-  }, 200);
+// ── PROGRESS ─────────────────────────────────────────────────────────
+let prog=null;
+function startProg(days){
+  const bar=document.getElementById('pBar');
+  const total=days>1?35000:12000;
+  const step=100/(total/200);
+  let pct=0;bar.style.width='0%';
+  clearInterval(prog);
+  prog=setInterval(()=>{
+    pct=Math.min(pct+step*(1-pct/110),92);
+    bar.style.width=pct+'%';
+  },200);
+}
+function stopProg(){
+  clearInterval(prog);
+  const bar=document.getElementById('pBar');
+  bar.style.width='100%';
+  setTimeout(()=>{bar.style.width='0%';},600);
 }
 
-function stopProgress() {
-  clearInterval(progressInterval);
-  document.getElementById('pBar').style.width = '100%';
-  setTimeout(()=>{ document.getElementById('pBar').style.width = '0%'; }, 500);
-}
-
-// ── PROMPT ────────────────────────────────────────────────────────
-function buildPrompt(budget, country, diet, goal, meals, skill, selected, days,
-                     allergies, cuisine, proteins, carbs, macros) {
-
-  const dietMap = {
-    'none':          'no dietary restrictions (omnivore)',
-    'vegetarian':    'vegetarian (no meat or fish)',
-    'vegan':         'vegan (no animal products)',
-    'high-protein':  'high protein (prioritise meat, eggs, legumes)',
-    'carnivore':     'carnivore (meat and animal products only, no plant carbs)',
-    'flexitarian':   'flexitarian (mostly plant-based, occasional meat fine)',
-    'pescatarian':   'pescatarian (fish and seafood ok, no other meat)',
-    'keto':          'ketogenic (very low carb under 30g/day, high fat)',
-    'mediterranean': 'Mediterranean (olive oil, fish, vegetables, legumes, moderate grains)'
+// ── PROMPT ───────────────────────────────────────────────────────────
+function buildPrompt(budget,country,diet,goal,meals,skill,selected,days,allergies,cuisine,proteins,carbs,macros){
+  const dietMap={
+    'none':'no dietary restrictions (omnivore)',
+    'vegetarian':'vegetarian (no meat or fish)',
+    'vegan':'vegan (no animal products)',
+    'high-protein':'high protein (prioritise meat, eggs, legumes)',
+    'carnivore':'carnivore (meat and animal products only)',
+    'flexitarian':'flexitarian (mostly plant-based, occasional meat fine)',
+    'pescatarian':'pescatarian (fish ok, no other meat)',
+    'keto':'ketogenic (under 30g carbs/day, high fat)',
+    'mediterranean':'Mediterranean (olive oil, fish, vegetables, legumes)'
   };
-
-  const goalMap = {
-    'maintain': 'maintain current weight (~2000 kcal/day)',
-    'lose':     'lose weight — calorie deficit (~1500–1700 kcal/day), focus on filling, high-volume foods',
-    'gain':     'gain muscle — calorie surplus (~2400–2700 kcal/day), high protein every meal',
-    'cut':      'cut body fat while preserving muscle (~1700–1900 kcal/day), high protein, moderate carbs',
-    'bulk':     'bulk up — maximum calories (~3000–3500 kcal/day), calorie-dense foods',
-    'athletic': 'fuel athletic performance (~2500–3000 kcal/day), balanced macros, emphasis on carbs pre-workout'
+  const goalMap={
+    'maintain':'maintain current weight (~2000 kcal/day)',
+    'lose':'lose weight — calorie deficit (~1500–1700 kcal/day), filling foods',
+    'gain':'gain muscle — surplus (~2400–2700 kcal/day), high protein every meal',
+    'cut':'cut fat, keep muscle (~1700–1900 kcal/day), high protein, moderate carbs',
+    'bulk':'bulk up — maximum calories (~3000–3500 kcal/day)',
+    'athletic':'athletic performance (~2500–3000 kcal/day), balanced macros'
   };
+  const allergyStr=allergies.length?`STRICTLY FORBIDDEN (never include): ${allergies.join(', ')}.`:'';
+  const proteinStr=proteins.length?`Preferred proteins: ${proteins.join(', ')}.`:'';
+  const carbStr=carbs.length?`Preferred carbs: ${carbs.join(', ')}. Do NOT default to rice unless listed.`:'Do NOT default to rice.';
+  const cuisineStr=cuisine!=='any'?`Cuisine style: ${cuisine}.`:'';
+  const macroStr=`Macro targets: ~${macros.p}% protein, ~${macros.c}% carbs, ~${macros.f}% fat.`;
+  const wb=(parseFloat(budget)*days).toFixed(2);
 
-  const allergyStr = allergies.length
-    ? `ALLERGIES — STRICTLY FORBIDDEN (never include these): ${allergies.join(', ')}.` : '';
-
-  const proteinStr  = proteins.length  ? `Preferred protein sources: ${proteins.join(', ')}.` : '';
-  const carbStr     = carbs.length     ? `Preferred carbohydrates: ${carbs.join(', ')}. Do NOT default to rice unless it is in this list.` : 'Do NOT default to rice — use pasta, potatoes, oats, bread, or other carbs instead.';
-  const cuisineStr  = cuisine!=='any'  ? `Cuisine style: ${cuisine}.` : '';
-  const macroStr    = `Approximate macro targets: ~${macros.p}% protein, ~${macros.c}% carbohydrates, ~${macros.f}% fat.`;
-  const wb          = (parseFloat(budget) * days).toFixed(2);
-
-  const durStr = days > 1
-    ? `Generate a ${days}-day plan labelled Day 1 through Day ${days}.
+  const durStr=days>1
+    ?`Generate a ${days}-day plan labelled Day 1 through Day ${days}.
 - No meal name repeats across all ${days} days.
-- Total must stay within ${cur.s}${wb} (${cur.s}${budget}/day × ${days}).
-- Each day has dailyCost and calories fields.
-- shoppingList covers the entire period.
-- For multi-day: max 3 steps per meal, max 5 ingredients per meal.`
-    : `Generate a 1-day plan. Total cost must stay under ${cur.s}${budget}.`;
+- Total within ${cur.s}${wb} (${cur.s}${budget}/day × ${days}).
+- Each day has dailyCost and calories.
+- shoppingList covers the full period.
+- Multi-day: max 3 steps per meal, max 5 ingredients.`
+    :`Generate a 1-day plan. Total cost under ${cur.s}${budget}.`;
 
-  return `You are a professional budget meal planner. Create a practical, affordable, nutritious meal plan. Write clearly for a ${skill} cook.
+  return`You are a professional budget meal planner. Create a practical, affordable, nutritious meal plan. Write clearly for a ${skill} cook.
 
-LOCATION: User is in ${country||'Europe'}.
-CURRENCY: ALL prices MUST be in ${cur.n} (${cur.c}), symbol "${cur.s}".
-Use REALISTIC local supermarket prices for ${country||'Europe'}. Example reference prices:
-- Sweden: pasta 500g = kr 10–15, eggs 6-pack = kr 22–28, chicken breast 500g = kr 45–60, oats 500g = kr 15–20, lentils 500g = kr 18–25, banana = kr 3–5 each.
-- UK: pasta 500g = £0.65–0.90, eggs 6-pack = £1.10–1.40, chicken breast 500g = £2.50–3.50.
-- Germany: pasta 500g = €0.70–0.90, eggs 10-pack = €1.50–2.00, chicken breast 500g = €3.00–4.50.
-- Use similar logic for other countries based on local cost of living.
+LOCATION: ${country||'Europe'}
+CURRENCY: ALL prices in ${cur.n} (${cur.c}), symbol "${cur.s}". Use realistic local supermarket prices.
+Reference prices for Sweden: pasta 500g=kr10–15, eggs 6-pack=kr22–28, chicken breast 500g=kr45–60, oats 500g=kr15–20, lentils 500g=kr18–25. Use similar logic for other countries.
 
-USER INPUTS:
+USER:
 - Budget: ${cur.s}${budget} ${cur.c}/day
 - Diet: ${dietMap[diet]||diet}
 - Goal: ${goalMap[goal]||goal}
-- Meals per day: ${meals}
+- Meals/day: ${meals}
 - Skill: ${skill}
-${cuisineStr ? '- '+cuisineStr : ''}
-${allergyStr ? '- '+allergyStr : ''}
-${proteinStr ? '- '+proteinStr : ''}
+${cuisineStr?'- '+cuisineStr:''}
+${allergyStr?'- ALLERGIES: '+allergyStr:''}
+${proteinStr?'- '+proteinStr:''}
 - ${carbStr}
 - ${macroStr}
 
@@ -1528,154 +1676,93 @@ ${appPrompt(selected)}
 
 DURATION: ${durStr}
 
-PRICING — CRITICAL:
-- Use realistic local prices. Never underestimate costs.
-- Budget must not be exceeded. If it would be, reduce portions or swap ingredients.
-- Show exact cost for each meal.
-- Note: prices are approximate estimates — add a small buffer.
+PRICING — CRITICAL: Use realistic local prices. Never underestimate. Show exact cost per meal. Must not exceed budget.
 
-TIMING — CRITICAL:
-- Prep times must be HONEST and REALISTIC. Include ALL time: chopping, boiling, waiting.
-- Simple oat porridge = 8–12 mins. Pasta dish = 20–25 mins. Soup = 25–35 mins. Roasted vegetables = 30–40 mins.
-- ALWAYS give a range: "20–25 mins" not "20 mins". Never write "5 mins" for anything that takes longer.
-- If in doubt, add 5 minutes to your estimate.
+TIMING — CRITICAL: Always give ranges: "20–25 mins". Never write "5 mins" for anything taking longer. Include ALL time: chopping, boiling, waiting. Simple porridge=8–12 mins. Pasta=20–25 mins. Soup=25–35 mins.
 
-PROTEIN VARIETY — CRITICAL:
-- Never rely only on meat. Include eggs, legumes (lentils, chickpeas, beans), dairy, fish, or tofu across the day.
-- Each meal must have a clear protein source.
-- No two meals in the same day should have the same main protein.
+PROTEIN: Never rely only on meat. Include eggs, legumes, dairy, fish or tofu. Each meal needs a clear protein source. No two meals same main protein per day.
 
-VARIETY RULES:
-- No repeated main ingredient across meals in the same day.
-- Vary cooking methods across meals.
-- Vary flavor profiles — not all meals should taste the same.
-- Include at least 2 portions of vegetables per day.
-- Do NOT default to rice as a carb unless the user specifically chose it.
+VARIETY: No repeated main ingredient in same day. Vary cooking methods and flavors. Include 2+ vegetable portions per day.
 
-STEP RULES:
-- ${days>1?'3':'3–5'} numbered steps per meal.
-- Each step under 25 words.
-- Start with a verb: Boil, Chop, Mix, Heat, Add, Stir, Season, Drain, Fry, Bake, Slice, Cook, Rinse, Peel.
-- Include EXACT quantities: "Add 1 tsp salt", "Use 80g dry pasta per serving".
-- Be specific and beginner-friendly. No assumed knowledge.
+STEPS: ${days>1?'3':'3–5'} numbered steps per meal. Under 25 words each. Start with action verb. Include exact quantities in steps.
 
-INGREDIENTS:
-- List with EXACT quantities and units: "80g dried pasta", "2 medium eggs", "1 tsp olive oil", "½ tsp cumin", "pinch of black pepper".
-- Include all spices and seasonings with amounts — even small ones like a pinch of salt.
+INGREDIENTS: Exact quantities: "80g dried pasta", "2 medium eggs", "1 tsp olive oil", "½ tsp cumin".
 
-Always respond ONLY in valid JSON. No text outside the JSON structure.
+Respond ONLY in valid JSON. No text outside JSON.
 
-1-DAY JSON:
-{
-  "totalCost":"${cur.s}X.XX","calories":"~XXXX kcal","budgetConfirmed":true,
-  "meals":[{
-    "type":"Breakfast","name":"Full meal name","description":"One engaging sentence about the meal.",
-    "cost":"${cur.s}X.XX","prepTime":"X–Y mins","portion":"e.g. 350g",
-    "calories":"~XXX kcal","cookingMethod":"e.g. Simmered on stovetop",
-    "macros":{"protein":"Xg","carbs":"Xg","fat":"Xg"},
-    "ingredients":["80g rolled oats","200ml water","1 ripe banana, sliced","1 tsp honey","¼ tsp cinnamon"],
-    "steps":["Boil 200ml water in a small saucepan on medium heat — about 3 minutes.","Add 80g oats, stir continuously for 4–5 minutes until thick and creamy.","Pour into a bowl. Top with banana slices, drizzle 1 tsp honey, sprinkle cinnamon."]
-  }],
-  "shoppingList":{"produce":[],"dairy":[],"grains":[],"protein":[],"other":[]},
-  "tip":"One specific, actionable money-saving tip with a concrete example."
+1-DAY:
+{"totalCost":"${cur.s}X.XX","calories":"~XXXX kcal","budgetConfirmed":true,
+"meals":[{"type":"Breakfast","name":"...","description":"One sentence.","cost":"${cur.s}X.XX","prepTime":"X–Y mins","portion":"e.g. 350g","calories":"~XXX kcal","cookingMethod":"e.g. Simmered","macros":{"protein":"Xg","carbs":"Xg","fat":"Xg"},"ingredients":["80g oats","200ml water","1 banana","1 tsp honey"],"steps":["Boil 200ml water in a small pan — 3 minutes.","Add 80g oats, stir 4–5 minutes until thick.","Top with sliced banana and drizzle 1 tsp honey."]}],
+"shoppingList":{"produce":[],"dairy":[],"grains":[],"protein":[],"other":[]},
+"tip":"Specific actionable tip with concrete example."}
+
+MULTI-DAY:
+{"totalCost":"${cur.s}XX.XX","budgetConfirmed":true,
+"days":[{"day":"Day 1","dailyCost":"${cur.s}X.XX","calories":"~XXXX kcal","meals":[{"type":"Breakfast","name":"...","description":"...","cost":"${cur.s}X.XX","prepTime":"X–Y mins","portion":"...","calories":"~XXX kcal","cookingMethod":"...","macros":{"protein":"Xg","carbs":"Xg","fat":"Xg"},"ingredients":["item"],"steps":["Step.","Step.","Step."]}]}],
+"shoppingList":{"produce":[],"dairy":[],"grains":[],"protein":[],"other":[]},
+"tip":"Specific tip."}`;
 }
 
-MULTI-DAY JSON:
-{
-  "totalCost":"${cur.s}XX.XX","budgetConfirmed":true,
-  "days":[{"day":"Day 1","dailyCost":"${cur.s}X.XX","calories":"~XXXX kcal",
-    "meals":[{"type":"Breakfast","name":"...","description":"...","cost":"${cur.s}X.XX",
-      "prepTime":"X–Y mins","portion":"...","calories":"~XXX kcal","cookingMethod":"...",
-      "macros":{"protein":"Xg","carbs":"Xg","fat":"Xg"},
-      "ingredients":["item with exact quantity"],
-      "steps":["Verb + action with quantity.","Verb + action.","Verb + action."]}]}],
-  "shoppingList":{"produce":[],"dairy":[],"grains":[],"protein":[],"other":[]},
-  "tip":"One specific money-saving tip."
-}`;
-}
+// ── MAIN ─────────────────────────────────────────────────────────────
+async function generate(){
+  const budget=document.getElementById('budget').value||10;
+  const country=document.getElementById('country').value.trim()||'Europe';
+  const diet=sel('diet')||'none';
+  const goal=sel('goal')||'maintain';
+  const meals=sel('mpp')||'3';
+  const days=parseInt(sel('dur')||'1');
+  const skill=sel('skill')||'beginner';
+  const cuisine=sel('cuisine')||'any';
+  const selected=multiSel('apps');
+  const allergies=[...multiSel('allergy'),...customA];
+  const proteins=multiSel('proteins');
+  const carbsArr=multiSel('carbs');
+  const macros={p:document.getElementById('mP').value,c:document.getElementById('mC').value,f:document.getElementById('mF').value};
 
-// ── MAIN GENERATE ─────────────────────────────────────────────────
-async function generate() {
-  const budget   = document.getElementById('budget').value || 10;
-  const country  = document.getElementById('country').value.trim() || 'Europe';
-  const diet     = sel('diet')    || 'none';
-  const goal     = sel('goal')    || 'maintain';
-  const meals    = sel('mpp')     || '3';
-  const days     = parseInt(sel('dur') || '1');
-  const skill    = sel('skill')   || 'beginner';
-  const cuisine  = sel('cuisine') || 'any';
-  const selected = multiSel('apps');
-  const allergies = [...multiSel('allergy'), ...customA];
-  const proteins  = multiSel('proteins');
-  const carbsArr  = multiSel('carbs');
-  const macros    = { p:document.getElementById('mP').value, c:document.getElementById('mC').value, f:document.getElementById('mF').value };
+  if(!selected.length){showErr('Please select at least one appliance.');return;}
 
-  if (!selected.length) {
-    showErr('Please select at least one appliance you have access to.'); return;
-  }
+  const btn=document.getElementById('genBtn');
+  const sw=document.getElementById('statusWrap');
+  btn.disabled=true;
+  btn.innerHTML='<span class="spin"></span>Generating';
+  sw.style.display='block';
+  document.getElementById('sTxt').textContent=days>1?`Building your ${days}-day plan`:'Building your meal plan';
+  document.getElementById('sSub').textContent=days>1?'20–40 seconds':'5–15 seconds';
+  document.getElementById('errBox').style.display='none';
+  document.getElementById('warnBox').style.display='none';
+  document.getElementById('results').style.display='none';
+  startProg(days);
 
-  // UI — start loading
-  const btn = document.getElementById('genBtn');
-  const sw  = document.getElementById('statusWrap');
-  btn.disabled  = true;
-  btn.innerHTML = '<span class="spin"></span> Generating...';
-  sw.style.display = 'block';
-  document.getElementById('sTxt').textContent = days > 1 ? `Building your ${days}-day plan...` : 'Building your meal plan...';
-  document.getElementById('sSub').textContent = days > 1 ? 'This takes 20–40 seconds — please wait' : 'Usually 5–15 seconds';
-  document.getElementById('errBox').style.display  = 'none';
-  document.getElementById('warnBox').style.display = 'none';
-  document.getElementById('results').style.display = 'none';
-  startProgress(days);
-
-  try {
-    const prompt = buildPrompt(budget, country, diet, goal, meals, skill, selected, days,
-                               allergies, cuisine, proteins, carbsArr, macros);
-
-    const response = await fetch('/generate', {
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({ prompt })
-    });
-
-    if (!response.ok) {
-      const e = await response.json();
-      throw new Error(e.error || `Server error: ${response.status}`);
+  try{
+    const prompt=buildPrompt(budget,country,diet,goal,meals,skill,selected,days,allergies,cuisine,proteins,carbsArr,macros);
+    const response=await fetch('/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({prompt})});
+    if(!response.ok){const e=await response.json();throw new Error(e.error||`Server error: ${response.status}`);}
+    const data=await response.json();
+    const raw=data.result.replace(/```json|```/g,'').trim();
+    const plan=JSON.parse(raw);
+    const allowed=allowedMethods();
+    const allMeals=plan.days?plan.days.flatMap(d=>d.meals):plan.meals;
+    const bad=allMeals.filter(m=>m.cookingMethod&&!methodOk(m.cookingMethod,allowed));
+    if(bad.length){
+      const w=document.getElementById('warnBox');
+      w.style.display='block';
+      w.textContent=`${bad.length} meal(s) may use appliances you don't have. Try regenerating for a fully compliant plan.`;
     }
-
-    const data    = await response.json();
-    const raw     = data.result.replace(/```json|```/g,'').trim();
-    const plan    = JSON.parse(raw);
-    const allowed = allowedMethods();
-
-    // Check for appliance violations
-    const allMeals = plan.days ? plan.days.flatMap(d=>d.meals) : plan.meals;
-    const bad = allMeals.filter(m => m.cookingMethod && !methodOk(m.cookingMethod, allowed));
-    if (bad.length) {
-      const w = document.getElementById('warnBox');
-      w.style.display = 'block';
-      w.textContent = `⚠️ ${bad.length} meal(s) may use appliances you don't have (highlighted in orange below). Try regenerating for a fully compliant plan.`;
-    }
-
-    document.getElementById('results').style.display = 'block';
-    showResults(plan, budget, cur.s, allowed, days, country);
-
-  } catch(err) {
+    document.getElementById('results').style.display='block';
+    showResults(plan,budget,cur.s,allowed,days,country);
+    document.getElementById('results').scrollIntoView({behavior:'smooth',block:'start'});
+  }catch(err){
     showErr(`Something went wrong: ${err.message}`);
-  } finally {
-    stopProgress();
-    btn.disabled  = false;
-    btn.innerHTML = '✨ Generate My Meal Plan';
-    sw.style.display = 'none';
+  }finally{
+    stopProg();
+    btn.disabled=false;
+    btn.innerHTML='Generate My Meal Plan';
+    sw.style.display='none';
   }
 }
 
-function showErr(msg) {
-  const b = document.getElementById('errBox');
-  b.style.display = 'block';
-  b.textContent = msg;
-}
+function showErr(msg){const b=document.getElementById('errBox');b.style.display='block';b.textContent=msg;}
 
-// Init macro display
 updateMacro();
 </script>
 </body>
