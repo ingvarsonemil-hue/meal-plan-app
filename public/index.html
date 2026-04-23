@@ -4,612 +4,755 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Mealzy — Free Meal Plan Generator</title>
-  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Lora:wght@600&display=swap" rel="stylesheet"/>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --orange:    #E8793A;
-      --orange-lt: #FFF4EC;
-      --orange-bd: #FFD9BC;
-      --green:     #2A5E2A;
-      --green-lt:  #F0FAF0;
-      --green-bd:  #A8D8A8;
-      --red:       #C0392B;
-      --red-lt:    #FFF0EE;
-      --red-bd:    #FFBBBB;
-      --text:      #1A1209;
-      --text-mid:  #6B5744;
-      --muted:     #A8927E;
-      --bg:        #FEFAF6;
-      --surface:   #FFFFFF;
-      --border:    #EDE4D8;
-      --r-sm:      10px;
-      --r-md:      14px;
-      --r-lg:      20px;
+      --o:      #E07B39;
+      --o-d:    #C45E20;
+      --o-lt:   #FFF5EC;
+      --o-bd:   #FFDCBC;
+      --g:      #2A5C2A;
+      --g-lt:   #EFF8EF;
+      --g-bd:   #A8D8A8;
+      --r:      #C0392B;
+      --r-lt:   #FFF0EE;
+      --r-bd:   #FFBBBB;
+      --b-lt:   #EFF6FF;
+      --b-bd:   #BFDBFE;
+      --b-txt:  #1D4ED8;
+      --text:   #1C1007;
+      --mid:    #6B5744;
+      --muted:  #AA917C;
+      --bg:     #FDF8F3;
+      --bg2:    #FAF3EB;
+      --surf:   #FFFFFF;
+      --bord:   #EAE0D5;
+      --bord2:  #DDD0C2;
+      --shadow: 0 2px 12px rgba(100,60,20,0.07);
+      --shadow2: 0 4px 24px rgba(100,60,20,0.11);
+      --r-sm:   10px;
+      --r-md:   16px;
+      --r-lg:   22px;
+      --r-xl:   28px;
     }
+
+    html { scroll-behavior: smooth; }
 
     body {
       font-family: 'Nunito', sans-serif;
       background: var(--bg);
       color: var(--text);
       min-height: 100vh;
-      padding: 24px 16px 100px;
+      padding: 28px 16px 120px;
     }
 
-    .wrap { max-width: 600px; margin: 0 auto; }
+    .wrap { max-width: 620px; margin: 0 auto; }
 
     /* ── HERO ───────────────────────────────────────────────────── */
     .hero {
+      background: linear-gradient(145deg, #FFF8F1 0%, #FFF2E5 100%);
+      border: 1.5px solid var(--o-bd);
+      border-radius: var(--r-xl);
+      padding: 36px 28px 32px;
+      margin-bottom: 14px;
       text-align: center;
-      padding: 32px 24px 28px;
-      background: var(--surface);
-      border: 1.5px solid var(--border);
-      border-radius: var(--r-lg);
-      margin-bottom: 12px;
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
     }
 
+    /* Decorative background circles */
+    .hero::before {
+      content: '';
+      position: absolute;
+      width: 200px; height: 200px;
+      background: radial-gradient(circle, rgba(224,123,57,0.08) 0%, transparent 70%);
+      top: -60px; right: -60px;
+      border-radius: 50%;
+    }
+
+    .hero::after {
+      content: '';
+      position: absolute;
+      width: 150px; height: 150px;
+      background: radial-gradient(circle, rgba(224,123,57,0.06) 0%, transparent 70%);
+      bottom: -40px; left: -40px;
+      border-radius: 50%;
+    }
+
+    .hero-inner { position: relative; z-index: 1; }
+
     .badge {
-      display: inline-block;
-      background: var(--orange-lt);
-      color: var(--orange);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--surf);
+      color: var(--o);
       font-size: 12px;
       font-weight: 800;
-      letter-spacing: 0.06em;
+      letter-spacing: 0.05em;
       text-transform: uppercase;
-      padding: 5px 14px;
+      padding: 6px 14px;
       border-radius: 100px;
-      border: 1.5px solid var(--orange-bd);
-      margin-bottom: 16px;
+      border: 1.5px solid var(--o-bd);
+      margin-bottom: 18px;
+      box-shadow: 0 1px 4px rgba(224,123,57,0.15);
     }
 
     .hero h1 {
-      font-size: clamp(22px, 5.5vw, 34px);
-      font-weight: 900;
-      line-height: 1.15;
-      margin-bottom: 10px;
+      font-family: 'Lora', serif;
+      font-size: clamp(24px, 5.5vw, 36px);
+      font-weight: 600;
+      line-height: 1.2;
+      margin-bottom: 12px;
+      color: var(--text);
     }
 
-    .hero h1 em { font-style: normal; color: var(--orange); }
+    .hero h1 em { font-style: italic; color: var(--o); }
 
     .hero p {
-      font-size: 14px;
-      color: var(--text-mid);
-      line-height: 1.65;
+      font-size: 15px;
+      color: var(--mid);
+      line-height: 1.7;
       max-width: 400px;
-      margin: 0 auto 22px;
+      margin: 0 auto 28px;
     }
 
     /* How it works */
-    .how { display: flex; align-items: flex-start; justify-content: center; gap: 6px; }
+    .how {
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      gap: 4px;
+      background: rgba(255,255,255,0.6);
+      border-radius: var(--r-md);
+      padding: 16px 12px;
+      border: 1px solid var(--o-bd);
+    }
 
-    .how-step { flex: 1; text-align: center; max-width: 110px; }
+    .how-step { flex: 1; text-align: center; max-width: 130px; }
 
-    .how-icon {
-      width: 42px; height: 42px;
-      border-radius: 13px;
-      background: var(--orange-lt);
-      border: 1.5px solid var(--orange-bd);
+    .how-num {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      background: var(--o);
+      color: #fff;
+      font-size: 16px; font-weight: 900;
       display: flex; align-items: center; justify-content: center;
-      font-size: 19px;
-      margin: 0 auto 7px;
+      margin: 0 auto 8px;
+      box-shadow: 0 3px 8px rgba(224,123,57,0.35);
     }
 
     .how-label { font-size: 12px; font-weight: 800; color: var(--text); line-height: 1.3; }
-    .how-sub   { font-size: 11px; color: var(--muted); margin-top: 2px; }
-    .how-arr   { font-size: 16px; color: var(--orange-bd); margin-top: 11px; flex-shrink: 0; }
+    .how-sub   { font-size: 11px; color: var(--muted); margin-top: 3px; line-height: 1.3; }
+    .how-arr   { color: var(--o-bd); font-size: 20px; margin-top: 8px; flex-shrink: 0; font-weight: 900; }
 
     /* ── SAMPLE ─────────────────────────────────────────────────── */
     .sample {
-      background: var(--surface);
-      border: 1.5px solid var(--border);
+      background: var(--surf);
+      border: 1.5px solid var(--bord);
       border-radius: var(--r-lg);
       overflow: hidden;
-      margin-bottom: 12px;
+      margin-bottom: 14px;
+      box-shadow: var(--shadow);
     }
 
     .sample-head {
       display: flex; align-items: center; justify-content: space-between;
-      padding: 13px 18px;
-      cursor: pointer;
-      background: var(--orange-lt);
-      border-bottom: 1.5px solid var(--orange-bd);
-      user-select: none;
+      padding: 14px 18px;
+      cursor: pointer; user-select: none;
+      background: var(--o-lt);
+      border-bottom: 1.5px solid var(--o-bd);
     }
 
-    .sample-head-l { display: flex; align-items: center; gap: 8px; }
-    .sample-head-title { font-size: 13px; font-weight: 800; color: var(--orange); }
-    .sample-head-sub   { font-size: 11px; color: var(--muted); }
+    .sample-head-l { display: flex; align-items: center; gap: 10px; }
+    .sample-head-icon { font-size: 22px; }
+    .sample-head-title { font-size: 14px; font-weight: 800; color: var(--o); }
+    .sample-head-sub   { font-size: 12px; color: var(--muted); margin-top: 1px; }
 
     .s-tog {
-      font-size: 12px; font-weight: 700; color: var(--orange);
-      background: var(--surface); border: 1.5px solid var(--orange-bd);
-      border-radius: 100px; padding: 4px 10px; cursor: pointer;
+      font-size: 12px; font-weight: 800; color: var(--o);
+      background: var(--surf); border: 1.5px solid var(--o-bd);
+      border-radius: 100px; padding: 5px 12px; cursor: pointer;
+      transition: all 0.15s;
     }
+    .s-tog:hover { background: var(--o); color: #fff; }
 
-    .sample-body { padding: 14px 16px 16px; }
+    .sample-body { padding: 16px; }
 
     .s-meal {
       display: flex; align-items: center; gap: 12px;
-      padding: 10px 12px;
+      padding: 12px 14px;
       background: var(--bg);
-      border: 1px solid var(--border);
-      border-radius: var(--r-sm);
-      margin-bottom: 8px;
+      border: 1px solid var(--bord);
+      border-radius: var(--r-md);
+      margin-bottom: 10px;
+      transition: border-color 0.15s;
     }
-
     .s-meal:last-of-type { margin-bottom: 0; }
-    .s-icon { font-size: 22px; flex-shrink: 0; }
+    .s-meal:hover { border-color: var(--o-bd); }
+
+    .s-icon { font-size: 24px; flex-shrink: 0; }
     .s-info { flex: 1; }
-    .s-type { font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); }
-    .s-name { font-size: 13px; font-weight: 800; color: var(--text); margin: 1px 0; }
-    .s-meta { font-size: 11px; color: var(--muted); }
-    .s-cost { font-size: 14px; font-weight: 800; color: var(--orange); }
+    .s-type { font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); }
+    .s-name { font-size: 14px; font-weight: 800; color: var(--text); margin: 2px 0; }
+    .s-meta { font-size: 12px; color: var(--muted); }
+    .s-cost { font-size: 15px; font-weight: 900; color: var(--o); }
 
     .s-note {
       font-size: 12px; color: var(--muted); text-align: center;
-      margin-top: 12px; padding-top: 12px;
-      border-top: 1px solid var(--border); font-weight: 600;
+      margin-top: 14px; padding-top: 14px;
+      border-top: 1px dashed var(--bord);
+      font-weight: 700;
     }
 
-    /* ── SECTION CARD ───────────────────────────────────────────── */
-    .sec {
-      background: var(--surface);
-      border: 1.5px solid var(--border);
-      border-radius: var(--r-lg);
-      padding: 18px;
-      margin-bottom: 10px;
+    /* ── DIVIDER ────────────────────────────────────────────────── */
+    .divider {
+      display: flex; align-items: center; gap: 12px;
+      margin: 20px 0 14px;
     }
+
+    .divider-line { flex: 1; height: 1px; background: var(--bord); }
+
+    .divider-label {
+      font-size: 11px; font-weight: 800;
+      text-transform: uppercase; letter-spacing: 0.1em;
+      color: var(--muted);
+    }
+
+    /* ── SECTION ────────────────────────────────────────────────── */
+    .sec {
+      background: var(--surf);
+      border: 1.5px solid var(--bord);
+      border-radius: var(--r-lg);
+      padding: 20px;
+      margin-bottom: 10px;
+      box-shadow: var(--shadow);
+      transition: border-color 0.2s;
+    }
+
+    .sec:focus-within { border-color: var(--o-bd); }
 
     .sec-label {
       font-size: 12px; font-weight: 800;
-      text-transform: uppercase; letter-spacing: 0.07em;
-      color: var(--muted); margin-bottom: 12px;
-      display: flex; align-items: center; gap: 6px;
+      text-transform: uppercase; letter-spacing: 0.08em;
+      color: var(--muted); margin-bottom: 14px;
+      display: flex; align-items: center; gap: 7px;
     }
 
-    .sec-label span { font-weight: 600; text-transform: none; letter-spacing: 0; }
+    .sec-label .note { font-weight: 600; text-transform: none; letter-spacing: 0; color: var(--muted); font-size: 11px; }
 
     /* ── BUDGET ─────────────────────────────────────────────────── */
-    .budget-wrap {
+    .budget-box {
       display: flex; align-items: center;
-      background: var(--bg);
-      border: 2px solid var(--border);
+      background: var(--bg2);
+      border: 2px solid var(--bord);
       border-radius: var(--r-md);
-      padding: 10px 16px; gap: 4px;
-      transition: border-color 0.15s;
+      padding: 12px 18px; gap: 6px;
+      transition: border-color 0.2s, box-shadow 0.2s;
     }
-
-    .budget-wrap:focus-within { border-color: var(--orange); }
+    .budget-box:focus-within {
+      border-color: var(--o);
+      box-shadow: 0 0 0 4px rgba(224,123,57,0.1);
+    }
 
     .cur-sym {
-      font-size: 28px; font-weight: 900; color: var(--orange);
-      min-width: 24px; transition: all 0.2s;
+      font-size: 32px; font-weight: 900; color: var(--o);
+      min-width: 28px; line-height: 1;
+      transition: all 0.2s;
     }
 
-    .budget-in {
+    .bud-in {
       font-family: 'Nunito', sans-serif;
-      font-size: 44px; font-weight: 900; color: var(--text);
+      font-size: 48px; font-weight: 900; color: var(--text);
       border: none; background: transparent;
-      width: 140px; outline: none; line-height: 1;
+      width: 150px; outline: none; line-height: 1;
     }
 
-    .budget-in::-webkit-inner-spin-button,
-    .budget-in::-webkit-outer-spin-button { -webkit-appearance: none; }
+    .bud-in::-webkit-inner-spin-button,
+    .bud-in::-webkit-outer-spin-button { -webkit-appearance: none; }
 
-    .budget-r { margin-left: auto; text-align: right; }
-    .budget-per { font-size: 13px; color: var(--muted); font-weight: 700; }
-    .cur-code { font-size: 11px; color: var(--orange); font-weight: 700; margin-top: 2px; min-height: 14px; }
+    .bud-r { margin-left: auto; text-align: right; }
+    .bud-per  { font-size: 13px; color: var(--muted); font-weight: 700; }
+    .cur-code { font-size: 12px; color: var(--o); font-weight: 800; margin-top: 3px; min-height: 16px; transition: all 0.2s; }
 
     /* ── TEXT INPUT ─────────────────────────────────────────────── */
     .txt-in {
       font-family: 'Nunito', sans-serif;
       font-size: 15px; font-weight: 700; color: var(--text);
-      border: 2px solid var(--border);
-      background: var(--bg);
+      border: 2px solid var(--bord);
+      background: var(--bg2);
       border-radius: var(--r-md);
       padding: 13px 16px; width: 100%; outline: none;
-      transition: border-color 0.15s;
+      transition: border-color 0.2s, box-shadow 0.2s;
     }
-
-    .txt-in:focus { border-color: var(--orange); }
+    .txt-in:focus {
+      border-color: var(--o);
+      box-shadow: 0 0 0 4px rgba(224,123,57,0.1);
+    }
     .txt-in::placeholder { color: var(--muted); font-weight: 600; }
 
-    .field-hint { font-size: 12px; color: var(--muted); font-weight: 600; margin-top: 8px; min-height: 16px; transition: all 0.2s; }
+    .field-hint {
+      font-size: 12px; color: var(--muted); font-weight: 700;
+      margin-top: 9px; min-height: 17px; transition: all 0.2s;
+      display: flex; align-items: center; gap: 5px;
+    }
+
+    /* ── PILLS ──────────────────────────────────────────────────── */
+    .pills { display: flex; flex-wrap: wrap; gap: 8px; }
+
+    .pill {
+      font-family: 'Nunito', sans-serif;
+      font-size: 13px; font-weight: 700;
+      padding: 8px 15px; border-radius: 100px;
+      border: 1.5px solid var(--bord);
+      color: var(--mid); background: var(--bg2);
+      cursor: pointer; transition: all 0.15s;
+      user-select: none;
+    }
+
+    .pill:hover       { border-color: var(--o); color: var(--o); background: var(--o-lt); }
+    .pill.on          { background: var(--o); border-color: var(--o); color: #fff; box-shadow: 0 2px 8px rgba(224,123,57,0.3); }
+    .pill.multi.on    { background: var(--g); border-color: var(--g); color: #fff; box-shadow: 0 2px 8px rgba(42,92,42,0.25); }
+    .pill.multi:hover { border-color: var(--g); color: var(--g); background: var(--g-lt); }
+    .pill.al.on       { background: var(--r); border-color: var(--r); color: #fff; box-shadow: 0 2px 8px rgba(192,57,43,0.25); }
+    .pill.al:hover    { border-color: var(--r); color: var(--r); background: var(--r-lt); }
 
     /* ── TWO COL ────────────────────────────────────────────────── */
     .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
     .two-col .sec { margin-bottom: 0; }
 
-    /* ── PILLS ──────────────────────────────────────────────────── */
-    .pills { display: flex; flex-wrap: wrap; gap: 7px; }
-
-    .pill {
-      font-family: 'Nunito', sans-serif;
-      font-size: 13px; font-weight: 700;
-      padding: 7px 14px; border-radius: 100px;
-      border: 1.5px solid var(--border);
-      color: var(--text-mid); background: var(--bg);
-      cursor: pointer; transition: all 0.15s; user-select: none;
+    /* ── ALLERGY ────────────────────────────────────────────────── */
+    .allergy-input-wrap {
+      display: flex; gap: 8px; margin-top: 12px;
     }
 
-    .pill:hover     { border-color: var(--orange); color: var(--orange); }
-    .pill.on        { background: var(--orange); border-color: var(--orange); color: #fff; }
-    .pill.multi.on  { background: var(--green); border-color: var(--green); color: #fff; }
-    .pill.multi:hover { border-color: var(--green); color: var(--green); }
-    .pill.allergy.on  { background: var(--red); border-color: var(--red); color: #fff; }
-    .pill.allergy:hover { border-color: var(--red); color: var(--red); }
-
-    /* ── ALLERGY TEXT INPUT ─────────────────────────────────────── */
-    .allergy-other {
-      margin-top: 10px;
-      display: flex;
-      gap: 8px;
-      align-items: center;
-    }
-
-    .allergy-other input {
+    .allergy-input-wrap input {
       font-family: 'Nunito', sans-serif;
       font-size: 13px; font-weight: 700;
-      border: 1.5px solid var(--border);
-      background: var(--bg);
+      border: 1.5px solid var(--bord);
+      background: var(--bg2);
       border-radius: var(--r-sm);
       padding: 9px 13px; flex: 1; outline: none;
-      color: var(--text);
-      transition: border-color 0.15s;
+      color: var(--text); transition: border-color 0.2s;
     }
+    .allergy-input-wrap input:focus { border-color: var(--r); }
+    .allergy-input-wrap input::placeholder { color: var(--muted); font-weight: 600; }
 
-    .allergy-other input:focus { border-color: var(--red); }
-    .allergy-other input::placeholder { color: var(--muted); font-weight: 600; }
-
-    .allergy-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
-
-    .allergy-tag {
-      font-size: 12px; font-weight: 700;
-      padding: 4px 10px 4px 10px;
-      background: var(--red-lt);
-      border: 1px solid var(--red-bd);
-      border-radius: 100px;
-      color: var(--red);
-      display: flex; align-items: center; gap: 5px;
-      cursor: pointer;
-    }
-
-    .allergy-tag::after { content: '×'; font-size: 14px; font-weight: 900; }
-
-    /* ── ADVANCED SECTION ───────────────────────────────────────── */
-    .adv-toggle {
-      width: 100%;
-      padding: 14px 18px;
-      background: var(--surface);
-      border: 1.5px solid var(--border);
-      border-radius: var(--r-lg);
+    .allergy-add-btn {
       font-family: 'Nunito', sans-serif;
-      font-size: 14px; font-weight: 800;
-      color: var(--text-mid);
-      cursor: pointer;
-      display: flex; align-items: center; justify-content: space-between;
-      margin-bottom: 10px;
+      font-size: 13px; font-weight: 800;
+      padding: 9px 14px;
+      background: var(--r-lt); border: 1.5px solid var(--r-bd);
+      border-radius: var(--r-sm); color: var(--r);
+      cursor: pointer; white-space: nowrap; transition: all 0.15s;
+    }
+    .allergy-add-btn:hover { background: var(--r); color: #fff; }
+
+    .allergy-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+
+    .a-tag {
+      font-size: 12px; font-weight: 700;
+      padding: 5px 10px 5px 12px;
+      background: var(--r-lt); border: 1px solid var(--r-bd);
+      border-radius: 100px; color: var(--r);
+      display: flex; align-items: center; gap: 6px; cursor: pointer;
       transition: all 0.15s;
     }
+    .a-tag:hover { background: var(--r); color: #fff; }
+    .a-tag-x { font-size: 15px; font-weight: 900; line-height: 1; }
 
-    .adv-toggle:hover { border-color: var(--orange); color: var(--orange); }
-    .adv-toggle.open  { border-color: var(--orange); color: var(--orange); border-bottom-left-radius: 0; border-bottom-right-radius: 0; border-bottom: none; }
+    /* ── ADVANCED ───────────────────────────────────────────────── */
+    .adv-btn {
+      width: 100%; padding: 15px 20px;
+      background: var(--surf); border: 1.5px solid var(--bord);
+      border-radius: var(--r-lg);
+      font-family: 'Nunito', sans-serif;
+      font-size: 14px; font-weight: 800; color: var(--mid);
+      cursor: pointer; display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 10px; transition: all 0.15s;
+      box-shadow: var(--shadow);
+    }
+    .adv-btn:hover  { border-color: var(--o); color: var(--o); }
+    .adv-btn.open   { border-color: var(--o); color: var(--o); border-bottom-left-radius: 0; border-bottom-right-radius: 0; border-bottom-color: transparent; margin-bottom: 0; }
 
     .adv-body {
-      background: var(--surface);
-      border: 1.5px solid var(--orange);
+      background: var(--surf); border: 1.5px solid var(--o);
       border-top: none;
-      border-bottom-left-radius: var(--r-lg);
-      border-bottom-right-radius: var(--r-lg);
-      padding: 16px;
-      margin-bottom: 10px;
-      display: none;
+      border-bottom-left-radius: var(--r-lg); border-bottom-right-radius: var(--r-lg);
+      padding: 16px; margin-bottom: 10px; display: none;
     }
 
-    .adv-body .sec { border-radius: var(--r-md); margin-bottom: 10px; }
+    .adv-body .sec { box-shadow: none; margin-bottom: 10px; }
     .adv-body .sec:last-child { margin-bottom: 0; }
 
     /* Macro sliders */
-    .macro-row { display: flex; flex-direction: column; gap: 12px; }
+    .macro-grid { display: flex; flex-direction: column; gap: 14px; }
 
-    .macro-item { display: flex; align-items: center; gap: 12px; }
+    .macro-row { display: flex; align-items: center; gap: 12px; }
 
-    .macro-label { font-size: 13px; font-weight: 800; color: var(--text-mid); width: 80px; flex-shrink: 0; }
+    .macro-lbl {
+      font-size: 13px; font-weight: 800; color: var(--mid);
+      width: 90px; flex-shrink: 0;
+    }
 
-    .macro-slider { flex: 1; accent-color: var(--orange); height: 4px; cursor: pointer; }
+    input[type=range] {
+      flex: 1; height: 6px; border-radius: 3px;
+      cursor: pointer; accent-color: var(--o);
+    }
 
     .macro-val {
-      font-size: 13px; font-weight: 800;
-      color: var(--orange);
-      width: 44px; text-align: right;
+      font-size: 14px; font-weight: 900; color: var(--o);
+      width: 42px; text-align: right;
     }
+
+    .macro-note { font-size: 12px; color: var(--muted); font-weight: 700; margin-top: 10px; }
 
     /* ── GENERATE BUTTON ────────────────────────────────────────── */
     .gen-btn {
-      width: 100%; padding: 19px;
-      background: var(--orange); color: #fff;
-      border: none; border-radius: var(--r-md);
+      width: 100%; padding: 20px;
+      background: linear-gradient(135deg, var(--o) 0%, var(--o-d) 100%);
+      color: #fff; border: none; border-radius: var(--r-md);
       font-family: 'Nunito', sans-serif;
       font-size: 18px; font-weight: 900;
       cursor: pointer; margin-bottom: 16px;
-      transition: opacity 0.15s, transform 0.1s;
-      display: flex; align-items: center; justify-content: center; gap: 8px;
+      transition: opacity 0.15s, transform 0.1s, box-shadow 0.15s;
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+      box-shadow: 0 4px 16px rgba(224,123,57,0.4);
+      letter-spacing: 0.01em;
+    }
+    .gen-btn:hover:not(:disabled) { opacity: 0.92; box-shadow: 0 6px 20px rgba(224,123,57,0.5); transform: translateY(-1px); }
+    .gen-btn:active:not(:disabled) { transform: scale(0.985) translateY(0); }
+    .gen-btn:disabled { opacity: 0.45; cursor: not-allowed; box-shadow: none; }
+
+    /* ── STATUS ─────────────────────────────────────────────────── */
+    .status-wrap {
+      text-align: center; padding: 24px 20px;
+      display: none;
     }
 
-    .gen-btn:hover:not(:disabled) { opacity: 0.88; }
-    .gen-btn:active:not(:disabled) { transform: scale(0.985); }
-    .gen-btn:disabled { opacity: 0.45; cursor: not-allowed; }
+    .status-spinner-wrap { margin-bottom: 14px; }
 
-    /* ── STATUS / ERROR ─────────────────────────────────────────── */
-    .status-box {
-      text-align: center; padding: 20px;
-      font-size: 14px; font-weight: 700;
-      color: var(--text-mid); display: none;
+    .status-bowl { font-size: 36px; animation: bounce 1s ease-in-out infinite; display: inline-block; }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50%       { transform: translateY(-8px); }
     }
 
-    .status-sub { font-size: 12px; color: var(--muted); margin-top: 4px; font-weight: 600; }
+    .status-title { font-size: 16px; font-weight: 800; color: var(--text); margin-bottom: 4px; }
+    .status-sub   { font-size: 13px; color: var(--muted); font-weight: 700; }
 
+    .progress-bar-wrap { margin-top: 16px; background: var(--bord); border-radius: 100px; height: 4px; overflow: hidden; }
+    .progress-bar      { height: 100%; background: var(--o); border-radius: 100px; width: 0%; transition: width 0.3s ease; }
+
+    /* ── ERROR / WARN ───────────────────────────────────────────── */
     .err-box {
-      background: var(--red-lt);
-      border: 1.5px solid var(--red-bd);
-      color: var(--red);
+      background: var(--r-lt); border: 1.5px solid var(--r-bd); color: var(--r);
       padding: 14px 18px; border-radius: var(--r-md);
-      font-size: 13px; font-weight: 700;
-      margin-bottom: 16px; display: none;
+      font-size: 13px; font-weight: 700; margin-bottom: 16px; display: none;
     }
 
     .warn-box {
       background: #FFFBEB; border: 1.5px solid #FDE68A; color: #92400E;
       padding: 12px 16px; border-radius: var(--r-md);
-      font-size: 13px; font-weight: 700;
-      margin-bottom: 12px; display: none;
+      font-size: 13px; font-weight: 700; margin-bottom: 12px; display: none;
     }
 
     /* ── RESULTS ────────────────────────────────────────────────── */
     #results { display: none; }
 
-    .res-top {
-      display: flex; align-items: flex-start;
-      justify-content: space-between;
-      margin-bottom: 8px; gap: 12px;
+    .res-header {
+      background: linear-gradient(135deg, #FFF8F1 0%, #FFF3E5 100%);
+      border: 1.5px solid var(--o-bd);
+      border-radius: var(--r-lg);
+      padding: 22px 22px 18px;
+      margin-bottom: 14px;
+      box-shadow: var(--shadow);
     }
 
-    .res-title { font-size: 22px; font-weight: 900; }
+    .res-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 8px; }
+    .res-title { font-family: 'Lora', serif; font-size: 22px; font-weight: 600; color: var(--text); }
 
     .cost-pill {
-      background: var(--orange-lt);
-      border: 1.5px solid var(--orange-bd);
-      border-radius: 100px; padding: 6px 16px;
-      font-size: 17px; font-weight: 900;
-      color: var(--orange); white-space: nowrap;
+      background: var(--o); color: #fff;
+      border-radius: 100px; padding: 7px 18px;
+      font-size: 17px; font-weight: 900; white-space: nowrap;
+      box-shadow: 0 3px 10px rgba(224,123,57,0.35);
     }
 
-    .res-meta { font-size: 13px; color: var(--muted); font-weight: 600; margin-bottom: 12px; }
+    .res-meta { font-size: 13px; color: var(--mid); font-weight: 700; margin-bottom: 12px; }
 
     .budget-badge {
-      display: inline-flex; align-items: center; gap: 6px;
-      padding: 10px 14px; border-radius: var(--r-sm);
-      font-size: 13px; font-weight: 800; margin-bottom: 14px;
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 10px 16px; border-radius: var(--r-sm);
+      font-size: 13px; font-weight: 800;
     }
-
-    .budget-badge.ok   { background: var(--green-lt); border: 1.5px solid var(--green-bd); color: var(--green); }
+    .budget-badge.ok   { background: var(--g-lt); border: 1.5px solid var(--g-bd); color: var(--g); }
     .budget-badge.over { background: #FFF7ED; border: 1.5px solid #FED7AA; color: #92400E; }
 
-    .act-row { display: flex; gap: 8px; margin-bottom: 20px; }
+    .act-row { display: flex; gap: 8px; margin-top: 14px; }
 
     .act-btn {
       flex: 1; padding: 11px 12px;
-      border: 1.5px solid var(--border);
-      border-radius: var(--r-sm);
-      background: var(--surface);
+      border: 1.5px solid var(--bord); border-radius: var(--r-sm);
+      background: var(--surf);
       font-family: 'Nunito', sans-serif;
-      font-size: 13px; font-weight: 800;
-      color: var(--text-mid); cursor: pointer;
-      display: flex; align-items: center; justify-content: center; gap: 6px;
+      font-size: 13px; font-weight: 800; color: var(--mid);
+      cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px;
       transition: all 0.15s;
     }
-
-    .act-btn:hover { border-color: var(--orange); color: var(--orange); }
-    .act-btn.done  { background: var(--green-lt); border-color: var(--green-bd); color: var(--green); }
+    .act-btn:hover { border-color: var(--o); color: var(--o); background: var(--o-lt); }
+    .act-btn.done  { background: var(--g-lt); border-color: var(--g-bd); color: var(--g); }
 
     /* Day block */
     .day-block { margin-bottom: 18px; }
 
     .day-head {
       display: flex; align-items: center; justify-content: space-between;
-      background: var(--orange-lt); border: 1.5px solid var(--orange-bd);
-      border-radius: var(--r-sm); padding: 9px 14px; margin-bottom: 10px;
+      background: var(--o-lt); border: 1.5px solid var(--o-bd);
+      border-radius: var(--r-md); padding: 10px 16px; margin-bottom: 10px;
     }
-
-    .day-name { font-size: 13px; font-weight: 900; color: var(--orange); text-transform: uppercase; letter-spacing: 0.07em; }
+    .day-name { font-size: 13px; font-weight: 900; color: var(--o); text-transform: uppercase; letter-spacing: 0.08em; }
     .day-info { font-size: 12px; color: var(--muted); font-weight: 700; }
 
-    .meals { display: flex; flex-direction: column; gap: 10px; margin-bottom: 12px; }
+    .meals { display: flex; flex-direction: column; gap: 12px; margin-bottom: 14px; }
 
-    /* Meal card */
+    /* ── MEAL CARD ──────────────────────────────────────────────── */
     .meal-card {
-      background: var(--surface);
-      border: 1.5px solid var(--border);
-      border-radius: var(--r-md); overflow: hidden;
+      background: var(--surf);
+      border: 1.5px solid var(--bord);
+      border-radius: var(--r-lg);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      transition: box-shadow 0.2s;
     }
+    .meal-card:hover    { box-shadow: var(--shadow2); }
+    .meal-card.flagged  { border-color: #FED7AA; }
 
-    .meal-card.flagged { border-color: #FED7AA; }
-
+    /* Meal top bar */
     .meal-head {
-      display: flex; gap: 12px; align-items: flex-start;
-      padding: 14px 14px 10px;
+      display: flex; gap: 14px; align-items: flex-start;
+      padding: 16px 16px 12px;
     }
 
     .meal-ico {
-      width: 46px; height: 46px; border-radius: 12px;
+      width: 52px; height: 52px; border-radius: 14px;
       display: flex; align-items: center; justify-content: center;
-      font-size: 22px; flex-shrink: 0;
+      font-size: 26px; flex-shrink: 0;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.08);
     }
 
     .meal-info { flex: 1; min-width: 0; }
 
     .meal-type-lbl {
       font-size: 10px; font-weight: 800;
-      text-transform: uppercase; letter-spacing: 0.1em;
-      color: var(--muted); margin-bottom: 2px;
+      text-transform: uppercase; letter-spacing: 0.12em;
+      color: var(--o); margin-bottom: 3px;
     }
 
     .meal-name {
-      font-size: 16px; font-weight: 900; color: var(--text);
-      margin-bottom: 4px; line-height: 1.2;
+      font-family: 'Lora', serif;
+      font-size: 17px; font-weight: 600; color: var(--text);
+      margin-bottom: 5px; line-height: 1.25;
     }
 
-    .meal-desc { font-size: 13px; color: var(--text-mid); line-height: 1.5; margin-bottom: 8px; }
+    .meal-desc {
+      font-size: 13px; color: var(--mid);
+      line-height: 1.55; margin-bottom: 10px;
+    }
 
     .meal-tags { display: flex; flex-wrap: wrap; gap: 5px; }
 
     .tag {
       font-size: 11px; font-weight: 700;
-      padding: 3px 9px; border-radius: 100px;
-      border: 1px solid var(--border);
-      color: var(--text-mid); background: var(--bg);
+      padding: 4px 10px; border-radius: 100px;
+      border: 1px solid var(--bord);
+      color: var(--mid); background: var(--bg2);
     }
-
-    .tag.blue { background: #EFF6FF; border-color: #BFDBFE; color: #1D4ED8; }
-    .tag.warn { background: #FFF7ED; border-color: #FED7AA; color: #92400E; }
+    .tag.blue  { background: var(--b-lt); border-color: var(--b-bd); color: var(--b-txt); }
+    .tag.warn  { background: #FFF7ED; border-color: #FED7AA; color: #92400E; }
     .tag.macro { background: #F3F4F6; border-color: #D1D5DB; color: #374151; }
 
-    .meal-price { font-size: 15px; font-weight: 900; color: var(--orange); white-space: nowrap; padding-top: 2px; }
+    .meal-price {
+      font-size: 17px; font-weight: 900; color: var(--o);
+      white-space: nowrap; padding-top: 3px;
+      text-align: right;
+    }
 
-    /* Ingredients */
+    /* Ingredients strip */
     .meal-ings {
-      border-top: 1px solid var(--border);
-      padding: 11px 14px; background: #FFFAF6;
+      border-top: 1px solid var(--bord);
+      padding: 13px 16px;
+      background: linear-gradient(to bottom, #FFFBF7, #FFF8F2);
     }
 
     .strip-lbl {
       font-size: 10px; font-weight: 800;
-      text-transform: uppercase; letter-spacing: 0.08em;
-      color: var(--muted); margin-bottom: 8px;
+      text-transform: uppercase; letter-spacing: 0.1em;
+      color: var(--muted); margin-bottom: 9px;
+      display: flex; align-items: center; gap: 5px;
     }
 
-    .ing-list { display: flex; flex-wrap: wrap; gap: 5px; }
+    .ing-list { display: flex; flex-wrap: wrap; gap: 6px; }
 
     .ing {
       font-size: 12px; font-weight: 700;
-      padding: 4px 10px;
-      background: var(--surface); border: 1px solid var(--orange-bd);
-      border-radius: 100px; color: #7A4A20;
+      padding: 5px 11px;
+      background: var(--surf); border: 1.5px solid var(--o-bd);
+      border-radius: 100px; color: #7A4720;
     }
 
-    /* Steps */
+    /* Steps — improved visual recipe guide */
     .meal-steps {
-      border-top: 1px solid var(--border);
-      padding: 14px; background: var(--bg);
+      border-top: 1px solid var(--bord);
+      padding: 16px;
+      background: var(--bg);
     }
 
-    .steps-list { display: flex; flex-direction: column; }
+    .steps-list { display: flex; flex-direction: column; gap: 0; }
 
     .step-row {
-      display: flex; gap: 12px; align-items: flex-start;
-      position: relative; padding-bottom: 14px;
+      display: flex; gap: 14px; align-items: flex-start;
+      position: relative; padding-bottom: 16px;
     }
 
     .step-row:last-child { padding-bottom: 0; }
 
+    /* Connector line */
     .step-row:not(:last-child)::before {
       content: '';
-      position: absolute; left: 14px; top: 30px; bottom: 0;
-      width: 2px; background: var(--orange-bd); border-radius: 2px;
+      position: absolute; left: 16px; top: 34px; bottom: 0;
+      width: 2px;
+      background: linear-gradient(to bottom, var(--o-bd), transparent);
+      border-radius: 2px;
     }
 
     .step-num {
-      width: 30px; height: 30px; border-radius: 50%;
-      background: var(--orange); color: #fff;
-      font-size: 13px; font-weight: 900;
+      width: 34px; height: 34px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--o), var(--o-d));
+      color: #fff; font-size: 14px; font-weight: 900;
       display: flex; align-items: center; justify-content: center;
       flex-shrink: 0; position: relative; z-index: 1;
-      box-shadow: 0 2px 6px rgba(232,121,58,0.3);
+      box-shadow: 0 3px 8px rgba(224,123,57,0.35);
     }
 
-    .step-body { flex: 1; padding-top: 5px; }
-    .step-text { font-size: 14px; font-weight: 700; color: var(--text); line-height: 1.5; }
+    .step-body  { flex: 1; padding-top: 6px; }
+    .step-text  { font-size: 14px; font-weight: 700; color: var(--text); line-height: 1.55; }
 
-    /* Shopping list */
+    /* ── SHOPPING CARD ──────────────────────────────────────────── */
     .shop-card {
-      background: var(--green-lt); border: 1.5px solid var(--green-bd);
-      border-radius: var(--r-lg); padding: 18px; margin-bottom: 10px;
+      background: linear-gradient(145deg, #F2FAF2 0%, #EAF6EA 100%);
+      border: 1.5px solid var(--g-bd);
+      border-radius: var(--r-lg); padding: 20px; margin-bottom: 12px;
+      box-shadow: var(--shadow);
     }
 
-    .shop-title { font-size: 15px; font-weight: 900; color: var(--green); margin-bottom: 14px; }
+    .shop-title {
+      font-family: 'Lora', serif;
+      font-size: 17px; font-weight: 600; color: var(--g); margin-bottom: 16px;
+      display: flex; align-items: center; gap: 8px;
+    }
 
-    .shop-cat { margin-bottom: 12px; }
+    .shop-cat { margin-bottom: 14px; }
     .shop-cat:last-child { margin-bottom: 0; }
 
     .shop-cat-lbl {
       font-size: 10px; font-weight: 800;
-      text-transform: uppercase; letter-spacing: 0.08em;
-      color: #3A7A3A; margin-bottom: 6px;
+      text-transform: uppercase; letter-spacing: 0.1em;
+      color: #3A7A3A; margin-bottom: 8px;
     }
 
-    .shop-items { display: flex; flex-wrap: wrap; gap: 6px; }
+    .shop-items { display: flex; flex-wrap: wrap; gap: 7px; }
 
     .shop-item {
       font-size: 13px; font-weight: 700;
-      padding: 7px 12px;
-      background: var(--surface); border: 1px solid var(--green-bd);
-      border-radius: var(--r-sm); color: var(--green);
-      display: flex; align-items: center; gap: 6px;
+      padding: 8px 14px;
+      background: var(--surf); border: 1.5px solid var(--g-bd);
+      border-radius: var(--r-sm); color: var(--g);
+      display: flex; align-items: center; gap: 7px;
+      transition: all 0.15s;
     }
+    .shop-item:hover { background: var(--g-lt); border-color: var(--g); }
 
     .shop-item::before {
-      content: ''; width: 6px; height: 6px;
+      content: ''; width: 7px; height: 7px;
       border-radius: 50%; background: #4CAF50; flex-shrink: 0;
     }
 
-    /* Cheap stores tip */
-    .stores-box {
-      background: #EFF6FF; border: 1.5px solid #BFDBFE;
-      border-radius: var(--r-md); padding: 13px 16px; margin-bottom: 10px;
-      font-size: 13px; font-weight: 700; color: #1D4ED8; line-height: 1.6;
+    /* ── STORES CARD ────────────────────────────────────────────── */
+    .stores-card {
+      background: linear-gradient(145deg, #EFF6FF, #E8F2FF);
+      border: 1.5px solid var(--b-bd);
+      border-radius: var(--r-lg); padding: 18px; margin-bottom: 12px;
+      box-shadow: var(--shadow);
     }
 
-    /* Tip */
-    .tip-card {
-      background: #FFFBEB; border: 1.5px solid #FDE68A;
-      border-radius: var(--r-md); padding: 14px 16px;
-      font-size: 13px; font-weight: 700; color: #78350F;
-      line-height: 1.6; margin-bottom: 14px;
+    .stores-title {
+      font-size: 13px; font-weight: 900; color: var(--b-txt);
+      margin-bottom: 10px; display: flex; align-items: center; gap: 7px;
     }
+
+    .stores-text { font-size: 13px; font-weight: 700; color: #374151; line-height: 1.65; }
+
+    .store-pill {
+      display: inline-block;
+      font-size: 12px; font-weight: 800;
+      padding: 3px 10px;
+      background: var(--surf); border: 1px solid var(--b-bd);
+      border-radius: 100px; color: var(--b-txt);
+      margin: 2px;
+    }
+
+    /* ── TIP CARD ───────────────────────────────────────────────── */
+    .tip-card {
+      background: linear-gradient(145deg, #FFFCEB, #FFF8DB);
+      border: 1.5px solid #F5D76E;
+      border-radius: var(--r-lg); padding: 16px 18px;
+      font-size: 14px; font-weight: 700; color: #78350F;
+      line-height: 1.65; margin-bottom: 14px;
+      box-shadow: var(--shadow);
+      display: flex; align-items: flex-start; gap: 10px;
+    }
+
+    .tip-icon { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
 
     /* Spinner */
     @keyframes spin { to { transform: rotate(360deg); } }
-
     .spin {
-      display: inline-block; width: 18px; height: 18px;
-      border: 2.5px solid rgba(255,255,255,0.35);
+      display: inline-block; width: 20px; height: 20px;
+      border: 3px solid rgba(255,255,255,0.35);
       border-top-color: #fff; border-radius: 50%;
-      animation: spin 0.7s linear infinite;
-      vertical-align: middle; margin-right: 6px;
+      animation: spin 0.65s linear infinite;
+      vertical-align: middle; margin-right: 8px;
     }
 
     @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(8px); }
+      from { opacity: 0; transform: translateY(10px); }
       to   { opacity: 1; transform: translateY(0); }
     }
-
-    .fade { animation: fadeUp 0.3s ease forwards; }
+    .fade { animation: fadeUp 0.35s ease forwards; }
 
     footer {
-      text-align: center; font-size: 12px;
-      color: var(--muted); font-weight: 600; margin-top: 48px;
+      text-align: center; font-size: 12px; color: var(--muted);
+      font-weight: 700; margin-top: 56px;
+      padding-top: 20px; border-top: 1px solid var(--bord);
     }
 
+    /* ── RESPONSIVE ─────────────────────────────────────────────── */
     @media (max-width: 480px) {
       .two-col { grid-template-columns: 1fr; }
-      .how-arr  { display: none; }
+      .how-arr { display: none; }
+      .meal-name { font-size: 15px; }
     }
 
     @media print {
-      .gen-btn, .act-row, .how, .sample, .adv-toggle, .adv-body, .badge { display: none; }
-      body { background: white; padding: 0; }
-      .meal-card { break-inside: avoid; }
+      .gen-btn, .act-row, .adv-btn, .adv-body, .sample, .badge, .how { display: none !important; }
+      body { background: white; padding: 0; font-size: 12px; }
+      .meal-card { break-inside: avoid; box-shadow: none; border: 1px solid #ccc; }
+      .hero { box-shadow: none; }
     }
   </style>
 </head>
@@ -618,26 +761,29 @@
 
   <!-- HERO -->
   <div class="hero">
-    <div class="badge">✨ Free · No signup needed</div>
-    <h1>Your personal meal plan,<br/><em>built around your budget</em></h1>
-    <p>Tell us your budget, diet and kitchen — we'll build a full meal plan with recipes, exact quantities and a shopping list in seconds.</p>
-    <div class="how">
-      <div class="how-step">
-        <div class="how-icon">📝</div>
-        <div class="how-label">Fill in your details</div>
-        <div class="how-sub">Budget, diet & kitchen</div>
-      </div>
-      <div class="how-arr">→</div>
-      <div class="how-step">
-        <div class="how-icon">✨</div>
-        <div class="how-label">Generate your plan</div>
-        <div class="how-sub">AI builds it instantly</div>
-      </div>
-      <div class="how-arr">→</div>
-      <div class="how-step">
-        <div class="how-icon">🛒</div>
-        <div class="how-label">Shop & cook</div>
-        <div class="how-sub">Save money every week</div>
+    <div class="hero-inner">
+      <div class="badge">🥗 Free · No signup · No ads</div>
+      <h1>Your personal meal plan,<br/><em>built for your budget</em></h1>
+      <p>Tell us your budget, kitchen and preferences — get a full plan with step-by-step recipes, exact quantities and a shopping list in seconds.</p>
+
+      <div class="how">
+        <div class="how-step">
+          <div class="how-num">1</div>
+          <div class="how-label">Fill in<br/>your details</div>
+          <div class="how-sub">Budget, diet & kitchen</div>
+        </div>
+        <div class="how-arr">→</div>
+        <div class="how-step">
+          <div class="how-num">2</div>
+          <div class="how-label">Generate<br/>your plan</div>
+          <div class="how-sub">AI builds it in seconds</div>
+        </div>
+        <div class="how-arr">→</div>
+        <div class="how-step">
+          <div class="how-num">3</div>
+          <div class="how-label">Shop &<br/>cook</div>
+          <div class="how-sub">Save money every week</div>
+        </div>
       </div>
     </div>
   </div>
@@ -646,10 +792,10 @@
   <div class="sample">
     <div class="sample-head" onclick="toggleSample()">
       <div class="sample-head-l">
-        <span>👀</span>
+        <span class="sample-head-icon">👀</span>
         <div>
-          <div class="sample-head-title">See an example plan</div>
-          <div class="sample-head-sub">kr 100/day · Sweden · 3 meals</div>
+          <div class="sample-head-title">See an example output</div>
+          <div class="sample-head-sub">kr 100/day · Sweden · Stovetop · 3 meals</div>
         </div>
       </div>
       <button class="s-tog" id="sBtn">Hide ▲</button>
@@ -660,40 +806,42 @@
         <div class="s-info">
           <div class="s-type">Breakfast</div>
           <div class="s-name">Oat porridge with banana & honey</div>
-          <div class="s-meta">⏱ 8–10 mins · 🔥 ~380 kcal · ⚖️ 300g</div>
+          <div class="s-meta">⏱ 8–12 mins · 🔥 ~390 kcal · ⚖️ 350g · 🍳 Stovetop</div>
         </div>
-        <div class="s-cost">kr 12</div>
+        <div class="s-cost">kr 14</div>
       </div>
       <div class="s-meal">
         <span class="s-icon">☀️</span>
         <div class="s-info">
           <div class="s-type">Lunch</div>
-          <div class="s-name">Red lentil soup with rye bread</div>
-          <div class="s-meta">⏱ 20–25 mins · 🔥 ~520 kcal · ⚖️ 400g</div>
+          <div class="s-name">Red lentil soup with rye crispbread</div>
+          <div class="s-meta">⏱ 25–30 mins · 🔥 ~510 kcal · ⚖️ 420g · 🍳 Simmered</div>
         </div>
-        <div class="s-cost">kr 22</div>
+        <div class="s-cost">kr 24</div>
       </div>
       <div class="s-meal">
         <span class="s-icon">🌙</span>
         <div class="s-info">
           <div class="s-type">Dinner</div>
-          <div class="s-name">Penne with tomato & tuna</div>
-          <div class="s-meta">⏱ 20–25 mins · 🔥 ~650 kcal · ⚖️ 450g</div>
+          <div class="s-name">Penne with tuna, tomato & spinach</div>
+          <div class="s-meta">⏱ 20–25 mins · 🔥 ~640 kcal · ⚖️ 450g · 🍳 Boiled + pan</div>
         </div>
-        <div class="s-cost">kr 38</div>
+        <div class="s-cost">kr 36</div>
       </div>
-      <div class="s-note">This is just an example — your real plan is built around your inputs and country.</div>
+      <div class="s-note">💡 Example only — your real plan is built around your exact country, budget & preferences</div>
     </div>
   </div>
+
+  <div class="divider"><div class="divider-line"></div><div class="divider-label">Your preferences</div><div class="divider-line"></div></div>
 
   <!-- BUDGET -->
   <div class="sec">
     <div class="sec-label">💰 Daily budget</div>
-    <div class="budget-wrap">
+    <div class="budget-box">
       <span class="cur-sym" id="sym">€</span>
-      <input class="budget-in" type="number" id="budget" value="10" min="1" max="9999"/>
-      <div class="budget-r">
-        <div class="budget-per">per day</div>
+      <input class="bud-in" type="number" id="budget" value="10" min="1" max="9999"/>
+      <div class="bud-r">
+        <div class="bud-per">per day</div>
         <div class="cur-code" id="curCode"></div>
       </div>
     </div>
@@ -705,7 +853,7 @@
     <input class="txt-in" type="text" id="country"
       placeholder="e.g. Sweden, Germany, USA, Japan..."
       oninput="onCountry()" onchange="onCountry()" onblur="onCountry()"/>
-    <div class="field-hint" id="countryHint">Enter your country — we'll use local prices and currency</div>
+    <div class="field-hint" id="cHint">Enter your country — we'll use local prices and currency</div>
   </div>
 
   <!-- DURATION + MEALS -->
@@ -738,7 +886,7 @@
       <span class="pill" data-v="lose">Lose weight</span>
       <span class="pill" data-v="gain">Gain muscle</span>
       <span class="pill" data-v="cut">Cut fat, keep muscle</span>
-      <span class="pill" data-v="bulk">Bulk up (high cal)</span>
+      <span class="pill" data-v="bulk">Bulk up</span>
       <span class="pill" data-v="athletic">Athletic performance</span>
     </div>
   </div>
@@ -761,28 +909,30 @@
 
   <!-- ALLERGIES -->
   <div class="sec">
-    <div class="sec-label">⚠️ Allergies & intolerances <span>(select all that apply)</span></div>
+    <div class="sec-label">⚠️ Allergies & intolerances <span class="note">(select all that apply)</span></div>
     <div class="pills" id="allergy">
-      <span class="pill allergy multi" data-v="gluten">🌾 Gluten</span>
-      <span class="pill allergy multi" data-v="dairy">🥛 Dairy / Lactose</span>
-      <span class="pill allergy multi" data-v="eggs">🥚 Eggs</span>
-      <span class="pill allergy multi" data-v="nuts">🥜 Nuts</span>
-      <span class="pill allergy multi" data-v="peanuts">Peanuts</span>
-      <span class="pill allergy multi" data-v="soy">Soy</span>
-      <span class="pill allergy multi" data-v="shellfish">🦐 Shellfish</span>
-      <span class="pill allergy multi" data-v="fish">🐟 Fish</span>
-      <span class="pill allergy multi" data-v="pork">🐷 Pork</span>
-      <span class="pill allergy multi" data-v="beef">🥩 Beef</span>
+      <span class="pill al multi" data-v="gluten">🌾 Gluten</span>
+      <span class="pill al multi" data-v="dairy">🥛 Dairy</span>
+      <span class="pill al multi" data-v="lactose">Lactose</span>
+      <span class="pill al multi" data-v="eggs">🥚 Eggs</span>
+      <span class="pill al multi" data-v="nuts">🥜 Nuts</span>
+      <span class="pill al multi" data-v="peanuts">Peanuts</span>
+      <span class="pill al multi" data-v="soy">Soy</span>
+      <span class="pill al multi" data-v="shellfish">🦐 Shellfish</span>
+      <span class="pill al multi" data-v="fish">🐟 Fish</span>
+      <span class="pill al multi" data-v="pork">🐷 Pork</span>
+      <span class="pill al multi" data-v="beef">🥩 Beef</span>
     </div>
-    <div class="allergy-other">
-      <input type="text" id="allergyInput" placeholder="Other allergy? Type and press Enter..." onkeydown="addAllergy(event)"/>
+    <div class="allergy-input-wrap">
+      <input type="text" id="aIn" placeholder="Other? Type and press Enter or Add..."/>
+      <button class="allergy-add-btn" onclick="addAllergy()">+ Add</button>
     </div>
-    <div class="allergy-tags" id="allergyTags"></div>
+    <div class="allergy-tags" id="aTags"></div>
   </div>
 
   <!-- APPLIANCES -->
   <div class="sec">
-    <div class="sec-label">🔌 Your appliances <span>(select all you have)</span></div>
+    <div class="sec-label">🔌 Your appliances <span class="note">(select everything you own)</span></div>
     <div class="warn-box" id="appWarn"></div>
     <div class="pills" id="apps">
       <span class="pill multi" data-v="stovetop"  data-m="boiled,pan-fried,fried,sauteed,sautéed,simmered,steamed,poached">🍳 Stovetop</span>
@@ -793,7 +943,7 @@
       <span class="pill multi" data-v="air fryer" data-m="air-fried,air fried,air fryer">💨 Air fryer</span>
     </div>
     <p style="font-size:12px;color:var(--muted);margin-top:10px;font-weight:700;">
-      Only select what you actually own — every meal will be built around your exact kitchen.
+      ⚠️ Only select what you actually own — every meal will be built around your exact kitchen setup.
     </p>
   </div>
 
@@ -808,86 +958,87 @@
   </div>
 
   <!-- ADVANCED OPTIONS -->
-  <button class="adv-toggle" id="advBtn" onclick="toggleAdv()">
-    <span>⚙️ Advanced options — cuisine, macros & more</span>
-    <span id="advArrow">▼</span>
+  <button class="adv-btn" id="advBtn" onclick="toggleAdv()">
+    <span>⚙️ Advanced options — cuisine, proteins, macros & more</span>
+    <span id="advArr">▼</span>
   </button>
 
   <div class="adv-body" id="advBody">
 
-    <!-- CUISINE -->
     <div class="sec">
-      <div class="sec-label">🍜 Cuisine style <span>(optional)</span></div>
+      <div class="sec-label">🍜 Cuisine style <span class="note">(optional)</span></div>
       <div class="pills" id="cuisine">
         <span class="pill on" data-v="any">Any cuisine</span>
         <span class="pill" data-v="italian">🇮🇹 Italian</span>
         <span class="pill" data-v="asian">🥢 Asian</span>
         <span class="pill" data-v="mexican">🌮 Mexican</span>
         <span class="pill" data-v="mediterranean">🫒 Mediterranean</span>
-        <span class="pill" data-v="nordic">🐟 Nordic</span>
+        <span class="pill" data-v="nordic">🐟 Nordic / Scandinavian</span>
         <span class="pill" data-v="indian">🍛 Indian</span>
         <span class="pill" data-v="american">🍔 American</span>
         <span class="pill" data-v="middle-eastern">🧆 Middle Eastern</span>
+        <span class="pill" data-v="japanese">🍱 Japanese</span>
+        <span class="pill" data-v="greek">🫒 Greek</span>
       </div>
     </div>
 
-    <!-- PROTEIN SOURCE -->
     <div class="sec">
-      <div class="sec-label">🥩 Preferred protein sources <span>(select all you like)</span></div>
+      <div class="sec-label">🥩 Preferred protein sources <span class="note">(select all you enjoy)</span></div>
       <div class="pills" id="proteins">
         <span class="pill multi on" data-v="chicken">🐔 Chicken</span>
         <span class="pill multi on" data-v="eggs">🥚 Eggs</span>
         <span class="pill multi on" data-v="lentils">🌱 Lentils</span>
+        <span class="pill multi on" data-v="chickpeas">🫘 Chickpeas</span>
         <span class="pill multi on" data-v="beans">🫘 Beans</span>
         <span class="pill multi" data-v="tuna">🐟 Tuna</span>
         <span class="pill multi" data-v="salmon">🐠 Salmon</span>
-        <span class="pill multi" data-v="beef">🥩 Beef</span>
+        <span class="pill multi" data-v="beef mince">🥩 Beef mince</span>
         <span class="pill multi" data-v="pork">🐷 Pork</span>
         <span class="pill multi" data-v="tofu">🟦 Tofu</span>
         <span class="pill multi" data-v="greek yogurt">🍶 Greek yogurt</span>
         <span class="pill multi" data-v="cottage cheese">🧀 Cottage cheese</span>
+        <span class="pill multi" data-v="quorn">🌿 Quorn / Mycoprotein</span>
+        <span class="pill multi" data-v="edamame">🟢 Edamame</span>
       </div>
     </div>
 
-    <!-- CARB SOURCE -->
     <div class="sec">
-      <div class="sec-label">🌾 Preferred carbohydrates <span>(select all you like)</span></div>
+      <div class="sec-label">🌾 Preferred carbohydrates <span class="note">(select all you enjoy)</span></div>
       <div class="pills" id="carbs">
         <span class="pill multi on" data-v="pasta">🍝 Pasta</span>
         <span class="pill multi on" data-v="potatoes">🥔 Potatoes</span>
         <span class="pill multi on" data-v="oats">🥣 Oats</span>
         <span class="pill multi on" data-v="bread">🍞 Bread</span>
         <span class="pill multi" data-v="rice">🍚 Rice</span>
+        <span class="pill multi" data-v="sweet potato">🍠 Sweet potato</span>
         <span class="pill multi" data-v="quinoa">Quinoa</span>
         <span class="pill multi" data-v="couscous">Couscous</span>
-        <span class="pill multi" data-v="sweet potato">🍠 Sweet potato</span>
-        <span class="pill multi" data-v="bulgur">Bulgur</span>
+        <span class="pill multi" data-v="bulgur">Bulgur wheat</span>
+        <span class="pill multi" data-v="wraps">🌯 Wraps / tortillas</span>
+        <span class="pill multi" data-v="rye crispbread">🍞 Rye crispbread</span>
       </div>
     </div>
 
-    <!-- MACROS -->
     <div class="sec">
-      <div class="sec-label">📊 Macro balance <span>(drag to adjust)</span></div>
-      <div class="macro-row">
-        <div class="macro-item">
-          <div class="macro-label">🍗 Protein</div>
-          <input class="macro-slider" type="range" id="mProtein" min="10" max="50" value="25" step="5" oninput="updateMacro()"/>
-          <div class="macro-val" id="mProteinVal">25%</div>
+      <div class="sec-label">📊 Macro targets <span class="note">(drag to adjust — approximate)</span></div>
+      <div class="macro-grid">
+        <div class="macro-row">
+          <div class="macro-lbl">🍗 Protein</div>
+          <input type="range" id="mP" min="10" max="50" value="25" step="5" oninput="updateMacro()"/>
+          <div class="macro-val" id="mPv">25%</div>
         </div>
-        <div class="macro-item">
-          <div class="macro-label">🌾 Carbs</div>
-          <input class="macro-slider" type="range" id="mCarbs" min="10" max="70" value="50" step="5" oninput="updateMacro()"/>
-          <div class="macro-val" id="mCarbsVal">50%</div>
+        <div class="macro-row">
+          <div class="macro-lbl">🌾 Carbs</div>
+          <input type="range" id="mC" min="10" max="70" value="50" step="5" oninput="updateMacro()"/>
+          <div class="macro-val" id="mCv">50%</div>
         </div>
-        <div class="macro-item">
-          <div class="macro-label">🥑 Fat</div>
-          <input class="macro-slider" type="range" id="mFat" min="10" max="50" value="25" step="5" oninput="updateMacro()"/>
-          <div class="macro-val" id="mFatVal">25%</div>
+        <div class="macro-row">
+          <div class="macro-lbl">🥑 Fat</div>
+          <input type="range" id="mF" min="10" max="50" value="25" step="5" oninput="updateMacro()"/>
+          <div class="macro-val" id="mFv">25%</div>
         </div>
       </div>
-      <div style="font-size:12px;color:var(--muted);margin-top:10px;font-weight:700;" id="macroNote">
-        Approximate guide — Claude will aim for these ratios.
-      </div>
+      <div class="macro-note" id="macroNote">Total: 100% ✅</div>
     </div>
 
   </div><!-- end adv-body -->
@@ -895,76 +1046,112 @@
   <!-- GENERATE -->
   <button class="gen-btn" id="genBtn" onclick="generate()">✨ Generate My Meal Plan</button>
 
-  <div class="status-box" id="statusBox">
-    <div id="statusTxt"></div>
-    <div class="status-sub" id="statusSub"></div>
+  <!-- STATUS -->
+  <div class="status-wrap" id="statusWrap">
+    <div class="status-spinner-wrap">
+      <span class="status-bowl">🥘</span>
+    </div>
+    <div class="status-title" id="sTxt">Building your meal plan...</div>
+    <div class="status-sub" id="sSub">Usually 5–15 seconds</div>
+    <div class="progress-bar-wrap"><div class="progress-bar" id="pBar"></div></div>
   </div>
+
   <div class="err-box"  id="errBox"></div>
   <div class="warn-box" id="warnBox"></div>
   <div id="results"></div>
 
-</div><!-- end wrap -->
+</div>
 
-<footer>Mealzy · Powered by Claude AI · Free forever · No account needed</footer>
+<footer>
+  Mealzy · Powered by Claude AI · Free forever · No account needed<br/>
+  <span style="font-size:11px;font-weight:600;">Prices are estimates — always check your local supermarket for exact costs.</span>
+</footer>
 
 <script>
-// ── CURRENCY MAP ────────────────────────────────────────────────────
-const CURRENCIES = [
-  { k:['sweden','sverige'],                                                      s:'kr',  c:'SEK', n:'Swedish Krona' },
-  { k:['norway','norge'],                                                        s:'kr',  c:'NOK', n:'Norwegian Krone' },
-  { k:['denmark','danmark'],                                                     s:'kr',  c:'DKK', n:'Danish Krone' },
-  { k:['uk','united kingdom','england','britain','scotland','wales'],            s:'£',   c:'GBP', n:'British Pound' },
-  { k:['usa','united states','america'],                                         s:'$',   c:'USD', n:'US Dollar' },
-  { k:['canada'],                                                                s:'CA$', c:'CAD', n:'Canadian Dollar' },
-  { k:['australia'],                                                             s:'A$',  c:'AUD', n:'Australian Dollar' },
-  { k:['japan'],                                                                 s:'¥',   c:'JPY', n:'Japanese Yen' },
-  { k:['china'],                                                                 s:'¥',   c:'CNY', n:'Chinese Yuan' },
-  { k:['india'],                                                                 s:'₹',   c:'INR', n:'Indian Rupee' },
-  { k:['brazil'],                                                                s:'R$',  c:'BRL', n:'Brazilian Real' },
-  { k:['mexico'],                                                                s:'MX$', c:'MXN', n:'Mexican Peso' },
-  { k:['switzerland'],                                                           s:'CHF', c:'CHF', n:'Swiss Franc' },
-  { k:['poland'],                                                                s:'zł',  c:'PLN', n:'Polish Zloty' },
-  { k:['czech'],                                                                 s:'Kč',  c:'CZK', n:'Czech Koruna' },
-  { k:['hungary'],                                                               s:'Ft',  c:'HUF', n:'Hungarian Forint' },
-  { k:['romania'],                                                               s:'lei', c:'RON', n:'Romanian Leu' },
-  { k:['turkey','türkiye'],                                                      s:'₺',   c:'TRY', n:'Turkish Lira' },
-  { k:['south korea','korea'],                                                   s:'₩',   c:'KRW', n:'South Korean Won' },
-  { k:['singapore'],                                                             s:'S$',  c:'SGD', n:'Singapore Dollar' },
-  { k:['new zealand'],                                                           s:'NZ$', c:'NZD', n:'New Zealand Dollar' },
-  { k:['south africa'],                                                          s:'R',   c:'ZAR', n:'South African Rand' },
+// ── CURRENCIES ────────────────────────────────────────────────────
+const CURR = [
+  { k:['sweden','sverige'],                                                          s:'kr',  c:'SEK', n:'Swedish Krona' },
+  { k:['norway','norge'],                                                            s:'kr',  c:'NOK', n:'Norwegian Krone' },
+  { k:['denmark','danmark'],                                                         s:'kr',  c:'DKK', n:'Danish Krone' },
+  { k:['finland','suomi'],                                                           s:'€',   c:'EUR', n:'Euro' },
+  { k:['uk','united kingdom','england','britain','scotland','wales'],               s:'£',   c:'GBP', n:'British Pound' },
+  { k:['usa','united states','america'],                                             s:'$',   c:'USD', n:'US Dollar' },
+  { k:['canada'],                                                                    s:'CA$', c:'CAD', n:'Canadian Dollar' },
+  { k:['australia'],                                                                 s:'A$',  c:'AUD', n:'Australian Dollar' },
+  { k:['new zealand'],                                                               s:'NZ$', c:'NZD', n:'New Zealand Dollar' },
+  { k:['japan'],                                                                     s:'¥',   c:'JPY', n:'Japanese Yen' },
+  { k:['china'],                                                                     s:'¥',   c:'CNY', n:'Chinese Yuan' },
+  { k:['south korea','korea'],                                                       s:'₩',   c:'KRW', n:'South Korean Won' },
+  { k:['india'],                                                                     s:'₹',   c:'INR', n:'Indian Rupee' },
+  { k:['brazil'],                                                                    s:'R$',  c:'BRL', n:'Brazilian Real' },
+  { k:['mexico'],                                                                    s:'MX$', c:'MXN', n:'Mexican Peso' },
+  { k:['switzerland'],                                                               s:'CHF', c:'CHF', n:'Swiss Franc' },
+  { k:['poland'],                                                                    s:'zł',  c:'PLN', n:'Polish Zloty' },
+  { k:['czech'],                                                                     s:'Kč',  c:'CZK', n:'Czech Koruna' },
+  { k:['hungary'],                                                                   s:'Ft',  c:'HUF', n:'Hungarian Forint' },
+  { k:['romania'],                                                                   s:'lei', c:'RON', n:'Romanian Leu' },
+  { k:['turkey','türkiye'],                                                          s:'₺',   c:'TRY', n:'Turkish Lira' },
+  { k:['south africa'],                                                              s:'R',   c:'ZAR', n:'South African Rand' },
+  { k:['singapore'],                                                                 s:'S$',  c:'SGD', n:'Singapore Dollar' },
   { k:['germany','france','spain','italy','netherlands','belgium','portugal',
-       'austria','finland','ireland','greece','croatia','slovakia','slovenia',
-       'estonia','latvia','lithuania','luxembourg','malta','cyprus','europe'],   s:'€',   c:'EUR', n:'Euro' },
+       'austria','ireland','greece','croatia','slovakia','slovenia',
+       'estonia','latvia','lithuania','luxembourg','malta','cyprus','europe'],       s:'€',   c:'EUR', n:'Euro' },
 ];
 
 const EUR = { s:'€', c:'EUR', n:'Euro' };
-let currentCurrency = EUR;
+let cur = EUR;
 
 function getCurrency(txt) {
   const lo = txt.toLowerCase().trim();
   if (!lo) return EUR;
-  for (const e of CURRENCIES) {
-    if (e.k.some(k => lo.includes(k))) return { s:e.s, c:e.c, n:e.n };
-  }
+  for (const e of CURR) { if (e.k.some(k => lo.includes(k))) return { s:e.s, c:e.c, n:e.n }; }
   return EUR;
 }
 
 function onCountry() {
-  const val = document.getElementById('country').value;
-  currentCurrency = getCurrency(val);
-  document.getElementById('sym').textContent = currentCurrency.s;
-  document.getElementById('curCode').textContent = val.trim() ? currentCurrency.c : '';
-  const hint = document.getElementById('countryHint');
-  if (val.trim()) {
-    hint.textContent = `💱 Prices shown in ${currentCurrency.n} (${currentCurrency.c})`;
-    hint.style.color = 'var(--orange)';
+  const v = document.getElementById('country').value;
+  cur = getCurrency(v);
+  document.getElementById('sym').textContent    = cur.s;
+  document.getElementById('curCode').textContent = v.trim() ? cur.c : '';
+  const h = document.getElementById('cHint');
+  if (v.trim()) {
+    h.innerHTML   = `<span>💱</span> Prices will be shown in ${cur.n} (${cur.c})`;
+    h.style.color = 'var(--o)';
   } else {
-    hint.textContent = 'Enter your country — we\'ll use local prices and currency';
-    hint.style.color = 'var(--muted)';
+    h.textContent = 'Enter your country — we\'ll use local prices and currency';
+    h.style.color = 'var(--muted)';
   }
 }
 
-// ── SAMPLE TOGGLE ───────────────────────────────────────────────────
+// ── CHEAP STORES DATABASE ─────────────────────────────────────────
+function getStores(country) {
+  const lo = (country||'').toLowerCase();
+  const stores = {
+    sweden:      { tip:'Sweden',       chains:['Lidl','Willys','Netto','Aldi'],                extra:'Willys is often cheapest for basics. Avoid ICA for staples.' },
+    norway:      { tip:'Norway',       chains:['Rema 1000','Kiwi','Coop Extra'],               extra:'Rema 1000 and Kiwi typically beat others on price.' },
+    denmark:     { tip:'Denmark',      chains:['Netto','Lidl','Aldi','Rema 1000'],             extra:'Netto own-brand products are great value.' },
+    germany:     { tip:'Germany',      chains:['Aldi','Lidl','Netto','Penny','Kaufland'],      extra:'Aldi and Lidl own-brands are excellent quality.' },
+    uk:          { tip:'UK',           chains:['Aldi','Lidl','Asda','Tesco','Iceland'],        extra:'Aldi and Lidl are consistently cheapest. Tesco Basics range for pantry staples.' },
+    france:      { tip:'France',       chains:['Lidl','Aldi','Netto','Leader Price'],          extra:'Lidl France has excellent quality frozen veg and proteins.' },
+    spain:       { tip:'Spain',        chains:['Mercadona','Lidl','Aldi','Dia'],               extra:'Mercadona Hacendado own-brand is superb value.' },
+    usa:         { tip:'USA',          chains:['Aldi','Lidl','Walmart','Trader Joe\'s'],       extra:'Aldi is typically 30–40% cheaper than mainstream stores.' },
+    canada:      { tip:'Canada',       chains:['No Frills','Food Basics','Walmart','FreshCo'],extra:'No Frills is consistently cheapest for groceries.' },
+    australia:   { tip:'Australia',    chains:['Aldi','Woolworths Essentials','Coles Smart Buy'],extra:'Aldi is significantly cheaper than Coles/Woolworths.' },
+    netherlands: { tip:'Netherlands',  chains:['Lidl','Aldi','Dirk','Jumbo'],                  extra:'Dirk is a local budget favourite.' },
+    poland:      { tip:'Poland',       chains:['Biedronka','Lidl','Aldi','Netto'],             extra:'Biedronka is Poland\'s cheapest major supermarket.' },
+    italy:       { tip:'Italy',        chains:['Lidl','Aldi','Eurospin','In\'s Mercato'],      extra:'Eurospin is Italy\'s best budget option.' },
+    finland:     { tip:'Finland',      chains:['Lidl','Tokmanni','K-Market'],                  extra:'Lidl Finland is typically 20% cheaper than S-Group.' },
+    portugal:    { tip:'Portugal',     chains:['Lidl','Aldi','Pingo Doce','Minipreço'],        extra:'Pingo Doce has excellent weekly deals.' },
+  };
+  for (const [k,v] of Object.entries(stores)) {
+    if (lo.includes(k) || (k==='uk' && (lo.includes('england')||lo.includes('britain')||lo.includes('united kingdom')))) {
+      return v;
+    }
+  }
+  return null;
+}
+
+// ── SAMPLE TOGGLE ─────────────────────────────────────────────────
 function toggleSample() {
   const b = document.getElementById('sBody');
   const btn = document.getElementById('sBtn');
@@ -973,59 +1160,53 @@ function toggleSample() {
   btn.textContent = open ? 'Show ▼' : 'Hide ▲';
 }
 
-// ── ADVANCED TOGGLE ─────────────────────────────────────────────────
+// ── ADVANCED TOGGLE ───────────────────────────────────────────────
 function toggleAdv() {
-  const body = document.getElementById('advBody');
-  const btn  = document.getElementById('advBtn');
-  const arr  = document.getElementById('advArrow');
-  const open = body.style.display === 'block';
-  body.style.display = open ? 'none' : 'block';
+  const b   = document.getElementById('advBody');
+  const btn = document.getElementById('advBtn');
+  const arr = document.getElementById('advArr');
+  const open = b.style.display === 'block';
+  b.style.display = open ? 'none' : 'block';
   btn.classList.toggle('open', !open);
   arr.textContent = open ? '▼' : '▲';
 }
 
-// ── MACRO DISPLAY ───────────────────────────────────────────────────
+// ── MACRO UPDATE ──────────────────────────────────────────────────
 function updateMacro() {
-  const p = parseInt(document.getElementById('mProtein').value);
-  const c = parseInt(document.getElementById('mCarbs').value);
-  const f = parseInt(document.getElementById('mFat').value);
-  document.getElementById('mProteinVal').textContent = p + '%';
-  document.getElementById('mCarbsVal').textContent   = c + '%';
-  document.getElementById('mFatVal').textContent     = f + '%';
-  const total = p + c + f;
-  const note  = document.getElementById('macroNote');
-  note.textContent = total === 100
-    ? '✅ Macros add up to 100% — perfect.'
-    : `ℹ️ Total: ${total}% — Claude will approximate these ratios.`;
-  note.style.color = total === 100 ? 'var(--green)' : 'var(--muted)';
+  const p = +document.getElementById('mP').value;
+  const c = +document.getElementById('mC').value;
+  const f = +document.getElementById('mF').value;
+  document.getElementById('mPv').textContent = p + '%';
+  document.getElementById('mCv').textContent = c + '%';
+  document.getElementById('mFv').textContent = f + '%';
+  const tot = p + c + f;
+  const n = document.getElementById('macroNote');
+  n.textContent = tot === 100 ? `Total: ${tot}% ✅` : `Total: ${tot}% — Claude will approximate.`;
+  n.style.color = tot === 100 ? 'var(--g)' : 'var(--muted)';
 }
 
-// ── CUSTOM ALLERGIES ─────────────────────────────────────────────────
-const customAllergies = new Set();
+// ── CUSTOM ALLERGIES ──────────────────────────────────────────────
+const customA = new Set();
 
-function addAllergy(e) {
-  if (e.key !== 'Enter') return;
-  const input = document.getElementById('allergyInput');
-  const val   = input.value.trim();
-  if (!val || customAllergies.has(val.toLowerCase())) { input.value=''; return; }
-  customAllergies.add(val.toLowerCase());
-  renderAllergyTags();
-  input.value = '';
+function addAllergy() {
+  const inp = document.getElementById('aIn');
+  const v   = inp.value.trim();
+  if (!v || customA.has(v.toLowerCase())) { inp.value = ''; return; }
+  customA.add(v.toLowerCase());
+  renderATags();
+  inp.value = '';
 }
 
-function removeAllergy(val) {
-  customAllergies.delete(val);
-  renderAllergyTags();
+document.getElementById('aIn').addEventListener('keydown', e => { if (e.key === 'Enter') addAllergy(); });
+
+function removeA(v) { customA.delete(v); renderATags(); }
+
+function renderATags() {
+  document.getElementById('aTags').innerHTML =
+    [...customA].map(a => `<span class="a-tag" onclick="removeA('${a}')"><span>${a}</span><span class="a-tag-x">×</span></span>`).join('');
 }
 
-function renderAllergyTags() {
-  const cont = document.getElementById('allergyTags');
-  cont.innerHTML = [...customAllergies].map(a =>
-    `<span class="allergy-tag" onclick="removeAllergy('${a}')">${a}</span>`
-  ).join('');
-}
-
-// ── PILL HELPERS ─────────────────────────────────────────────────────
+// ── PILL LOGIC ────────────────────────────────────────────────────
 ['dur','mpp','goal','diet','skill','cuisine'].forEach(id => {
   document.getElementById(id).addEventListener('click', e => {
     const p = e.target.closest('.pill');
@@ -1045,9 +1226,9 @@ function renderAllergyTags() {
 function sel(id)    { const p = document.querySelector(`#${id} .pill.on`); return p ? p.dataset.v : null; }
 function multiSel(id) { return [...document.querySelectorAll(`#${id} .pill.on`)].map(p => p.dataset.v); }
 
-// ── APPLIANCE VALIDATION ─────────────────────────────────────────────
+// ── APPLIANCE VALIDATION ──────────────────────────────────────────
 function allowedMethods() {
-  const m = new Set(['no-cook','no cook','raw','assembled','mixed','cold','none']);
+  const m = new Set(['no-cook','no cook','raw','assembled','cold','none','mixed']);
   document.querySelectorAll('#apps .pill.on').forEach(p => {
     (p.dataset.m||'').split(',').forEach(x => m.add(x.trim().toLowerCase()));
   });
@@ -1061,54 +1242,29 @@ function methodOk(method, allowed) {
   return false;
 }
 
-function appliancePrompt(selected) {
-  const details = {
+function appPrompt(selected) {
+  const dets = {
     'stovetop':  'stovetop/hob — boiling, frying, sautéing, simmering, steaming',
-    'microwave': 'microwave — microwaving and reheating only',
+    'microwave': 'microwave — reheating and microwaving only',
     'oven':      'oven — baking, roasting, grilling',
-    'kettle':    'kettle — boiling water only (for oats, noodles, couscous)',
-    'blender':   'blender — blending and smoothies',
-    'air fryer': 'air fryer — air-frying chips, chicken, vegetables'
+    'kettle':    'kettle — boiling water only (oats, instant noodles, couscous)',
+    'blender':   'blender — blending, smoothies',
+    'air fryer': 'air fryer — air-frying (chicken, chips, vegetables, reheating)'
   };
-  const have = selected.map(a => details[a]||a);
-  const miss  = Object.keys(details).filter(a => !selected.includes(a)).map(a => details[a]||a);
-  return `APPLIANCE RULE — MOST CRITICAL:
+  const have = selected.map(a => dets[a]||a);
+  const miss  = Object.keys(dets).filter(a => !selected.includes(a)).map(a => dets[a]||a);
+  return `APPLIANCE RULE — THE SINGLE MOST IMPORTANT RULE:
 User ONLY has: ${have.join('; ')}.
-Does NOT have: ${miss.length ? miss.join('; ') : 'nothing else'}.
-- Every meal MUST be cookable with ONLY these appliances.
-- NEVER use an appliance not listed. Check every meal before including it.
-- cookingMethod must match an available appliance.`;
+Does NOT have: ${miss.length?miss.join('; '):'nothing else'}.
+- Every meal MUST be cookable with ONLY the appliances listed.
+- NEVER suggest a meal needing an appliance not listed.
+- cookingMethod must match an available appliance.
+- Air fryer only → all meals must be air-fried or no-cook.
+- Kettle only → all meals must use boiling water or be no-cook.
+- No stovetop → never boil, fry or sauté anything.`;
 }
 
-// ── CHEAP STORES BY COUNTRY ──────────────────────────────────────────
-function getCheapStores(country) {
-  const lo = country.toLowerCase();
-  if (lo.includes('sweden') || lo.includes('sverige'))
-    return 'Cheapest stores in Sweden: Lidl, Willys, Netto, Aldi. Avoid ICA Maxi for staples.';
-  if (lo.includes('germany'))
-    return 'Cheapest stores in Germany: Aldi, Lidl, Netto, Penny, Kaufland.';
-  if (lo.includes('uk') || lo.includes('england') || lo.includes('britain'))
-    return 'Cheapest stores in the UK: Aldi, Lidl, Asda, Tesco basics range.';
-  if (lo.includes('norway'))
-    return 'Cheapest stores in Norway: Rema 1000, Kiwi, Coop Extra.';
-  if (lo.includes('france'))
-    return 'Cheapest stores in France: Lidl, Aldi, Netto, Leader Price.';
-  if (lo.includes('spain'))
-    return 'Cheapest stores in Spain: Mercadona, Lidl, Aldi, Dia.';
-  if (lo.includes('usa') || lo.includes('america'))
-    return 'Cheapest stores in the USA: Aldi, Lidl, Walmart, Trader Joe\'s basics.';
-  if (lo.includes('australia'))
-    return 'Cheapest stores in Australia: Aldi, Woolworths basics, Coles own-brand.';
-  if (lo.includes('netherlands'))
-    return 'Cheapest stores in Netherlands: Lidl, Aldi, Dirk, Jumbo basics.';
-  if (lo.includes('finland'))
-    return 'Cheapest stores in Finland: Lidl, Tokmanni, K-Market budget range.';
-  if (lo.includes('poland'))
-    return 'Cheapest stores in Poland: Biedronka, Lidl, Aldi, Netto.';
-  return `Look for budget supermarket chains in ${country} — own-brand products and discount stores typically save 20–40%.`;
-}
-
-// ── UI HELPERS ───────────────────────────────────────────────────────
+// ── HELPER FUNCTIONS ──────────────────────────────────────────────
 function mealIcon(type) {
   const t = type.toLowerCase();
   if (t.includes('break'))  return { e:'🌅', bg:'#FFF9DB' };
@@ -1123,30 +1279,31 @@ function catIcon(c) {
           pantry:'🫙',frozen:'🧊',bakery:'🍞',beverages:'🧃'}[c.toLowerCase()]||'🛒';
 }
 
-function budgetBanner(totalStr, budget, days, sym) {
+function budgetBadge(totalStr, budget, days, sym) {
   const spent = parseFloat(totalStr.replace(/[^0-9.]/g,''));
   const limit = parseFloat(budget) * days;
   const ok    = spent <= limit;
   const diff  = Math.abs(limit - spent).toFixed(2);
   const lbl   = days > 1 ? `${sym}${budget}/day × ${days} = ${sym}${limit.toFixed(2)}` : `${sym}${budget}`;
   return `<div class="budget-badge ${ok?'ok':'over'}">
-    ${ok ? `✅ Fits budget (${lbl}) — ${sym}${diff} to spare` : `⚠️ Over budget (${lbl}) by ${sym}${diff}`}
+    ${ok ? `✅ Fits your budget (${lbl}) — ${sym}${diff} to spare` : `⚠️ Over budget (${lbl}) by ${sym}${diff}`}
   </div>`;
 }
 
+// ── MEAL CARD HTML ────────────────────────────────────────────────
 function mealCard(meal, allowed) {
   const ic      = mealIcon(meal.type);
   const flagged = meal.cookingMethod && !methodOk(meal.cookingMethod, allowed);
 
   const ings = meal.ingredients?.length
     ? `<div class="meal-ings">
-        <div class="strip-lbl">🧺 Ingredients (with quantities)</div>
+        <div class="strip-lbl">🧺 Ingredients with quantities</div>
         <div class="ing-list">${meal.ingredients.map(i=>`<span class="ing">${i}</span>`).join('')}</div>
        </div>` : '';
 
   const steps = meal.steps?.length
     ? `<div class="meal-steps">
-        <div class="strip-lbl">📋 Step-by-step instructions</div>
+        <div class="strip-lbl">📋 Step-by-step guide</div>
         <div class="steps-list">
           ${meal.steps.map((s,i)=>`
             <div class="step-row">
@@ -1157,9 +1314,9 @@ function mealCard(meal, allowed) {
        </div>` : '';
 
   const macroTags = meal.macros
-    ? `<span class="tag macro">P: ${meal.macros.protein||'?'}</span>
-       <span class="tag macro">C: ${meal.macros.carbs||'?'}</span>
-       <span class="tag macro">F: ${meal.macros.fat||'?'}</span>` : '';
+    ? `<span class="tag macro">P ${meal.macros.protein||'?'}</span>
+       <span class="tag macro">C ${meal.macros.carbs||'?'}</span>
+       <span class="tag macro">F ${meal.macros.fat||'?'}</span>` : '';
 
   return `<div class="meal-card ${flagged?'flagged':''}">
     <div class="meal-head">
@@ -1169,10 +1326,10 @@ function mealCard(meal, allowed) {
         <div class="meal-name">${meal.name}</div>
         <div class="meal-desc">${meal.description}</div>
         <div class="meal-tags">
-          ${meal.cookingMethod ? `<span class="tag ${flagged?'warn':'blue'}">${flagged?'⚠️':'🍳'} ${meal.cookingMethod}</span>` : ''}
-          ${meal.prepTime  ? `<span class="tag">⏱ ${meal.prepTime}</span>` : ''}
-          ${meal.portion   ? `<span class="tag">⚖️ ${meal.portion}</span>` : ''}
-          ${meal.calories  ? `<span class="tag">🔥 ${meal.calories}</span>` : ''}
+          ${meal.cookingMethod?`<span class="tag ${flagged?'warn':'blue'}">${flagged?'⚠️':'🍳'} ${meal.cookingMethod}</span>`:''}
+          ${meal.prepTime ?`<span class="tag">⏱ ${meal.prepTime}</span>`:''}
+          ${meal.portion  ?`<span class="tag">⚖️ ${meal.portion}</span>`:''}
+          ${meal.calories ?`<span class="tag">🔥 ${meal.calories}</span>`:''}
           ${macroTags}
         </div>
       </div>
@@ -1184,7 +1341,7 @@ function mealCard(meal, allowed) {
 
 function shopHTML(list) {
   if (!list) return '';
-  if (typeof list === 'object' && !Array.isArray(list)) {
+  if (typeof list==='object' && !Array.isArray(list)) {
     return Object.entries(list).map(([cat,items])=>{
       if (!items?.length) return '';
       return `<div class="shop-cat">
@@ -1196,30 +1353,43 @@ function shopHTML(list) {
   return `<div class="shop-items">${list.map(i=>`<div class="shop-item">${i}</div>`).join('')}</div>`;
 }
 
+function actRow() {
+  return `<div class="act-row">
+    <button class="act-btn copy-btn" onclick="copyPlan()">📋 Copy plan</button>
+    <button class="act-btn" onclick="printPlan()">🖨️ Print</button>
+  </div>`;
+}
+
 function copyPlan() {
   navigator.clipboard.writeText(document.getElementById('results').innerText).then(()=>{
-    document.querySelectorAll('.copy-btn').forEach(b => {
-      b.textContent = '✅ Copied!';
-      b.classList.add('done');
-      setTimeout(()=>{ b.textContent='📋 Copy'; b.classList.remove('done'); }, 2000);
+    document.querySelectorAll('.copy-btn').forEach(b=>{
+      b.textContent='✅ Copied!'; b.classList.add('done');
+      setTimeout(()=>{ b.textContent='📋 Copy plan'; b.classList.remove('done'); }, 2500);
     });
   });
 }
 
 function printPlan() { window.print(); }
 
-function actRow() {
-  return `<div class="act-row">
-    <button class="act-btn copy-btn" onclick="copyPlan()">📋 Copy</button>
-    <button class="act-btn" onclick="printPlan()">🖨️ Print</button>
+// ── STORES HTML ───────────────────────────────────────────────────
+function storesHTML(country) {
+  const s = getStores(country);
+  if (!s) return `<div class="stores-card">
+    <div class="stores-title">🏪 Budget shopping tip</div>
+    <div class="stores-text">Look for discount supermarket chains in ${country||'your country'} — own-brand products typically save 20–40% vs branded items.</div>
+  </div>`;
+  return `<div class="stores-card">
+    <div class="stores-title">🏪 Cheapest supermarkets in ${s.tip}</div>
+    <div class="stores-text">
+      Best value stores: ${s.chains.map(c=>`<span class="store-pill">${c}</span>`).join('')}<br/>
+      <span style="color:var(--muted);font-size:12px;margin-top:4px;display:block;">${s.extra}</span>
+    </div>
   </div>`;
 }
 
-// ── DISPLAY ──────────────────────────────────────────────────────────
-function showResults(plan, budget, cur, allowed, days, country) {
-  const storesNote = getCheapStores(country);
-  const isMulti    = days > 1;
-
+// ── DISPLAY RESULTS ───────────────────────────────────────────────
+function showResults(plan, budget, sym, allowed, days, country) {
+  const isMulti = days > 1;
   let inner = '';
 
   if (isMulti) {
@@ -1232,171 +1402,202 @@ function showResults(plan, budget, cur, allowed, days, country) {
         <div class="meals">${d.meals.map(m=>mealCard(m,allowed)).join('')}</div>
       </div>`).join('');
 
-    inner = `
+    inner = `<div class="res-header">
       <div class="res-top">
         <div class="res-title">Your ${days}-day plan</div>
         <div class="cost-pill">${plan.totalCost} total</div>
       </div>
-      <div class="res-meta">Budget: ${cur.s}${budget}/day · ${cur.s}${(parseFloat(budget)*days).toFixed(2)} for ${days} days</div>
-      ${budgetBanner(plan.totalCost, budget, days, cur.s)}
+      <div class="res-meta">Budget: ${sym}${budget}/day · ${sym}${(parseFloat(budget)*days).toFixed(2)} total</div>
+      ${budgetBadge(plan.totalCost, budget, days, sym)}
       ${actRow()}
-      ${daysH}`;
+    </div>
+    ${daysH}`;
   } else {
-    inner = `
+    inner = `<div class="res-header">
       <div class="res-top">
         <div class="res-title">Your meal plan</div>
         <div class="cost-pill">${plan.totalCost} / day</div>
       </div>
-      <div class="res-meta">${plan.calories||''} · Budget: ${cur.s}${budget}</div>
-      ${budgetBanner(plan.totalCost, budget, 1, cur.s)}
+      <div class="res-meta">${plan.calories||''} · Budget: ${sym}${budget}</div>
+      ${budgetBadge(plan.totalCost, budget, 1, sym)}
       ${actRow()}
-      <div class="meals">${plan.meals.map(m=>mealCard(m,allowed)).join('')}</div>`;
+    </div>
+    <div class="meals">${plan.meals.map(m=>mealCard(m,allowed)).join('')}</div>`;
   }
 
   document.getElementById('results').innerHTML = `<div class="fade">
     ${inner}
     <div class="shop-card">
-      <div class="shop-title">🛒 ${isMulti ? `${days}-day` : ''} Shopping list</div>
+      <div class="shop-title">🛒 ${isMulti?`${days}-day `:''} Shopping list</div>
       ${shopHTML(plan.shoppingList)}
     </div>
-    <div class="stores-box">🏪 ${storesNote}</div>
-    <div class="tip-card">💡 ${plan.tip}</div>
+    ${storesHTML(country)}
+    <div class="tip-card"><span class="tip-icon">💡</span><span>${plan.tip}</span></div>
     ${actRow()}
   </div>`;
 }
 
-// ── PROMPT ───────────────────────────────────────────────────────────
-function buildPrompt(budget, country, cur, diet, goal, meals, skill, selected, days,
+// ── PROGRESS BAR ──────────────────────────────────────────────────
+let progressInterval = null;
+
+function startProgress(days) {
+  const bar  = document.getElementById('pBar');
+  const total = days > 1 ? 35000 : 12000;
+  const step  = 100 / (total / 200);
+  let pct = 0;
+  bar.style.width = '0%';
+  clearInterval(progressInterval);
+  progressInterval = setInterval(()=>{
+    pct = Math.min(pct + step * (1 - pct/110), 92);
+    bar.style.width = pct + '%';
+  }, 200);
+}
+
+function stopProgress() {
+  clearInterval(progressInterval);
+  document.getElementById('pBar').style.width = '100%';
+  setTimeout(()=>{ document.getElementById('pBar').style.width = '0%'; }, 500);
+}
+
+// ── PROMPT ────────────────────────────────────────────────────────
+function buildPrompt(budget, country, diet, goal, meals, skill, selected, days,
                      allergies, cuisine, proteins, carbs, macros) {
 
   const dietMap = {
-    'none':'no dietary restrictions (omnivore)',
-    'vegetarian':'vegetarian (no meat or fish)',
-    'vegan':'vegan (no animal products at all)',
-    'high-protein':'high protein (prioritise meat, eggs, legumes)',
-    'carnivore':'carnivore (meat and animal products only, no plant carbs)',
-    'flexitarian':'flexitarian (mostly plant-based, occasional meat)',
-    'pescatarian':'pescatarian (fish and seafood ok, no other meat)',
-    'keto':'ketogenic (very low carb, high fat)',
-    'mediterranean':'Mediterranean style (olive oil, fish, vegetables, legumes)'
+    'none':          'no dietary restrictions (omnivore)',
+    'vegetarian':    'vegetarian (no meat or fish)',
+    'vegan':         'vegan (no animal products)',
+    'high-protein':  'high protein (prioritise meat, eggs, legumes)',
+    'carnivore':     'carnivore (meat and animal products only, no plant carbs)',
+    'flexitarian':   'flexitarian (mostly plant-based, occasional meat fine)',
+    'pescatarian':   'pescatarian (fish and seafood ok, no other meat)',
+    'keto':          'ketogenic (very low carb under 30g/day, high fat)',
+    'mediterranean': 'Mediterranean (olive oil, fish, vegetables, legumes, moderate grains)'
   };
 
   const goalMap = {
-    'maintain':'maintain current weight (~2000 kcal/day)',
-    'lose':'lose weight (calorie deficit, ~1500–1700 kcal/day, filling foods)',
-    'gain':'gain muscle (calorie surplus, ~2400–2700 kcal/day, high protein)',
-    'cut':'cut fat while keeping muscle (~1700–1900 kcal/day, high protein, low carb)',
-    'bulk':'bulk up with maximum calories (~3000+ kcal/day)',
-    'athletic':'fuel athletic performance (~2500–3000 kcal/day, balanced macros)'
+    'maintain': 'maintain current weight (~2000 kcal/day)',
+    'lose':     'lose weight — calorie deficit (~1500–1700 kcal/day), focus on filling, high-volume foods',
+    'gain':     'gain muscle — calorie surplus (~2400–2700 kcal/day), high protein every meal',
+    'cut':      'cut body fat while preserving muscle (~1700–1900 kcal/day), high protein, moderate carbs',
+    'bulk':     'bulk up — maximum calories (~3000–3500 kcal/day), calorie-dense foods',
+    'athletic': 'fuel athletic performance (~2500–3000 kcal/day), balanced macros, emphasis on carbs pre-workout'
   };
 
-  const allergyList = [...allergies].join(', ');
-  const proteinPref = proteins.length ? `Preferred protein sources: ${proteins.join(', ')}.` : '';
-  const carbPref    = carbs.length    ? `Preferred carbohydrate sources: ${carbs.join(', ')}.` : '';
-  const cuisinePref = cuisine !== 'any' ? `Cuisine style: ${cuisine}.` : '';
-  const macroPref   = `Target macro ratios: ~${macros.protein}% protein, ~${macros.carbs}% carbohydrates, ~${macros.fat}% fat.`;
+  const allergyStr = allergies.length
+    ? `ALLERGIES — STRICTLY FORBIDDEN (never include these): ${allergies.join(', ')}.` : '';
+
+  const proteinStr  = proteins.length  ? `Preferred protein sources: ${proteins.join(', ')}.` : '';
+  const carbStr     = carbs.length     ? `Preferred carbohydrates: ${carbs.join(', ')}. Do NOT default to rice unless it is in this list.` : 'Do NOT default to rice — use pasta, potatoes, oats, bread, or other carbs instead.';
+  const cuisineStr  = cuisine!=='any'  ? `Cuisine style: ${cuisine}.` : '';
+  const macroStr    = `Approximate macro targets: ~${macros.p}% protein, ~${macros.c}% carbohydrates, ~${macros.f}% fat.`;
   const wb          = (parseFloat(budget) * days).toFixed(2);
 
-  const durInstr = days > 1
-    ? `Generate a ${days}-day meal plan labelled Day 1 through Day ${days}.
+  const durStr = days > 1
+    ? `Generate a ${days}-day plan labelled Day 1 through Day ${days}.
 - No meal name repeats across all ${days} days.
 - Total must stay within ${cur.s}${wb} (${cur.s}${budget}/day × ${days}).
-- Each day has its own dailyCost and calories field.
-- shoppingList covers the entire ${days} days.
-- For multi-day plans: max 3 steps per meal, max 5 ingredients per meal to keep output concise.`
-    : `Generate a 1-day meal plan. Total cost must stay under ${cur.s}${budget}.`;
+- Each day has dailyCost and calories fields.
+- shoppingList covers the entire period.
+- For multi-day: max 3 steps per meal, max 5 ingredients per meal.`
+    : `Generate a 1-day plan. Total cost must stay under ${cur.s}${budget}.`;
 
-  return `You are a professional budget meal planner. Generate a practical, affordable, nutritious meal plan. Keep language clear and beginner-friendly unless skill is advanced.
+  return `You are a professional budget meal planner. Create a practical, affordable, nutritious meal plan. Write clearly for a ${skill} cook.
 
 LOCATION: User is in ${country||'Europe'}.
-CURRENCY: ALL prices must be in ${cur.n} (${cur.c}), symbol "${cur.s}". Use REALISTIC local supermarket prices for ${country||'Europe'}. Do not guess — use actual typical prices (e.g. in Sweden, pasta 500g = ~kr 10–15, eggs 6-pack = ~kr 20–25).
+CURRENCY: ALL prices MUST be in ${cur.n} (${cur.c}), symbol "${cur.s}".
+Use REALISTIC local supermarket prices for ${country||'Europe'}. Example reference prices:
+- Sweden: pasta 500g = kr 10–15, eggs 6-pack = kr 22–28, chicken breast 500g = kr 45–60, oats 500g = kr 15–20, lentils 500g = kr 18–25, banana = kr 3–5 each.
+- UK: pasta 500g = £0.65–0.90, eggs 6-pack = £1.10–1.40, chicken breast 500g = £2.50–3.50.
+- Germany: pasta 500g = €0.70–0.90, eggs 10-pack = €1.50–2.00, chicken breast 500g = €3.00–4.50.
+- Use similar logic for other countries based on local cost of living.
 
-USER PREFERENCES:
-- Daily budget: ${cur.s}${budget} ${cur.c}
+USER INPUTS:
+- Budget: ${cur.s}${budget} ${cur.c}/day
 - Diet: ${dietMap[diet]||diet}
 - Goal: ${goalMap[goal]||goal}
 - Meals per day: ${meals}
-- Cooking skill: ${skill}
-${cuisinePref ? '- '+cuisinePref : ''}
-${allergyList ? `- ALLERGIES/INTOLERANCES (STRICT — NEVER include these): ${allergyList}` : ''}
-${proteinPref ? '- '+proteinPref : ''}
-${carbPref    ? '- '+carbPref    : ''}
-- ${macroPref}
+- Skill: ${skill}
+${cuisineStr ? '- '+cuisineStr : ''}
+${allergyStr ? '- '+allergyStr : ''}
+${proteinStr ? '- '+proteinStr : ''}
+- ${carbStr}
+- ${macroStr}
 
-${appliancePrompt(selected)}
+${appPrompt(selected)}
 
-DURATION: ${durInstr}
+DURATION: ${durStr}
 
-PRICING RULES (critical):
-- Use REAL supermarket prices for ${country||'Europe'} — not estimates.
-- Staples like oats, pasta, rice, lentils, bread, eggs are cheap. Price them accurately.
-- Never say a meal costs less than it actually would. Be realistic, not optimistic.
-- Total daily cost must fit within ${cur.s}${budget}. Adjust portions if needed.
+PRICING — CRITICAL:
+- Use realistic local prices. Never underestimate costs.
+- Budget must not be exceeded. If it would be, reduce portions or swap ingredients.
+- Show exact cost for each meal.
+- Note: prices are approximate estimates — add a small buffer.
 
-TIMING RULES (critical):
-- Prep times must be REALISTIC. Include all chopping, boiling, waiting.
-- A simple pasta dish takes 20–25 mins minimum. Soup takes 25–35 mins.
-- NEVER say 5 minutes for something that takes 15. Use ranges: "20–25 mins".
+TIMING — CRITICAL:
+- Prep times must be HONEST and REALISTIC. Include ALL time: chopping, boiling, waiting.
+- Simple oat porridge = 8–12 mins. Pasta dish = 20–25 mins. Soup = 25–35 mins. Roasted vegetables = 30–40 mins.
+- ALWAYS give a range: "20–25 mins" not "20 mins". Never write "5 mins" for anything that takes longer.
+- If in doubt, add 5 minutes to your estimate.
+
+PROTEIN VARIETY — CRITICAL:
+- Never rely only on meat. Include eggs, legumes (lentils, chickpeas, beans), dairy, fish, or tofu across the day.
+- Each meal must have a clear protein source.
+- No two meals in the same day should have the same main protein.
 
 VARIETY RULES:
-- No repeated main protein or carb within the same day.
+- No repeated main ingredient across meals in the same day.
 - Vary cooking methods across meals.
-- Vary flavor profiles (not all savory/plain).
-- Include vegetables in at least 2 meals per day.
-- Do NOT default to rice unless specifically chosen — use pasta, potatoes, oats, bread as primary carbs.
+- Vary flavor profiles — not all meals should taste the same.
+- Include at least 2 portions of vegetables per day.
+- Do NOT default to rice as a carb unless the user specifically chose it.
 
 STEP RULES:
-- 3–5 numbered steps per meal (max 3 for multi-day plans).
+- ${days>1?'3':'3–5'} numbered steps per meal.
 - Each step under 25 words.
-- Start with an action verb: Boil, Chop, Mix, Heat, Add, Stir, Season, Drain, Fry, Bake.
-- Include EXACT quantities in steps (e.g. "Add 1 tsp salt", "Use 80g pasta per person").
-- Be specific and beginner-friendly.
+- Start with a verb: Boil, Chop, Mix, Heat, Add, Stir, Season, Drain, Fry, Bake, Slice, Cook, Rinse, Peel.
+- Include EXACT quantities: "Add 1 tsp salt", "Use 80g dry pasta per serving".
+- Be specific and beginner-friendly. No assumed knowledge.
 
-INGREDIENTS RULE:
-- List ingredients with EXACT quantities (e.g. "80g dried pasta", "2 eggs", "1 tsp olive oil", "pinch of salt").
-- Include spices and seasonings with amounts.
+INGREDIENTS:
+- List with EXACT quantities and units: "80g dried pasta", "2 medium eggs", "1 tsp olive oil", "½ tsp cumin", "pinch of black pepper".
+- Include all spices and seasonings with amounts — even small ones like a pinch of salt.
 
-Always respond in valid JSON only. No text outside JSON.
+Always respond ONLY in valid JSON. No text outside the JSON structure.
 
-1-DAY format:
+1-DAY JSON:
 {
   "totalCost":"${cur.s}X.XX","calories":"~XXXX kcal","budgetConfirmed":true,
   "meals":[{
-    "type":"Breakfast","name":"...","description":"One clear sentence.",
+    "type":"Breakfast","name":"Full meal name","description":"One engaging sentence about the meal.",
     "cost":"${cur.s}X.XX","prepTime":"X–Y mins","portion":"e.g. 350g",
-    "calories":"~XXX kcal","cookingMethod":"e.g. Pan-fried",
+    "calories":"~XXX kcal","cookingMethod":"e.g. Simmered on stovetop",
     "macros":{"protein":"Xg","carbs":"Xg","fat":"Xg"},
-    "ingredients":["80g rolled oats","200ml water","1 medium banana","1 tsp honey","pinch of cinnamon"],
-    "steps":["Boil 200ml water in a small pot on medium heat.","Add 80g oats and stir for 3–4 minutes until thick.","Slice the banana and place on top. Drizzle with 1 tsp honey."]
+    "ingredients":["80g rolled oats","200ml water","1 ripe banana, sliced","1 tsp honey","¼ tsp cinnamon"],
+    "steps":["Boil 200ml water in a small saucepan on medium heat — about 3 minutes.","Add 80g oats, stir continuously for 4–5 minutes until thick and creamy.","Pour into a bowl. Top with banana slices, drizzle 1 tsp honey, sprinkle cinnamon."]
   }],
   "shoppingList":{"produce":[],"dairy":[],"grains":[],"protein":[],"other":[]},
-  "tip":"One specific money-saving tip with a real example."
+  "tip":"One specific, actionable money-saving tip with a concrete example."
 }
 
-MULTI-DAY format:
+MULTI-DAY JSON:
 {
   "totalCost":"${cur.s}XX.XX","budgetConfirmed":true,
-  "days":[{
-    "day":"Day 1","dailyCost":"${cur.s}X.XX","calories":"~XXXX kcal",
-    "meals":[{
-      "type":"Breakfast","name":"...","description":"One sentence.",
-      "cost":"${cur.s}X.XX","prepTime":"X–Y mins","portion":"e.g. 300g",
-      "calories":"~XXX kcal","cookingMethod":"e.g. Boiled",
+  "days":[{"day":"Day 1","dailyCost":"${cur.s}X.XX","calories":"~XXXX kcal",
+    "meals":[{"type":"Breakfast","name":"...","description":"...","cost":"${cur.s}X.XX",
+      "prepTime":"X–Y mins","portion":"...","calories":"~XXX kcal","cookingMethod":"...",
       "macros":{"protein":"Xg","carbs":"Xg","fat":"Xg"},
-      "ingredients":["item with quantity"],
-      "steps":["Verb + action with quantity.","Verb + action.","Verb + action."]
-    }]
-  }],
+      "ingredients":["item with exact quantity"],
+      "steps":["Verb + action with quantity.","Verb + action.","Verb + action."]}]}],
   "shoppingList":{"produce":[],"dairy":[],"grains":[],"protein":[],"other":[]},
   "tip":"One specific money-saving tip."
 }`;
 }
 
-// ── MAIN ─────────────────────────────────────────────────────────────
+// ── MAIN GENERATE ─────────────────────────────────────────────────
 async function generate() {
   const budget   = document.getElementById('budget').value || 10;
   const country  = document.getElementById('country').value.trim() || 'Europe';
-  const cur      = currentCurrency;
   const diet     = sel('diet')    || 'none';
   const goal     = sel('goal')    || 'maintain';
   const meals    = sel('mpp')     || '3';
@@ -1404,41 +1605,31 @@ async function generate() {
   const skill    = sel('skill')   || 'beginner';
   const cuisine  = sel('cuisine') || 'any';
   const selected = multiSel('apps');
-  const allergies = [
-    ...multiSel('allergy'),
-    ...customAllergies
-  ];
-  const proteins = multiSel('proteins');
-  const carbsArr = multiSel('carbs');
-  const macros   = {
-    protein: document.getElementById('mProtein').value,
-    carbs:   document.getElementById('mCarbs').value,
-    fat:     document.getElementById('mFat').value
-  };
+  const allergies = [...multiSel('allergy'), ...customA];
+  const proteins  = multiSel('proteins');
+  const carbsArr  = multiSel('carbs');
+  const macros    = { p:document.getElementById('mP').value, c:document.getElementById('mC').value, f:document.getElementById('mF').value };
 
   if (!selected.length) {
-    showErr('Please select at least one appliance you have access to.');
-    return;
+    showErr('Please select at least one appliance you have access to.'); return;
   }
 
-  // UI loading
-  const btn  = document.getElementById('genBtn');
-  const sb   = document.getElementById('statusBox');
-  const st   = document.getElementById('statusTxt');
-  const ss   = document.getElementById('statusSub');
-  btn.disabled   = true;
-  btn.innerHTML  = '<span class="spin"></span> Generating...';
-  sb.style.display = 'block';
-  st.innerHTML   = days > 1 ? `🧠 Building your ${days}-day plan...` : '🧠 Building your meal plan...';
-  ss.textContent = days > 1 ? 'This takes 20–40 seconds — hang tight!' : 'Usually takes 5–15 seconds';
-
+  // UI — start loading
+  const btn = document.getElementById('genBtn');
+  const sw  = document.getElementById('statusWrap');
+  btn.disabled  = true;
+  btn.innerHTML = '<span class="spin"></span> Generating...';
+  sw.style.display = 'block';
+  document.getElementById('sTxt').textContent = days > 1 ? `Building your ${days}-day plan...` : 'Building your meal plan...';
+  document.getElementById('sSub').textContent = days > 1 ? 'This takes 20–40 seconds — please wait' : 'Usually 5–15 seconds';
   document.getElementById('errBox').style.display  = 'none';
   document.getElementById('warnBox').style.display = 'none';
   document.getElementById('results').style.display = 'none';
+  startProgress(days);
 
   try {
-    const prompt = buildPrompt(budget, country, cur, diet, goal, meals, skill,
-                               selected, days, allergies, cuisine, proteins, carbsArr, macros);
+    const prompt = buildPrompt(budget, country, diet, goal, meals, skill, selected, days,
+                               allergies, cuisine, proteins, carbsArr, macros);
 
     const response = await fetch('/generate', {
       method:'POST',
@@ -1456,32 +1647,36 @@ async function generate() {
     const plan    = JSON.parse(raw);
     const allowed = allowedMethods();
 
-    // Appliance check
+    // Check for appliance violations
     const allMeals = plan.days ? plan.days.flatMap(d=>d.meals) : plan.meals;
     const bad = allMeals.filter(m => m.cookingMethod && !methodOk(m.cookingMethod, allowed));
     if (bad.length) {
       const w = document.getElementById('warnBox');
       w.style.display = 'block';
-      w.textContent = `⚠️ ${bad.length} meal(s) may use appliances you don't have (highlighted in orange). Try regenerating for a better result.`;
+      w.textContent = `⚠️ ${bad.length} meal(s) may use appliances you don't have (highlighted in orange below). Try regenerating for a fully compliant plan.`;
     }
 
     document.getElementById('results').style.display = 'block';
-    showResults(plan, budget, cur, allowed, days, country);
+    showResults(plan, budget, cur.s, allowed, days, country);
 
   } catch(err) {
     showErr(`Something went wrong: ${err.message}`);
   } finally {
+    stopProgress();
     btn.disabled  = false;
     btn.innerHTML = '✨ Generate My Meal Plan';
-    sb.style.display = 'none';
+    sw.style.display = 'none';
   }
 }
 
 function showErr(msg) {
   const b = document.getElementById('errBox');
   b.style.display = 'block';
-  b.textContent   = msg;
+  b.textContent = msg;
 }
+
+// Init macro display
+updateMacro();
 </script>
 </body>
 </html>
