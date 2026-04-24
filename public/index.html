@@ -585,6 +585,50 @@
 
     .day-info { font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--cream-dimmer); }
 
+    /* ── DAY TABS ───────────────────────────────────────────────── */
+    .day-tabs {
+      display: flex; flex-wrap: wrap; gap: 1px;
+      margin: 24px 0 1px;
+      border: 1px solid rgba(240,232,216,0.08);
+    }
+
+    .day-tab {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 13px; font-weight: 700;
+      letter-spacing: 0.18em; text-transform: uppercase;
+      padding: 11px 16px;
+      background: rgba(240,232,216,0.03);
+      border: none; color: var(--cream-dimmer);
+      cursor: pointer; transition: all 0.15s;
+      flex: 1; min-width: 60px;
+    }
+
+    .day-tab:hover { background: rgba(212,130,42,0.08); color: var(--amber); }
+
+    .day-tab.active {
+      background: rgba(212,130,42,0.18);
+      color: var(--amber-lt);
+      border-bottom: 2px solid var(--amber);
+    }
+
+    .day-panel { display: none; }
+    .day-panel.active { display: block; }
+
+    .day-panel-head {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 16px 0 14px;
+      border-bottom: 1px solid rgba(240,232,216,0.06);
+      margin-bottom: 1px;
+    }
+
+    .day-panel-name {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 22px; font-weight: 900;
+      letter-spacing: 0.1em; text-transform: uppercase; color: var(--amber);
+    }
+
+    .day-panel-info { font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--cream-dimmer); }
+
     .meals { display: flex; flex-direction: column; gap: 1px; margin-bottom: 1px; }
 
     /* ── MEAL CARD — cinematic ───────────────────────────────────── */
@@ -1368,13 +1412,38 @@ function copyPlan(){
 }
 function printPlan(){window.print();}
 
+// ── DAY TAB SWITCHER ─────────────────────────────────────────────
+function switchDay(idx){
+  // Deactivate all tabs and panels
+  document.querySelectorAll('.day-tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.day-panel').forEach(p=>p.classList.remove('active'));
+  // Activate selected
+  document.getElementById('tab-'+idx).classList.add('active');
+  document.getElementById('panel-'+idx).classList.add('active');
+}
+
 // ── DISPLAY ───────────────────────────────────────────────────────
 function showResults(plan,budget,sym,allowed,days,country){
   const isMulti=days>1;
   let inner='';
 
   if(isMulti){
-    const daysH=plan.days.map(d=>`<div class="day-block"><div class="day-head"><div class="day-name">${d.day}</div><div class="day-info">${d.dailyCost} · ${d.calories||''}</div></div><div class="meals">${d.meals.map(m=>mealCard(m,allowed)).join('')}</div></div>`).join('');
+    // Build tab buttons
+    const tabBtns = plan.days.map((d,i)=>`
+      <button class="day-tab ${i===0?'active':''}" onclick="switchDay(${i})" id="tab-${i}">
+        ${d.day.replace('Day ','D')}
+      </button>`).join('');
+
+    // Build panels — one per day, only first visible
+    const panels = plan.days.map((d,i)=>`
+      <div class="day-panel ${i===0?'active':''}" id="panel-${i}">
+        <div class="day-panel-head">
+          <div class="day-panel-name">${d.day}</div>
+          <div class="day-panel-info">${d.dailyCost} · ${d.calories||''}</div>
+        </div>
+        <div class="meals">${d.meals.map(m=>mealCard(m,allowed)).join('')}</div>
+      </div>`).join('');
+
     inner=`<div class="res-hero"><div class="res-atmo"></div>
       <div class="res-over">Your personalised plan</div>
       <div class="res-title">YOUR<br/><span>${days}-DAY<br/>PLAN</span></div>
@@ -1383,7 +1452,9 @@ function showResults(plan,budget,sym,allowed,days,country){
         <div class="res-stat"><div class="res-stat-l">Daily budget</div><div class="res-stat-v">${sym}${budget}</div></div>
         <div class="res-stat"><div class="res-stat-l">Duration</div><div class="res-stat-v">${days} days</div></div>
       </div>
-      ${budgBadge(plan.totalCost,budget,days,sym)}${actRow()}</div>${daysH}`;
+      ${budgBadge(plan.totalCost,budget,days,sym)}${actRow()}</div>
+    <div class="day-tabs">${tabBtns}</div>
+    ${panels}`;
   }else{
     inner=`<div class="res-hero"><div class="res-atmo"></div>
       <div class="res-over">Your personalised plan</div>
