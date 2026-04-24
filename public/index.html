@@ -3,1227 +3,1137 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Mealzy — Personalised Meal Plans</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Bebas+Neue&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <title>Mealzy — Eat Well. Spend Less.</title>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;600;700;800;900&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet"/>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --glass:        rgba(255,255,255,0.07);
-      --glass-hover:  rgba(255,255,255,0.12);
-      --glass-border: rgba(255,255,255,0.12);
-      --glass-strong: rgba(255,255,255,0.15);
-      --accent:       #E8C547;
-      --accent2:      #C8F0A0;
-      --text:         #F5F0E8;
-      --text-dim:     rgba(245,240,232,0.55);
-      --text-dimmer:  rgba(245,240,232,0.35);
-      --red-glass:    rgba(220,60,60,0.25);
-      --red-border:   rgba(255,100,100,0.4);
-      --green-glass:  rgba(80,160,80,0.2);
-      --green-border: rgba(120,200,120,0.4);
+      --bg:       #0E0A07;
+      --warm:     #1A1008;
+      --amber:    #D4822A;
+      --amber-lt: #E8A84A;
+      --cream:    #F0E8D8;
+      --cream-dim: rgba(240,232,216,0.55);
+      --cream-dimmer: rgba(240,232,216,0.28);
+      --glass:    rgba(240,232,216,0.06);
+      --glass-bd: rgba(240,232,216,0.10);
+      --red-a:    rgba(200,60,40,0.22);
+      --red-b:    rgba(220,100,80,0.45);
+      --green-a:  rgba(60,140,60,0.18);
+      --green-b:  rgba(100,180,80,0.4);
     }
 
     html { scroll-behavior: smooth; }
 
     body {
-      font-family: 'Space Grotesk', sans-serif;
-      background: #0A0A08;
-      color: var(--text);
+      font-family: 'Barlow', sans-serif;
+      background: var(--bg);
+      color: var(--cream);
       min-height: 100vh;
       overflow-x: hidden;
     }
 
-    /* ── ANIMATED BACKGROUND ─────────────────────────────────── */
-    .bg-scene {
-      position: fixed;
-      inset: 0;
-      z-index: 0;
+    /* ── ATMOSPHERE ─────────────────────────────────────────────── */
+    /* Fixed warm gradient background that gives the ORYZO feel */
+    .atmo {
+      position: fixed; inset: 0; z-index: 0; pointer-events: none;
       background:
-        radial-gradient(ellipse 80% 60% at 20% 20%, rgba(60,40,10,0.9) 0%, transparent 60%),
-        radial-gradient(ellipse 60% 80% at 80% 80%, rgba(10,30,20,0.95) 0%, transparent 60%),
-        radial-gradient(ellipse 100% 100% at 50% 50%, #0D0B08 0%, #080A06 100%);
+        radial-gradient(ellipse 70% 50% at 15% 10%, rgba(140,60,10,0.55) 0%, transparent 65%),
+        radial-gradient(ellipse 60% 70% at 85% 85%, rgba(80,30,5,0.6) 0%, transparent 65%),
+        radial-gradient(ellipse 100% 100% at 50% 50%, #110C06 0%, #0A0704 100%);
     }
 
-    /* Floating orbs for atmosphere */
-    .orb {
-      position: fixed;
-      border-radius: 50%;
-      filter: blur(80px);
-      opacity: 0.4;
-      animation: drift 20s ease-in-out infinite;
-      pointer-events: none;
-      z-index: 0;
+    /* Subtle grain texture overlay */
+    .grain {
+      position: fixed; inset: 0; z-index: 1; pointer-events: none; opacity: 0.035;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+      background-size: 200px 200px;
     }
 
-    .orb1 { width: 500px; height: 500px; background: radial-gradient(circle, rgba(180,120,20,0.6), transparent); top: -100px; left: -100px; animation-delay: 0s; }
-    .orb2 { width: 400px; height: 400px; background: radial-gradient(circle, rgba(20,80,40,0.5), transparent); bottom: -100px; right: -100px; animation-delay: -10s; }
-    .orb3 { width: 300px; height: 300px; background: radial-gradient(circle, rgba(100,60,160,0.3), transparent); top: 50%; left: 50%; transform: translate(-50%,-50%); animation-delay: -5s; }
-
-    @keyframes drift {
-      0%, 100% { transform: translate(0, 0) scale(1); }
-      33%       { transform: translate(30px, -20px) scale(1.05); }
-      66%       { transform: translate(-20px, 30px) scale(0.95); }
-    }
-
-    /* ── LAYOUT ──────────────────────────────────────────────── */
+    /* ── LAYOUT ─────────────────────────────────────────────────── */
     .page {
-      position: relative;
-      z-index: 1;
-      max-width: 720px;
-      margin: 0 auto;
-      padding: 0 20px 120px;
+      position: relative; z-index: 2;
+      max-width: 780px; margin: 0 auto;
+      padding: 0 24px 120px;
     }
 
-    /* ── NAV ─────────────────────────────────────────────────── */
+    /* ── NAV — exactly like ORYZO ───────────────────────────────── */
     nav {
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 20px 0;
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border-bottom: 1px solid rgba(255,255,255,0.05);
+      position: sticky; top: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 22px 0;
+      border-bottom: 1px solid rgba(240,232,216,0.06);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      background: rgba(14,10,7,0.5);
     }
 
     .nav-logo {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 24px;
-      letter-spacing: 0.15em;
-      color: var(--accent);
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 18px; font-weight: 700;
+      letter-spacing: 0.3em; text-transform: uppercase;
+      color: var(--cream);
     }
 
-    .nav-tag {
-      font-size: 10px;
-      font-weight: 500;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: var(--text-dim);
+    .nav-links {
+      display: flex; gap: 28px;
     }
 
-    /* ── HERO ────────────────────────────────────────────────── */
+    .nav-link {
+      font-size: 10px; font-weight: 600;
+      letter-spacing: 0.22em; text-transform: uppercase;
+      color: var(--cream-dimmer);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .nav-link:hover { color: var(--cream); }
+
+    /* ── HERO — full-bleed ORYZO style ──────────────────────────── */
     .hero {
-      padding: 80px 0 60px;
-      text-align: center;
+      min-height: 92vh;
+      display: flex; flex-direction: column;
+      justify-content: flex-end;
+      padding-bottom: 60px;
+      position: relative;
     }
 
-    .hero-eyebrow {
-      font-size: 11px;
-      font-weight: 500;
-      letter-spacing: 0.3em;
-      text-transform: uppercase;
-      color: var(--accent);
-      margin-bottom: 24px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 12px;
+    /* Big atmospheric food image simulation using CSS */
+    .hero-visual {
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 60% 40%, rgba(160,80,20,0.4) 0%, transparent 60%),
+        radial-gradient(ellipse 50% 50% at 30% 60%, rgba(100,40,10,0.3) 0%, transparent 55%);
+      border-bottom: 1px solid rgba(240,232,216,0.06);
     }
 
-    .hero-eyebrow::before,
-    .hero-eyebrow::after {
-      content: '';
-      width: 40px;
-      height: 1px;
-      background: var(--accent);
-      opacity: 0.5;
+    /* The giant ORYZO-style headline */
+    .hero-overline {
+      font-size: 11px; font-weight: 600;
+      letter-spacing: 0.35em; text-transform: uppercase;
+      color: var(--amber);
+      margin-bottom: 20px;
     }
 
     .hero h1 {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: clamp(64px, 14vw, 120px);
-      line-height: 0.9;
-      letter-spacing: 0.02em;
-      color: var(--text);
-      margin-bottom: 8px;
-    }
-
-    .hero h1 span { color: var(--accent); }
-
-    .hero-sub {
-      font-size: 15px;
-      font-weight: 300;
-      color: var(--text-dim);
-      letter-spacing: 0.05em;
-      line-height: 1.7;
-      max-width: 440px;
-      margin: 24px auto 0;
-    }
-
-    /* ── HOW IT WORKS STRIP ──────────────────────────────────── */
-    .how-strip {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0;
-      padding: 28px 0 60px;
-    }
-
-    .how-item {
-      text-align: center;
-      flex: 1;
-    }
-
-    .how-num {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 48px;
-      color: rgba(232,197,71,0.2);
-      line-height: 1;
-      margin-bottom: 6px;
-    }
-
-    .how-label {
-      font-size: 11px;
-      font-weight: 500;
-      letter-spacing: 0.15em;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: clamp(72px, 16vw, 140px);
+      font-weight: 900;
+      line-height: 0.88;
+      letter-spacing: -0.01em;
       text-transform: uppercase;
-      color: var(--text-dim);
+      color: var(--cream);
+      margin-bottom: 32px;
     }
 
-    .how-divider {
-      width: 1px;
-      height: 40px;
-      background: rgba(255,255,255,0.08);
+    .hero h1 .accent { color: var(--amber); }
+    .hero h1 .outline {
+      -webkit-text-stroke: 1.5px var(--cream-dimmer);
+      color: transparent;
+    }
+
+    .hero-bottom {
+      display: flex; align-items: flex-end; justify-content: space-between; gap: 40px;
+    }
+
+    .hero-desc {
+      font-size: 15px; font-weight: 300;
+      color: var(--cream-dim); line-height: 1.7;
+      max-width: 340px; letter-spacing: 0.02em;
+    }
+
+    .hero-scroll {
+      font-size: 10px; font-weight: 600;
+      letter-spacing: 0.3em; text-transform: uppercase;
+      color: var(--cream-dimmer);
+      display: flex; align-items: center; gap: 10px;
       flex-shrink: 0;
     }
 
-    /* ── GLASS CARD ──────────────────────────────────────────── */
-    .glass {
+    .hero-scroll::before {
+      content: '';
+      display: block; width: 1px; height: 40px;
+      background: linear-gradient(to bottom, var(--amber), transparent);
+    }
+
+    /* ── HOW IT WORKS — horizontal strip ───────────────────────── */
+    .how {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: rgba(240,232,216,0.06);
+      border: 1px solid rgba(240,232,216,0.06);
+      margin: 80px 0 0;
+    }
+
+    .how-item {
+      background: var(--bg);
+      padding: 32px 24px;
+      transition: background 0.2s;
+    }
+
+    .how-item:hover { background: rgba(240,232,216,0.03); }
+
+    .how-n {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 56px; font-weight: 900;
+      color: rgba(212,130,42,0.15);
+      line-height: 1; margin-bottom: 12px;
+      letter-spacing: -0.02em;
+    }
+
+    .how-t {
+      font-size: 11px; font-weight: 600;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--cream-dimmer);
+      line-height: 1.5;
+    }
+
+    /* ── SECTION TITLE — ORYZO big left-aligned headline ───────── */
+    .sec-title {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: clamp(42px, 8vw, 72px);
+      font-weight: 900; text-transform: uppercase;
+      letter-spacing: -0.01em; line-height: 0.9;
+      color: var(--cream);
+      padding: 72px 0 8px;
+    }
+
+    .sec-title .dim { color: var(--cream-dimmer); }
+    .sec-title .a   { color: var(--amber); }
+
+    /* ── GLASS FIELD ─────────────────────────────────────────────── */
+    .field {
       background: var(--glass);
-      border: 1px solid var(--glass-border);
-      border-radius: 2px;
-      backdrop-filter: blur(24px);
-      -webkit-backdrop-filter: blur(24px);
-      padding: 28px;
-      margin-bottom: 2px;
+      border: 1px solid var(--glass-bd);
+      padding: 24px;
+      margin-bottom: 1px;
       transition: background 0.2s, border-color 0.2s;
     }
 
-    .glass:focus-within {
-      background: var(--glass-hover);
-      border-color: rgba(232,197,71,0.3);
+    .field:focus-within {
+      background: rgba(212,130,42,0.06);
+      border-color: rgba(212,130,42,0.3);
     }
 
-    .glass:hover { background: rgba(255,255,255,0.09); }
-
-    /* Section label */
-    .lbl {
-      font-size: 10px;
-      font-weight: 500;
-      letter-spacing: 0.25em;
-      text-transform: uppercase;
-      color: var(--text-dimmer);
-      margin-bottom: 16px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
+    .field-lbl {
+      font-size: 9px; font-weight: 600;
+      letter-spacing: 0.35em; text-transform: uppercase;
+      color: var(--cream-dimmer); margin-bottom: 14px;
     }
 
-    .lbl::after {
-      content: '';
-      flex: 1;
-      height: 1px;
-      background: rgba(255,255,255,0.06);
-    }
-
-    /* ── DIVIDER HEADING ─────────────────────────────────────── */
-    .section-heading {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 36px;
-      letter-spacing: 0.08em;
-      color: var(--text);
-      padding: 48px 0 4px;
-      opacity: 0.9;
-    }
-
-    .section-heading span { color: var(--accent); }
-
-    /* ── BUDGET ──────────────────────────────────────────────── */
-    .budget-row {
-      display: flex;
-      align-items: baseline;
-      gap: 6px;
-    }
+    /* ── BUDGET ─────────────────────────────────────────────────── */
+    .bud-row { display: flex; align-items: baseline; gap: 4px; }
 
     .cur-sym {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 52px;
-      color: var(--accent);
-      line-height: 1;
-      transition: all 0.2s;
-      min-width: 32px;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 56px; font-weight: 800;
+      color: var(--amber); line-height: 1;
+      min-width: 30px; transition: all 0.2s;
     }
 
-    .bud-input {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 72px;
-      line-height: 1;
-      color: var(--text);
-      background: transparent;
-      border: none;
-      outline: none;
-      width: 200px;
-      caret-color: var(--accent);
+    .bud-in {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 80px; font-weight: 900; line-height: 1;
+      color: var(--cream); background: transparent;
+      border: none; outline: none; width: 220px;
+      caret-color: var(--amber);
     }
 
-    .bud-input::-webkit-inner-spin-button,
-    .bud-input::-webkit-outer-spin-button { -webkit-appearance: none; }
+    .bud-in::-webkit-inner-spin-button,
+    .bud-in::-webkit-outer-spin-button { -webkit-appearance: none; }
 
-    .bud-right {
-      margin-left: auto;
-      text-align: right;
-      padding-bottom: 8px;
-    }
+    .bud-right { margin-left: auto; text-align: right; padding-bottom: 10px; }
+    .bud-per  { font-size: 10px; letter-spacing: 0.25em; text-transform: uppercase; color: var(--cream-dimmer); }
+    .cur-name { font-size: 11px; color: var(--amber); font-weight: 500; margin-top: 4px; min-height: 14px; letter-spacing: 0.08em; }
 
-    .bud-per   { font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-dimmer); }
-    .cur-name  { font-size: 12px; color: var(--accent); font-weight: 500; margin-top: 4px; min-height: 16px; }
-
-    /* ── TEXT INPUT ──────────────────────────────────────────── */
+    /* ── TEXT INPUT ──────────────────────────────────────────────── */
     .txt-in {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 15px;
-      font-weight: 400;
-      color: var(--text);
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 2px;
-      padding: 14px 16px;
-      width: 100%;
-      outline: none;
-      transition: all 0.2s;
-      letter-spacing: 0.02em;
+      font-family: 'Barlow', sans-serif;
+      font-size: 16px; font-weight: 400; color: var(--cream);
+      background: rgba(240,232,216,0.04);
+      border: 1px solid rgba(240,232,216,0.08);
+      padding: 14px 16px; width: 100%; outline: none;
+      transition: all 0.2s; letter-spacing: 0.03em;
     }
 
     .txt-in:focus {
-      background: rgba(255,255,255,0.08);
-      border-color: rgba(232,197,71,0.5);
+      background: rgba(212,130,42,0.07);
+      border-color: rgba(212,130,42,0.4);
     }
 
-    .txt-in::placeholder { color: var(--text-dimmer); }
+    .txt-in::placeholder { color: var(--cream-dimmer); font-weight: 300; }
 
     .field-hint {
-      font-size: 11px;
-      letter-spacing: 0.12em;
-      color: var(--text-dimmer);
-      margin-top: 10px;
-      min-height: 15px;
+      font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--cream-dimmer); margin-top: 10px; min-height: 14px;
       transition: color 0.2s;
-      text-transform: uppercase;
     }
 
-    /* ── PILLS ───────────────────────────────────────────────── */
+    /* ── GRID ───────────────────────────────────────────────────── */
+    .two { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; margin-bottom: 0; }
+    .two .field { margin-bottom: 0; }
+
+    /* ── PILLS ──────────────────────────────────────────────────── */
     .pills { display: flex; flex-wrap: wrap; gap: 6px; }
 
     .pill {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 11px;
-      font-weight: 500;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
+      font-family: 'Barlow', sans-serif;
+      font-size: 11px; font-weight: 500;
+      letter-spacing: 0.1em; text-transform: uppercase;
       padding: 8px 14px;
-      border: 1px solid rgba(255,255,255,0.12);
-      background: rgba(255,255,255,0.04);
-      color: var(--text-dim);
-      cursor: pointer;
-      transition: all 0.15s;
-      border-radius: 1px;
-      user-select: none;
+      border: 1px solid rgba(240,232,216,0.1);
+      background: rgba(240,232,216,0.03);
+      color: var(--cream-dimmer);
+      cursor: pointer; transition: all 0.15s; user-select: none;
     }
 
-    .pill:hover     { border-color: rgba(232,197,71,0.4); color: var(--accent); background: rgba(232,197,71,0.05); }
-    .pill.on        { background: rgba(232,197,71,0.15); border-color: var(--accent); color: var(--accent); }
-    .pill.multi.on  { background: rgba(200,240,160,0.12); border-color: var(--accent2); color: var(--accent2); }
-    .pill.multi:hover { border-color: rgba(200,240,160,0.5); color: var(--accent2); background: rgba(200,240,160,0.06); }
-    .pill.al.on     { background: var(--red-glass); border-color: var(--red-border); color: #FF8080; }
-    .pill.al:hover  { border-color: rgba(255,100,100,0.5); color: #FF8080; }
+    .pill:hover { border-color: rgba(212,130,42,0.4); color: var(--amber); background: rgba(212,130,42,0.05); }
+    .pill.on    { background: rgba(212,130,42,0.18); border-color: var(--amber); color: var(--amber-lt); }
+    .pill.mul.on { background: rgba(100,180,60,0.12); border-color: rgba(120,200,80,0.5); color: #A8E880; }
+    .pill.mul:hover { border-color: rgba(120,200,80,0.4); color: #A8E880; }
+    .pill.al.on  { background: var(--red-a); border-color: var(--red-b); color: #FF9090; }
+    .pill.al:hover { border-color: rgba(220,100,80,0.4); color: #FF9090; }
 
-    /* ── TWO COL ─────────────────────────────────────────────── */
-    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; margin-bottom: 0; }
-    .two-col .glass { margin-bottom: 0; }
+    /* ── ALLERGY INPUT ───────────────────────────────────────────── */
+    .a-row { display: flex; gap: 8px; margin-top: 12px; }
 
-    /* ── ALLERGY INPUT ───────────────────────────────────────── */
-    .a-input-row { display: flex; gap: 8px; margin-top: 12px; }
-
-    .a-input-row input {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 12px;
-      color: var(--text);
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 1px;
-      padding: 9px 13px;
-      flex: 1; outline: none;
-      transition: border-color 0.2s;
-      letter-spacing: 0.05em;
+    .a-row input {
+      font-family: 'Barlow', sans-serif;
+      font-size: 13px; color: var(--cream);
+      background: rgba(240,232,216,0.04);
+      border: 1px solid rgba(240,232,216,0.08);
+      padding: 9px 13px; flex: 1; outline: none; transition: border-color 0.2s;
     }
 
-    .a-input-row input:focus { border-color: rgba(255,100,100,0.5); }
-    .a-input-row input::placeholder { color: var(--text-dimmer); }
+    .a-row input:focus { border-color: rgba(220,80,60,0.4); }
+    .a-row input::placeholder { color: var(--cream-dimmer); }
 
-    .a-add {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 11px; font-weight: 600;
-      letter-spacing: 0.15em; text-transform: uppercase;
-      padding: 9px 14px;
-      background: var(--red-glass);
-      border: 1px solid var(--red-border);
-      color: #FF9090; cursor: pointer;
-      border-radius: 1px; transition: all 0.15s;
-      white-space: nowrap;
+    .a-add-btn {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 13px; font-weight: 700; letter-spacing: 0.15em;
+      padding: 9px 16px; background: var(--red-a);
+      border: 1px solid var(--red-b); color: #FF9090;
+      cursor: pointer; transition: all 0.15s; text-transform: uppercase;
     }
 
-    .a-add:hover { background: rgba(220,60,60,0.35); }
+    .a-add-btn:hover { background: rgba(200,60,40,0.35); }
 
     .a-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
 
     .a-tag {
-      font-size: 11px; font-weight: 500;
-      letter-spacing: 0.1em; text-transform: uppercase;
+      font-size: 10px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase;
       padding: 5px 10px 5px 12px;
-      background: var(--red-glass); border: 1px solid var(--red-border);
-      color: #FF8080; display: flex; align-items: center; gap: 6px;
-      cursor: pointer; transition: all 0.15s; border-radius: 1px;
+      background: var(--red-a); border: 1px solid var(--red-b);
+      color: #FF9090; display: flex; align-items: center; gap: 7px;
+      cursor: pointer; transition: all 0.15s;
     }
 
-    .a-tag:hover { background: rgba(220,60,60,0.35); }
-    .a-tag-x { font-size: 14px; font-weight: 700; }
+    .a-tag:hover { background: rgba(200,60,40,0.35); }
+    .a-tag-x { font-size: 15px; font-weight: 700; }
 
-    /* ── ADVANCED TOGGLE ─────────────────────────────────────── */
+    /* ── ADVANCED ───────────────────────────────────────────────── */
     .adv-btn {
-      width: 100%;
-      padding: 16px 28px;
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.08);
-      color: var(--text-dim);
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 11px; font-weight: 500;
+      width: 100%; padding: 18px 24px;
+      background: rgba(240,232,216,0.03);
+      border: 1px solid rgba(240,232,216,0.08);
+      color: var(--cream-dimmer);
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 14px; font-weight: 700;
       letter-spacing: 0.2em; text-transform: uppercase;
-      cursor: pointer;
-      display: flex; align-items: center; justify-content: space-between;
-      margin-bottom: 2px;
-      transition: all 0.2s;
-      border-radius: 1px;
+      cursor: pointer; display: flex; align-items: center; justify-content: space-between;
+      transition: all 0.2s; margin-bottom: 1px;
     }
 
-    .adv-btn:hover  { border-color: rgba(232,197,71,0.3); color: var(--accent); }
-    .adv-btn.open   { border-color: rgba(232,197,71,0.3); color: var(--accent); border-bottom-color: transparent; margin-bottom: 0; }
+    .adv-btn:hover { border-color: rgba(212,130,42,0.3); color: var(--amber); }
+    .adv-btn.open  { border-color: rgba(212,130,42,0.3); color: var(--amber); border-bottom-color: transparent; margin-bottom: 0; }
 
     .adv-body {
-      background: rgba(255,255,255,0.03);
-      border: 1px solid rgba(232,197,71,0.2);
-      border-top: none;
-      padding: 4px 0 0;
-      display: none;
-      margin-bottom: 2px;
+      background: rgba(212,130,42,0.03);
+      border: 1px solid rgba(212,130,42,0.2); border-top: none;
+      display: none; margin-bottom: 1px;
     }
 
-    .adv-body .glass { border-radius: 0; margin-bottom: 0; border: none; border-bottom: 1px solid rgba(255,255,255,0.04); }
-    .adv-body .glass:last-child { border-bottom: none; }
+    .adv-body .field { border: none; border-bottom: 1px solid rgba(240,232,216,0.05); }
+    .adv-body .field:last-child { border-bottom: none; }
 
-    /* Macro sliders */
+    /* Macros */
     .macro-grid { display: flex; flex-direction: column; gap: 16px; }
-
     .macro-row  { display: flex; align-items: center; gap: 14px; }
-
-    .macro-lbl  {
-      font-size: 11px; font-weight: 500;
-      letter-spacing: 0.15em; text-transform: uppercase;
-      color: var(--text-dim); width: 80px; flex-shrink: 0;
-    }
+    .macro-lbl  { font-size: 10px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: var(--cream-dimmer); width: 72px; flex-shrink: 0; }
 
     input[type=range] {
       flex: 1; height: 2px; cursor: pointer;
-      -webkit-appearance: none;
-      background: rgba(255,255,255,0.1);
-      border-radius: 1px; outline: none;
+      -webkit-appearance: none; background: rgba(240,232,216,0.08); outline: none;
     }
-
     input[type=range]::-webkit-slider-thumb {
-      -webkit-appearance: none;
-      width: 14px; height: 14px;
-      border-radius: 50%;
-      background: var(--accent);
-      cursor: pointer;
-      box-shadow: 0 0 8px rgba(232,197,71,0.5);
+      -webkit-appearance: none; width: 14px; height: 14px; border-radius: 50%;
+      background: var(--amber); cursor: pointer;
+      box-shadow: 0 0 10px rgba(212,130,42,0.5);
     }
 
     .macro-val {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 20px; color: var(--accent);
-      width: 44px; text-align: right;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 22px; font-weight: 800; color: var(--amber);
+      width: 44px; text-align: right; letter-spacing: 0.02em;
     }
 
-    .macro-note {
-      font-size: 11px; color: var(--text-dimmer);
-      letter-spacing: 0.08em; margin-top: 12px;
+    .macro-note { font-size: 10px; color: var(--cream-dimmer); letter-spacing: 0.12em; margin-top: 12px; }
+
+    /* ── SAMPLE PLAN ─────────────────────────────────────────────── */
+    .sample-btn {
+      width: 100%; padding: 16px 24px;
+      background: rgba(240,232,216,0.03);
+      border: 1px solid rgba(240,232,216,0.08);
+      color: var(--cream-dimmer);
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 13px; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase;
+      cursor: pointer; display: flex; align-items: center; justify-content: space-between;
+      transition: all 0.2s; margin-bottom: 1px;
     }
 
-    /* ── SAMPLE PLAN ─────────────────────────────────────────── */
-    .sample-wrap {
-      margin-bottom: 2px;
+    .sample-btn:hover { border-color: rgba(212,130,42,0.3); color: var(--amber); }
+
+    .sample-body { display: none; border: 1px solid rgba(240,232,216,0.06); border-top: none; }
+
+    .s-meal {
+      display: flex; align-items: center; gap: 16px;
+      padding: 16px 24px;
+      border-bottom: 1px solid rgba(240,232,216,0.04);
+      background: rgba(240,232,216,0.02);
+      transition: background 0.15s;
     }
 
-    .sample-toggle-btn {
-      width: 100%;
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.08);
-      color: var(--text-dim);
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 11px; font-weight: 500;
-      letter-spacing: 0.2em; text-transform: uppercase;
-      padding: 14px 28px;
-      cursor: pointer;
-      display: flex; align-items: center; justify-content: space-between;
-      transition: all 0.2s; border-radius: 1px;
-    }
+    .s-meal:last-of-type { border-bottom: none; }
+    .s-meal:hover { background: rgba(240,232,216,0.04); }
 
-    .sample-toggle-btn:hover { border-color: rgba(232,197,71,0.3); color: var(--accent); }
-
-    .sample-body { display: none; }
-
-    .sample-meal {
-      display: flex; align-items: center; gap: 14px;
-      padding: 14px 28px;
-      border-bottom: 1px solid rgba(255,255,255,0.04);
-      background: rgba(255,255,255,0.03);
-    }
-
-    .s-icon { font-size: 20px; flex-shrink: 0; }
+    .s-ico  { font-size: 22px; flex-shrink: 0; }
     .s-info { flex: 1; }
-    .s-type { font-size: 9px; font-weight: 500; letter-spacing: 0.25em; text-transform: uppercase; color: var(--text-dimmer); }
-    .s-name { font-size: 14px; font-weight: 500; color: var(--text); margin: 3px 0; }
-    .s-meta { font-size: 11px; color: var(--text-dimmer); letter-spacing: 0.05em; }
-    .s-cost { font-family: 'Bebas Neue', sans-serif; font-size: 22px; color: var(--accent); }
+    .s-type { font-size: 9px; font-weight: 600; letter-spacing: 0.3em; text-transform: uppercase; color: var(--amber); }
+    .s-name { font-size: 15px; font-weight: 500; color: var(--cream); margin: 3px 0; }
+    .s-meta { font-size: 12px; color: var(--cream-dimmer); letter-spacing: 0.04em; }
+    .s-cost {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 26px; font-weight: 800; color: var(--amber); letter-spacing: 0.02em;
+    }
 
     .s-note {
-      font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase;
-      color: var(--text-dimmer); text-align: center;
-      padding: 14px 28px;
-      background: rgba(255,255,255,0.02);
-      border-top: 1px solid rgba(255,255,255,0.04);
+      font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--cream-dimmer); text-align: center;
+      padding: 14px 24px; background: rgba(240,232,216,0.02);
+      border-top: 1px solid rgba(240,232,216,0.04);
     }
 
-    /* ── GENERATE BUTTON ─────────────────────────────────────── */
+    /* ── GENERATE BUTTON — big ORYZO CTA ────────────────────────── */
+    .gen-wrap { margin-top: 32px; }
+
     .gen-btn {
-      width: 100%;
-      padding: 22px;
-      background: var(--accent);
-      color: #0A0A08;
+      width: 100%; padding: 26px;
+      background: var(--amber);
+      color: #0E0A07;
       border: none;
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 22px;
-      letter-spacing: 0.2em;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 24px; font-weight: 900;
+      letter-spacing: 0.2em; text-transform: uppercase;
       cursor: pointer;
-      margin-top: 24px;
-      margin-bottom: 16px;
       transition: all 0.2s;
-      display: flex; align-items: center; justify-content: center; gap: 10px;
-      border-radius: 1px;
+      display: flex; align-items: center; justify-content: center; gap: 12px;
     }
 
     .gen-btn:hover:not(:disabled) {
-      background: #F5D860;
-      box-shadow: 0 8px 40px rgba(232,197,71,0.4);
-      transform: translateY(-1px);
+      background: var(--amber-lt);
+      box-shadow: 0 0 60px rgba(212,130,42,0.35);
     }
 
-    .gen-btn:active:not(:disabled) { transform: scale(0.99); }
-    .gen-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+    .gen-btn:active:not(:disabled) { transform: scale(0.995); }
+    .gen-btn:disabled { opacity: 0.25; cursor: not-allowed; }
 
-    /* ── STATUS ──────────────────────────────────────────────── */
-    .status-wrap {
-      text-align: center;
-      padding: 40px 20px;
-      display: none;
+    /* ── STATUS ──────────────────────────────────────────────────── */
+    .status-wrap { display: none; text-align: center; padding: 60px 0; }
+
+    .status-ico {
+      font-size: 48px; display: block; margin-bottom: 20px;
+      animation: float 3s ease-in-out infinite;
     }
 
-    .status-icon { font-size: 40px; display: block; margin-bottom: 16px; animation: pulse 2s ease-in-out infinite; }
-
-    @keyframes pulse {
-      0%, 100% { opacity: 1; transform: scale(1); }
-      50%       { opacity: 0.6; transform: scale(0.95); }
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50%       { transform: translateY(-10px); }
     }
 
-    .status-title {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 28px; letter-spacing: 0.1em;
-      color: var(--text); margin-bottom: 8px;
+    .status-h {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 36px; font-weight: 900; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--cream); margin-bottom: 8px;
     }
 
-    .status-sub { font-size: 12px; color: var(--text-dimmer); letter-spacing: 0.1em; text-transform: uppercase; }
+    .status-s { font-size: 12px; color: var(--cream-dimmer); letter-spacing: 0.15em; text-transform: uppercase; }
 
-    .progress-wrap { margin-top: 24px; height: 1px; background: rgba(255,255,255,0.08); }
-    .progress-fill { height: 100%; background: var(--accent); transition: width 0.3s ease; width: 0%; }
+    .prog-wrap { margin-top: 28px; height: 1px; background: rgba(240,232,216,0.06); }
+    .prog-fill { height: 100%; background: var(--amber); transition: width 0.3s; width: 0%; }
 
-    /* ── ERROR / WARN ────────────────────────────────────────── */
+    /* ── ALERTS ──────────────────────────────────────────────────── */
     .err-box {
-      background: var(--red-glass); border: 1px solid var(--red-border);
+      background: var(--red-a); border: 1px solid var(--red-b);
       color: #FF9090; padding: 16px 20px;
-      font-size: 13px; font-weight: 500;
-      letter-spacing: 0.03em; margin-bottom: 16px; display: none;
-      border-radius: 1px;
+      font-size: 13px; font-weight: 500; letter-spacing: 0.03em;
+      margin-bottom: 16px; display: none;
     }
 
     .warn-box {
-      background: rgba(200,160,20,0.15); border: 1px solid rgba(232,197,71,0.3);
-      color: var(--accent); padding: 14px 20px;
-      font-size: 12px; font-weight: 500;
-      letter-spacing: 0.05em; margin-bottom: 12px; display: none;
-      border-radius: 1px;
+      background: rgba(212,130,42,0.1); border: 1px solid rgba(212,130,42,0.3);
+      color: var(--amber); padding: 14px 20px;
+      font-size: 12px; font-weight: 500; letter-spacing: 0.06em;
+      margin-bottom: 12px; display: none;
     }
 
-    /* ── RESULTS ─────────────────────────────────────────────── */
+    /* ── RESULTS ─────────────────────────────────────────────────── */
     #results { display: none; }
 
+    /* Big cinematic results header — ORYZO style */
     .res-hero {
-      padding: 48px 0 32px;
-      border-bottom: 1px solid rgba(255,255,255,0.06);
-      margin-bottom: 4px;
+      min-height: 50vh;
+      display: flex; flex-direction: column; justify-content: flex-end;
+      padding-bottom: 40px;
+      border-bottom: 1px solid rgba(240,232,216,0.06);
+      margin-bottom: 1px;
+      position: relative;
     }
 
-    .res-eyebrow {
-      font-size: 10px; letter-spacing: 0.3em; text-transform: uppercase;
-      color: var(--accent); margin-bottom: 12px;
+    .res-atmo {
+      position: absolute; inset: 0; pointer-events: none;
+      background: radial-gradient(ellipse 80% 60% at 70% 40%, rgba(160,80,20,0.3) 0%, transparent 65%);
+    }
+
+    .res-over {
+      font-size: 10px; font-weight: 600;
+      letter-spacing: 0.4em; text-transform: uppercase;
+      color: var(--amber); margin-bottom: 16px;
+      position: relative;
     }
 
     .res-title {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: clamp(48px, 10vw, 80px);
-      line-height: 0.9; letter-spacing: 0.02em;
-      color: var(--text); margin-bottom: 20px;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: clamp(52px, 12vw, 100px);
+      font-weight: 900; text-transform: uppercase;
+      letter-spacing: -0.01em; line-height: 0.88;
+      color: var(--cream); margin-bottom: 28px;
+      position: relative;
     }
 
-    .res-title span { color: var(--accent); }
+    .res-title span { color: var(--amber); }
 
-    .res-meta-row {
-      display: flex; align-items: center; gap: 24px; flex-wrap: wrap;
+    .res-stats {
+      display: flex; gap: 0; position: relative;
+      border-top: 1px solid rgba(240,232,216,0.08); padding-top: 24px;
     }
 
     .res-stat {
-      display: flex; flex-direction: column; gap: 3px;
+      flex: 1; padding-right: 28px; border-right: 1px solid rgba(240,232,216,0.08);
+      margin-right: 28px;
     }
 
-    .res-stat-label { font-size: 9px; letter-spacing: 0.25em; text-transform: uppercase; color: var(--text-dimmer); }
-    .res-stat-value { font-family: 'Bebas Neue', sans-serif; font-size: 28px; color: var(--text); letter-spacing: 0.05em; }
-    .res-stat-value.accent { color: var(--accent); }
+    .res-stat:last-child { border-right: none; margin-right: 0; }
 
-    .res-divider { width: 1px; height: 40px; background: rgba(255,255,255,0.08); }
+    .res-stat-l { font-size: 9px; font-weight: 600; letter-spacing: 0.3em; text-transform: uppercase; color: var(--cream-dimmer); margin-bottom: 5px; }
 
-    /* Budget badge */
+    .res-stat-v {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 30px; font-weight: 900; letter-spacing: 0.02em; color: var(--cream);
+    }
+
+    .res-stat-v.a { color: var(--amber); }
+
     .budget-badge {
       display: inline-flex; align-items: center; gap: 8px;
       padding: 10px 16px; margin-top: 20px;
-      font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase;
-      border-radius: 1px;
+      font-size: 10px; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase;
     }
 
-    .budget-badge.ok   { background: var(--green-glass); border: 1px solid var(--green-border); color: var(--accent2); }
-    .budget-badge.over { background: var(--red-glass); border: 1px solid var(--red-border); color: #FF9090; }
+    .budget-badge.ok   { background: var(--green-a); border: 1px solid var(--green-b); color: #A8E880; }
+    .budget-badge.over { background: var(--red-a); border: 1px solid var(--red-b); color: #FF9090; }
 
-    /* Action buttons */
-    .act-row { display: flex; gap: 4px; margin-top: 20px; }
+    .act-row { display: flex; gap: 1px; margin-top: 20px; }
 
     .act-btn {
-      flex: 1; padding: 12px;
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.1);
-      color: var(--text-dim);
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 11px; font-weight: 500;
-      letter-spacing: 0.15em; text-transform: uppercase;
+      flex: 1; padding: 13px;
+      background: rgba(240,232,216,0.04);
+      border: 1px solid rgba(240,232,216,0.09);
+      color: var(--cream-dimmer);
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 13px; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase;
       cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px;
-      transition: all 0.15s; border-radius: 1px;
+      transition: all 0.15s;
     }
 
-    .act-btn:hover { border-color: rgba(232,197,71,0.4); color: var(--accent); }
-    .act-btn.done  { background: var(--green-glass); border-color: var(--green-border); color: var(--accent2); }
+    .act-btn:hover { border-color: rgba(212,130,42,0.4); color: var(--amber); }
+    .act-btn.done  { background: var(--green-a); border-color: var(--green-b); color: #A8E880; }
 
     /* Day block */
-    .day-block { margin-bottom: 4px; }
+    .day-block { margin-bottom: 1px; }
 
     .day-head {
       display: flex; align-items: center; justify-content: space-between;
-      padding: 12px 0;
-      border-bottom: 1px solid rgba(255,255,255,0.06);
-      margin-bottom: 4px;
+      padding: 14px 0; border-bottom: 1px solid rgba(240,232,216,0.06); margin-bottom: 1px;
     }
 
     .day-name {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 22px; letter-spacing: 0.1em; color: var(--accent);
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 20px; font-weight: 900; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--amber);
     }
 
-    .day-info { font-size: 11px; color: var(--text-dimmer); letter-spacing: 0.1em; text-transform: uppercase; }
+    .day-info { font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--cream-dimmer); }
 
-    .meals { display: flex; flex-direction: column; gap: 2px; margin-bottom: 4px; }
+    .meals { display: flex; flex-direction: column; gap: 1px; margin-bottom: 1px; }
 
-    /* ── MEAL CARD ───────────────────────────────────────────── */
+    /* ── MEAL CARD — cinematic ───────────────────────────────────── */
     .meal-card {
       background: var(--glass);
-      border: 1px solid var(--glass-border);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      overflow: hidden;
-      transition: background 0.2s;
-      border-radius: 1px;
+      border: 1px solid var(--glass-bd);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      overflow: hidden; transition: background 0.2s;
     }
 
-    .meal-card:hover { background: var(--glass-hover); }
-    .meal-card.flagged { border-color: rgba(255,100,100,0.3); }
+    .meal-card:hover { background: rgba(240,232,216,0.09); }
+    .meal-card.flagged { border-color: rgba(220,80,60,0.3); }
 
-    .meal-head {
-      display: flex; gap: 14px; align-items: flex-start;
-      padding: 18px 20px 14px;
-    }
+    .meal-head { display: flex; gap: 16px; align-items: flex-start; padding: 20px 20px 14px; }
 
     .meal-ico {
-      width: 48px; height: 48px;
+      width: 52px; height: 52px;
       display: flex; align-items: center; justify-content: center;
-      font-size: 24px; flex-shrink: 0;
-      background: rgba(255,255,255,0.06);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 1px;
+      font-size: 26px; flex-shrink: 0;
+      background: rgba(240,232,216,0.05);
+      border: 1px solid rgba(240,232,216,0.07);
     }
 
     .meal-info { flex: 1; min-width: 0; }
 
-    .meal-type-lbl {
-      font-size: 9px; font-weight: 500;
-      letter-spacing: 0.3em; text-transform: uppercase;
-      color: var(--accent); margin-bottom: 4px;
+    .meal-type-l {
+      font-size: 9px; font-weight: 600;
+      letter-spacing: 0.35em; text-transform: uppercase;
+      color: var(--amber); margin-bottom: 5px;
     }
 
     .meal-name {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 22px; letter-spacing: 0.04em;
-      color: var(--text); margin-bottom: 6px; line-height: 1;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 24px; font-weight: 800; letter-spacing: 0.02em;
+      text-transform: uppercase; color: var(--cream);
+      margin-bottom: 6px; line-height: 1;
     }
 
-    .meal-desc { font-size: 13px; color: var(--text-dim); line-height: 1.55; margin-bottom: 10px; font-weight: 300; }
+    .meal-desc { font-size: 13px; font-weight: 300; color: var(--cream-dim); line-height: 1.6; margin-bottom: 10px; }
 
     .meal-tags { display: flex; flex-wrap: wrap; gap: 4px; }
 
     .tag {
-      font-size: 10px; font-weight: 500;
-      letter-spacing: 0.1em; text-transform: uppercase;
+      font-size: 9px; font-weight: 600;
+      letter-spacing: 0.15em; text-transform: uppercase;
       padding: 4px 10px;
-      border: 1px solid rgba(255,255,255,0.08);
-      background: rgba(255,255,255,0.04);
-      color: var(--text-dimmer);
-      border-radius: 1px;
+      border: 1px solid rgba(240,232,216,0.07);
+      background: rgba(240,232,216,0.03);
+      color: var(--cream-dimmer);
     }
 
-    .tag.blue { border-color: rgba(100,160,255,0.3); color: #88AAFF; background: rgba(100,160,255,0.08); }
-    .tag.warn { border-color: rgba(255,100,100,0.3); color: #FF9090; }
-    .tag.macro { border-color: rgba(255,255,255,0.06); color: var(--text-dimmer); }
+    .tag.b { border-color: rgba(100,160,255,0.25); color: #88AAFF; background: rgba(100,160,255,0.06); }
+    .tag.w { border-color: rgba(220,80,60,0.3); color: #FF9090; }
+    .tag.m { border-color: rgba(240,232,216,0.06); color: var(--cream-dimmer); }
 
     .meal-price {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 28px; color: var(--accent);
-      white-space: nowrap; padding-top: 4px;
-      letter-spacing: 0.05em;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 30px; font-weight: 900; color: var(--amber);
+      white-space: nowrap; padding-top: 4px; letter-spacing: 0.03em;
     }
 
     /* Ingredients */
     .meal-ings {
-      border-top: 1px solid rgba(255,255,255,0.06);
-      padding: 14px 20px;
-      background: rgba(0,0,0,0.1);
+      border-top: 1px solid rgba(240,232,216,0.05);
+      padding: 14px 20px; background: rgba(0,0,0,0.15);
     }
 
-    .strip-lbl {
-      font-size: 9px; font-weight: 500;
-      letter-spacing: 0.25em; text-transform: uppercase;
-      color: var(--text-dimmer); margin-bottom: 10px;
+    .strip-l {
+      font-size: 9px; font-weight: 600;
+      letter-spacing: 0.3em; text-transform: uppercase;
+      color: var(--cream-dimmer); margin-bottom: 10px;
     }
 
     .ing-list { display: flex; flex-wrap: wrap; gap: 5px; }
 
     .ing {
-      font-size: 11px; font-weight: 400;
+      font-size: 11px; font-weight: 400; letter-spacing: 0.04em;
       padding: 5px 11px;
-      background: rgba(232,197,71,0.07);
-      border: 1px solid rgba(232,197,71,0.2);
-      color: rgba(232,197,71,0.8);
-      letter-spacing: 0.03em;
-      border-radius: 1px;
+      background: rgba(212,130,42,0.08);
+      border: 1px solid rgba(212,130,42,0.22);
+      color: rgba(232,168,74,0.9);
     }
 
     /* Steps */
-    .meal-steps {
-      border-top: 1px solid rgba(255,255,255,0.06);
-      padding: 16px 20px;
-    }
+    .meal-steps { border-top: 1px solid rgba(240,232,216,0.05); padding: 16px 20px; }
 
     .steps-list { display: flex; flex-direction: column; }
 
     .step-row {
       display: flex; gap: 14px; align-items: flex-start;
-      position: relative; padding-bottom: 16px;
+      position: relative; padding-bottom: 14px;
     }
 
     .step-row:last-child { padding-bottom: 0; }
 
     .step-row:not(:last-child)::before {
-      content: '';
-      position: absolute; left: 13px; top: 30px; bottom: 0;
-      width: 1px;
-      background: linear-gradient(to bottom, rgba(232,197,71,0.3), transparent);
+      content: ''; position: absolute;
+      left: 13px; top: 28px; bottom: 0; width: 1px;
+      background: linear-gradient(to bottom, rgba(212,130,42,0.4), transparent);
     }
 
-    .step-num {
+    .step-n {
       width: 28px; height: 28px;
-      background: rgba(232,197,71,0.15);
-      border: 1px solid rgba(232,197,71,0.3);
-      color: var(--accent);
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 14px; letter-spacing: 0.05em;
+      background: rgba(212,130,42,0.12);
+      border: 1px solid rgba(212,130,42,0.35);
+      color: var(--amber);
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 16px; font-weight: 800; letter-spacing: 0.05em;
       display: flex; align-items: center; justify-content: center;
       flex-shrink: 0; position: relative; z-index: 1;
-      border-radius: 1px;
     }
 
-    .step-body  { flex: 1; padding-top: 4px; }
-    .step-text  { font-size: 13px; font-weight: 400; color: var(--text-dim); line-height: 1.6; letter-spacing: 0.02em; }
+    .step-body { flex: 1; padding-top: 4px; }
+    .step-txt  { font-size: 13px; font-weight: 300; color: var(--cream-dim); line-height: 1.65; letter-spacing: 0.02em; }
 
-    /* Shopping list */
+    /* Shopping */
     .shop-card {
-      background: rgba(80,160,80,0.06);
-      border: 1px solid rgba(120,200,120,0.15);
-      padding: 24px;
-      margin-top: 4px;
-      border-radius: 1px;
+      background: rgba(60,140,60,0.06);
+      border: 1px solid rgba(100,180,60,0.15);
+      padding: 28px; margin-top: 1px;
     }
 
     .shop-title {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 28px; letter-spacing: 0.08em;
-      color: var(--accent2); margin-bottom: 20px;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 32px; font-weight: 900; letter-spacing: 0.06em;
+      text-transform: uppercase; color: #A8E880; margin-bottom: 22px;
     }
 
     .shop-cat { margin-bottom: 16px; }
     .shop-cat:last-child { margin-bottom: 0; }
 
-    .shop-cat-lbl {
-      font-size: 9px; font-weight: 500;
-      letter-spacing: 0.25em; text-transform: uppercase;
-      color: rgba(200,240,160,0.4); margin-bottom: 8px;
+    .shop-cat-l {
+      font-size: 9px; font-weight: 600; letter-spacing: 0.3em;
+      text-transform: uppercase; color: rgba(168,232,128,0.4); margin-bottom: 8px;
     }
 
     .shop-items { display: flex; flex-wrap: wrap; gap: 5px; }
 
     .shop-item {
-      font-size: 12px; font-weight: 400;
+      font-size: 12px; font-weight: 400; letter-spacing: 0.04em;
       padding: 7px 13px;
-      background: rgba(200,240,160,0.06);
-      border: 1px solid rgba(200,240,160,0.15);
-      color: rgba(200,240,160,0.8);
-      display: flex; align-items: center; gap: 7px;
-      letter-spacing: 0.03em; transition: all 0.15s;
-      border-radius: 1px;
+      background: rgba(168,232,128,0.05);
+      border: 1px solid rgba(168,232,128,0.14);
+      color: rgba(168,232,128,0.75);
+      display: flex; align-items: center; gap: 8px; transition: all 0.15s;
     }
 
-    .shop-item:hover { background: rgba(200,240,160,0.12); border-color: rgba(200,240,160,0.3); }
+    .shop-item:hover { background: rgba(168,232,128,0.1); border-color: rgba(168,232,128,0.25); }
+    .shop-item::before { content: ''; width: 4px; height: 4px; border-radius: 50%; background: #A8E880; flex-shrink: 0; }
 
-    .shop-item::before {
-      content: ''; width: 4px; height: 4px;
-      border-radius: 50%; background: var(--accent2); flex-shrink: 0;
-    }
-
-    /* Stores card */
+    /* Stores */
     .stores-card {
-      background: rgba(100,160,255,0.06);
-      border: 1px solid rgba(100,160,255,0.15);
-      padding: 20px; margin-top: 4px;
-      border-radius: 1px;
+      background: rgba(100,160,255,0.05);
+      border: 1px solid rgba(100,160,255,0.14);
+      padding: 22px; margin-top: 1px;
     }
 
     .stores-title {
-      font-size: 10px; font-weight: 500;
-      letter-spacing: 0.25em; text-transform: uppercase;
+      font-size: 9px; font-weight: 600;
+      letter-spacing: 0.3em; text-transform: uppercase;
       color: #88AAFF; margin-bottom: 10px;
     }
 
-    .stores-text { font-size: 13px; color: var(--text-dim); line-height: 1.65; font-weight: 300; }
+    .stores-txt { font-size: 13px; font-weight: 300; color: var(--cream-dim); line-height: 1.65; }
 
     .store-chip {
-      display: inline-block; font-size: 11px; font-weight: 500;
+      display: inline-block; font-size: 10px; font-weight: 600; letter-spacing: 0.1em;
       padding: 3px 9px;
-      background: rgba(100,160,255,0.1);
-      border: 1px solid rgba(100,160,255,0.2);
+      background: rgba(100,160,255,0.08);
+      border: 1px solid rgba(100,160,255,0.18);
       color: #88AAFF; margin: 2px;
-      letter-spacing: 0.05em; border-radius: 1px;
     }
 
     /* Tip */
     .tip-card {
-      background: rgba(232,197,71,0.06);
-      border: 1px solid rgba(232,197,71,0.15);
-      padding: 18px 20px; margin-top: 4px;
+      background: rgba(212,130,42,0.07);
+      border: 1px solid rgba(212,130,42,0.18);
+      padding: 18px 22px; margin-top: 1px;
       font-size: 13px; font-weight: 300;
-      color: rgba(232,197,71,0.8);
-      line-height: 1.65; letter-spacing: 0.02em;
-      display: flex; align-items: flex-start; gap: 10px;
-      border-radius: 1px;
+      color: rgba(232,168,74,0.8); line-height: 1.7; letter-spacing: 0.02em;
+      display: flex; align-items: flex-start; gap: 12px;
     }
 
-    .tip-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+    .tip-arr {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 22px; color: var(--amber); flex-shrink: 0; margin-top: -2px;
+    }
 
     /* Spinner */
     @keyframes spin { to { transform: rotate(360deg); } }
     .spin {
       display: inline-block; width: 20px; height: 20px;
-      border: 2px solid rgba(10,10,8,0.3);
-      border-top-color: #0A0A08; border-radius: 50%;
+      border: 2px solid rgba(14,10,7,0.3);
+      border-top-color: #0E0A07; border-radius: 50%;
       animation: spin 0.65s linear infinite;
-      vertical-align: middle; margin-right: 8px;
+      vertical-align: middle; margin-right: 10px;
     }
 
     @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(14px); }
+      from { opacity: 0; transform: translateY(16px); }
       to   { opacity: 1; transform: translateY(0); }
     }
-    .fade { animation: fadeUp 0.4s ease forwards; }
+    .fade { animation: fadeUp 0.45s ease forwards; }
 
     /* Footer */
     footer {
-      text-align: center;
-      padding: 40px 0 20px;
-      border-top: 1px solid rgba(255,255,255,0.05);
-      margin-top: 60px;
+      border-top: 1px solid rgba(240,232,216,0.06);
+      margin-top: 80px; padding: 40px 0;
+      display: flex; align-items: center; justify-content: space-between;
     }
 
-    .footer-logo {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 20px; letter-spacing: 0.2em;
-      color: rgba(232,197,71,0.3);
-      margin-bottom: 8px;
+    .foot-logo {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 22px; font-weight: 900; letter-spacing: 0.3em;
+      text-transform: uppercase; color: rgba(240,232,216,0.2);
     }
 
-    .footer-text {
-      font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase;
-      color: var(--text-dimmer);
+    .foot-txt {
+      font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--cream-dimmer);
     }
 
     /* Mobile */
-    @media (max-width: 480px) {
-      .two-col { grid-template-columns: 1fr; }
-      .how-strip { flex-wrap: wrap; }
-      .how-divider { display: none; }
-      .bud-input { font-size: 56px; width: 160px; }
+    @media (max-width: 520px) {
+      .two { grid-template-columns: 1fr; }
+      .how { grid-template-columns: 1fr; }
+      .hero h1 { font-size: 64px; }
+      .hero-bottom { flex-direction: column; gap: 24px; }
+      .nav-links { display: none; }
     }
 
     @media print {
-      .bg-scene, .orb, nav, .gen-btn, .act-row, .adv-btn, .adv-body, .sample-wrap, .how-strip { display: none !important; }
+      .atmo,.grain,nav,.gen-wrap,.act-row,.adv-btn,.adv-body,.sample-btn,.sample-body,.how { display: none !important; }
       body { background: white; color: black; }
-      .glass, .meal-card { background: #f9f9f9 !important; border: 1px solid #ddd !important; }
     }
   </style>
 </head>
 <body>
 
-<!-- Background -->
-<div class="bg-scene"></div>
-<div class="orb orb1"></div>
-<div class="orb orb2"></div>
-<div class="orb orb3"></div>
+<div class="atmo"></div>
+<div class="grain"></div>
 
 <div class="page">
 
   <!-- NAV -->
   <nav>
     <div class="nav-logo">Mealzy</div>
-    <div class="nav-tag">Free · No account needed</div>
+    <div class="nav-links">
+      <a class="nav-link" href="#form">Plan</a>
+      <a class="nav-link" href="#results">Results</a>
+      <a class="nav-link" href="#" onclick="window.print()">Print</a>
+    </div>
   </nav>
 
   <!-- HERO -->
   <div class="hero">
-    <div class="hero-eyebrow">Personalised Meal Planning</div>
-    <h1>EAT WELL.<br/><span>SPEND LESS.</span></h1>
-    <p class="hero-sub">Enter your budget and preferences. Get a full meal plan with step-by-step recipes, exact quantities and a shopping list — in seconds.</p>
+    <div class="hero-visual"></div>
+    <div class="hero-overline">Personalised · Affordable · Instant</div>
+    <h1>
+      EAT WELL.<br/>
+      <span class="accent">SPEND</span><br/>
+      <span class="outline">LESS.</span>
+    </h1>
+    <div class="hero-bottom">
+      <p class="hero-desc">Enter your budget, diet and kitchen. Get a full meal plan with step-by-step recipes, exact quantities and a shopping list — in seconds.</p>
+      <div class="hero-scroll">Scroll to start</div>
+    </div>
   </div>
 
   <!-- HOW IT WORKS -->
-  <div class="how-strip">
+  <div class="how">
     <div class="how-item">
-      <div class="how-num">01</div>
-      <div class="how-label">Fill in your details</div>
+      <div class="how-n">01</div>
+      <div class="how-t">Fill in your<br/>preferences</div>
     </div>
-    <div class="how-divider"></div>
     <div class="how-item">
-      <div class="how-num">02</div>
-      <div class="how-label">Generate your plan</div>
+      <div class="how-n">02</div>
+      <div class="how-t">Generate your<br/>meal plan</div>
     </div>
-    <div class="how-divider"></div>
     <div class="how-item">
-      <div class="how-num">03</div>
-      <div class="how-label">Shop & cook</div>
+      <div class="how-n">03</div>
+      <div class="how-t">Shop, cook<br/>& save money</div>
     </div>
   </div>
 
-  <!-- SAMPLE PLAN -->
-  <div class="sample-wrap">
-    <button class="sample-toggle-btn" onclick="toggleSample()">
-      <span>View example output</span>
-      <span id="sBtn">+ Show</span>
-    </button>
-    <div class="sample-body" id="sBody">
-      <div class="sample-meal">
-        <span class="s-icon">🌅</span>
-        <div class="s-info">
-          <div class="s-type">Breakfast</div>
-          <div class="s-name">Oat porridge with banana & honey</div>
-          <div class="s-meta">⏱ 8–12 mins · 🔥 ~390 kcal · ⚖️ 350g · Stovetop</div>
+  <!-- EXAMPLE OUTPUT -->
+  <div class="sec-title">See an <span class="dim">Example</span></div>
+
+  <div class="sample-btn" onclick="toggleSample()">
+    <span>View example output — kr 100/day · Sweden · 3 meals</span>
+    <span id="sBtn">+ Show</span>
+  </div>
+  <div class="sample-body" id="sBody">
+    <div class="s-meal">
+      <span class="s-ico">🌅</span>
+      <div class="s-info">
+        <div class="s-type">Breakfast</div>
+        <div class="s-name">Oat porridge with banana & honey</div>
+        <div class="s-meta">8–12 mins · ~390 kcal · 350g · Stovetop</div>
+      </div>
+      <div class="s-cost">kr 14</div>
+    </div>
+    <div class="s-meal">
+      <span class="s-ico">☀️</span>
+      <div class="s-info">
+        <div class="s-type">Lunch</div>
+        <div class="s-name">Red lentil soup with rye crispbread</div>
+        <div class="s-meta">25–30 mins · ~510 kcal · 420g · Simmered</div>
+      </div>
+      <div class="s-cost">kr 24</div>
+    </div>
+    <div class="s-meal">
+      <span class="s-ico">🌙</span>
+      <div class="s-info">
+        <div class="s-type">Dinner</div>
+        <div class="s-name">Penne with tuna, tomato & spinach</div>
+        <div class="s-meta">20–25 mins · ~640 kcal · 450g · Boiled</div>
+      </div>
+      <div class="s-cost">kr 36</div>
+    </div>
+    <div class="s-note">Example only — your plan is built around your exact inputs</div>
+  </div>
+
+  <!-- FORM -->
+  <div id="form">
+    <div class="sec-title">Your <span class="a">Plan</span></div>
+
+    <!-- BUDGET -->
+    <div class="field">
+      <div class="field-lbl">Daily budget</div>
+      <div class="bud-row">
+        <span class="cur-sym" id="sym">€</span>
+        <input class="bud-in" type="number" id="budget" value="10" min="1" max="9999"/>
+        <div class="bud-right">
+          <div class="bud-per">per day</div>
+          <div class="cur-name" id="curName"></div>
         </div>
-        <div class="s-cost">kr 14</div>
       </div>
-      <div class="sample-meal">
-        <span class="s-icon">☀️</span>
-        <div class="s-info">
-          <div class="s-type">Lunch</div>
-          <div class="s-name">Red lentil soup with rye crispbread</div>
-          <div class="s-meta">⏱ 25–30 mins · 🔥 ~510 kcal · ⚖️ 420g · Simmered</div>
+    </div>
+
+    <!-- COUNTRY -->
+    <div class="field">
+      <div class="field-lbl">Your country</div>
+      <input class="txt-in" type="text" id="country"
+        placeholder="Sweden, Germany, USA, Japan..."
+        oninput="onCountry()" onchange="onCountry()" onblur="onCountry()"/>
+      <div class="field-hint" id="cHint">Enter your country — local prices & currency will be applied</div>
+    </div>
+
+    <!-- DURATION + MEALS -->
+    <div class="two">
+      <div class="field">
+        <div class="field-lbl">Duration</div>
+        <div class="pills" id="dur">
+          <span class="pill on" data-v="1">1 day</span>
+          <span class="pill" data-v="3">3 days</span>
+          <span class="pill" data-v="5">5 days</span>
+          <span class="pill" data-v="7">7 days</span>
         </div>
-        <div class="s-cost">kr 24</div>
       </div>
-      <div class="sample-meal">
-        <span class="s-icon">🌙</span>
-        <div class="s-info">
-          <div class="s-type">Dinner</div>
-          <div class="s-name">Penne with tuna, tomato & spinach</div>
-          <div class="s-meta">⏱ 20–25 mins · 🔥 ~640 kcal · ⚖️ 450g · Boiled</div>
+      <div class="field">
+        <div class="field-lbl">Meals per day</div>
+        <div class="pills" id="mpp">
+          <span class="pill" data-v="2">2</span>
+          <span class="pill on" data-v="3">3</span>
+          <span class="pill" data-v="4">4</span>
+          <span class="pill" data-v="5">5</span>
         </div>
-        <div class="s-cost">kr 36</div>
-      </div>
-      <div class="s-note">Example only — your plan is built around your exact inputs</div>
-    </div>
-  </div>
-
-  <div class="section-heading">Your <span>Preferences</span></div>
-
-  <!-- BUDGET -->
-  <div class="glass">
-    <div class="lbl">Daily budget</div>
-    <div class="budget-row">
-      <span class="cur-sym" id="sym">€</span>
-      <input class="bud-input" type="number" id="budget" value="10" min="1" max="9999"/>
-      <div class="bud-right">
-        <div class="bud-per">per day</div>
-        <div class="cur-name" id="curName"></div>
       </div>
     </div>
-  </div>
 
-  <!-- COUNTRY -->
-  <div class="glass">
-    <div class="lbl">Your country</div>
-    <input class="txt-in" type="text" id="country"
-      placeholder="Sweden, Germany, USA, Japan..."
-      oninput="onCountry()" onchange="onCountry()" onblur="onCountry()"/>
-    <div class="field-hint" id="cHint">Enter your country — local prices & currency will be used</div>
-  </div>
-
-  <!-- DURATION + MEALS -->
-  <div class="two-col">
-    <div class="glass">
-      <div class="lbl">Duration</div>
-      <div class="pills" id="dur">
-        <span class="pill on" data-v="1">1 day</span>
-        <span class="pill" data-v="3">3 days</span>
-        <span class="pill" data-v="5">5 days</span>
-        <span class="pill" data-v="7">7 days</span>
+    <!-- GOAL -->
+    <div class="field">
+      <div class="field-lbl">Goal</div>
+      <div class="pills" id="goal">
+        <span class="pill on" data-v="maintain">Maintain weight</span>
+        <span class="pill" data-v="lose">Lose weight</span>
+        <span class="pill" data-v="gain">Gain muscle</span>
+        <span class="pill" data-v="cut">Cut fat, keep muscle</span>
+        <span class="pill" data-v="bulk">Bulk up</span>
+        <span class="pill" data-v="athletic">Athletic performance</span>
       </div>
     </div>
-    <div class="glass">
-      <div class="lbl">Meals per day</div>
-      <div class="pills" id="mpp">
-        <span class="pill" data-v="2">2</span>
-        <span class="pill on" data-v="3">3</span>
-        <span class="pill" data-v="4">4</span>
-        <span class="pill" data-v="5">5</span>
-      </div>
-    </div>
-  </div>
 
-  <!-- GOAL -->
-  <div class="glass">
-    <div class="lbl">Goal</div>
-    <div class="pills" id="goal">
-      <span class="pill on" data-v="maintain">Maintain weight</span>
-      <span class="pill" data-v="lose">Lose weight</span>
-      <span class="pill" data-v="gain">Gain muscle</span>
-      <span class="pill" data-v="cut">Cut fat, keep muscle</span>
-      <span class="pill" data-v="bulk">Bulk up</span>
-      <span class="pill" data-v="athletic">Athletic performance</span>
-    </div>
-  </div>
-
-  <!-- DIET -->
-  <div class="glass">
-    <div class="lbl">Diet type</div>
-    <div class="pills" id="diet">
-      <span class="pill on" data-v="none">No restriction</span>
-      <span class="pill" data-v="vegetarian">Vegetarian</span>
-      <span class="pill" data-v="vegan">Vegan</span>
-      <span class="pill" data-v="high-protein">High protein</span>
-      <span class="pill" data-v="carnivore">Carnivore</span>
-      <span class="pill" data-v="flexitarian">Flexitarian</span>
-      <span class="pill" data-v="pescatarian">Pescatarian</span>
-      <span class="pill" data-v="keto">Keto</span>
-      <span class="pill" data-v="mediterranean">Mediterranean</span>
-    </div>
-  </div>
-
-  <!-- ALLERGIES -->
-  <div class="glass">
-    <div class="lbl">Allergies & intolerances</div>
-    <div class="pills" id="allergy">
-      <span class="pill al multi" data-v="gluten">Gluten</span>
-      <span class="pill al multi" data-v="dairy">Dairy</span>
-      <span class="pill al multi" data-v="lactose">Lactose</span>
-      <span class="pill al multi" data-v="eggs">Eggs</span>
-      <span class="pill al multi" data-v="nuts">Nuts</span>
-      <span class="pill al multi" data-v="peanuts">Peanuts</span>
-      <span class="pill al multi" data-v="soy">Soy</span>
-      <span class="pill al multi" data-v="shellfish">Shellfish</span>
-      <span class="pill al multi" data-v="fish">Fish</span>
-      <span class="pill al multi" data-v="pork">Pork</span>
-      <span class="pill al multi" data-v="beef">Beef</span>
-    </div>
-    <div class="a-input-row">
-      <input type="text" id="aIn" placeholder="Other allergy — type and press Enter"/>
-      <button class="a-add" onclick="addAllergy()">+ Add</button>
-    </div>
-    <div class="a-tags" id="aTags"></div>
-  </div>
-
-  <!-- APPLIANCES -->
-  <div class="glass">
-    <div class="lbl">Your appliances — select only what you own</div>
-    <div class="warn-box" id="appWarn"></div>
-    <div class="pills" id="apps">
-      <span class="pill multi" data-v="stovetop"  data-m="boiled,pan-fried,fried,sauteed,sautéed,simmered,steamed,poached">Stovetop</span>
-      <span class="pill multi" data-v="microwave" data-m="microwaved,microwave">Microwave</span>
-      <span class="pill multi" data-v="oven"      data-m="baked,roasted,grilled,broiled">Oven</span>
-      <span class="pill multi" data-v="kettle"    data-m="kettle,hot water">Kettle</span>
-      <span class="pill multi" data-v="blender"   data-m="blended,blender">Blender</span>
-      <span class="pill multi" data-v="air fryer" data-m="air-fried,air fried,air fryer">Air fryer</span>
-    </div>
-    <div style="font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:var(--text-dimmer);margin-top:12px;">
-      Every meal is built exclusively around your selected appliances
-    </div>
-  </div>
-
-  <!-- SKILL -->
-  <div class="glass">
-    <div class="lbl">Cooking skill</div>
-    <div class="pills" id="skill">
-      <span class="pill on" data-v="beginner">Beginner</span>
-      <span class="pill" data-v="intermediate">Intermediate</span>
-      <span class="pill" data-v="advanced">Advanced</span>
-    </div>
-  </div>
-
-  <!-- ADVANCED -->
-  <button class="adv-btn" id="advBtn" onclick="toggleAdv()">
-    <span>Advanced options — cuisine, proteins, macros</span>
-    <span id="advArr">+</span>
-  </button>
-
-  <div class="adv-body" id="advBody">
-
-    <div class="glass">
-      <div class="lbl">Cuisine style</div>
-      <div class="pills" id="cuisine">
-        <span class="pill on" data-v="any">Any</span>
-        <span class="pill" data-v="italian">Italian</span>
-        <span class="pill" data-v="asian">Asian</span>
-        <span class="pill" data-v="mexican">Mexican</span>
+    <!-- DIET -->
+    <div class="field">
+      <div class="field-lbl">Diet type</div>
+      <div class="pills" id="diet">
+        <span class="pill on" data-v="none">No restriction</span>
+        <span class="pill" data-v="vegetarian">Vegetarian</span>
+        <span class="pill" data-v="vegan">Vegan</span>
+        <span class="pill" data-v="high-protein">High protein</span>
+        <span class="pill" data-v="carnivore">Carnivore</span>
+        <span class="pill" data-v="flexitarian">Flexitarian</span>
+        <span class="pill" data-v="pescatarian">Pescatarian</span>
+        <span class="pill" data-v="keto">Keto</span>
         <span class="pill" data-v="mediterranean">Mediterranean</span>
-        <span class="pill" data-v="nordic">Nordic</span>
-        <span class="pill" data-v="indian">Indian</span>
-        <span class="pill" data-v="american">American</span>
-        <span class="pill" data-v="middle-eastern">Middle Eastern</span>
-        <span class="pill" data-v="japanese">Japanese</span>
-        <span class="pill" data-v="greek">Greek</span>
       </div>
     </div>
 
-    <div class="glass">
-      <div class="lbl">Preferred protein sources</div>
-      <div class="pills" id="proteins">
-        <span class="pill multi on" data-v="chicken">Chicken</span>
-        <span class="pill multi on" data-v="eggs">Eggs</span>
-        <span class="pill multi on" data-v="lentils">Lentils</span>
-        <span class="pill multi on" data-v="chickpeas">Chickpeas</span>
-        <span class="pill multi on" data-v="beans">Beans</span>
-        <span class="pill multi" data-v="tuna">Tuna</span>
-        <span class="pill multi" data-v="salmon">Salmon</span>
-        <span class="pill multi" data-v="beef mince">Beef mince</span>
-        <span class="pill multi" data-v="pork">Pork</span>
-        <span class="pill multi" data-v="tofu">Tofu</span>
-        <span class="pill multi" data-v="greek yogurt">Greek yogurt</span>
-        <span class="pill multi" data-v="cottage cheese">Cottage cheese</span>
-        <span class="pill multi" data-v="quorn">Quorn</span>
-        <span class="pill multi" data-v="edamame">Edamame</span>
+    <!-- ALLERGIES -->
+    <div class="field">
+      <div class="field-lbl">Allergies & intolerances</div>
+      <div class="pills" id="allergy">
+        <span class="pill al mul" data-v="gluten">Gluten</span>
+        <span class="pill al mul" data-v="dairy">Dairy</span>
+        <span class="pill al mul" data-v="lactose">Lactose</span>
+        <span class="pill al mul" data-v="eggs">Eggs</span>
+        <span class="pill al mul" data-v="nuts">Nuts</span>
+        <span class="pill al mul" data-v="peanuts">Peanuts</span>
+        <span class="pill al mul" data-v="soy">Soy</span>
+        <span class="pill al mul" data-v="shellfish">Shellfish</span>
+        <span class="pill al mul" data-v="fish">Fish</span>
+        <span class="pill al mul" data-v="pork">Pork</span>
+        <span class="pill al mul" data-v="beef">Beef</span>
+      </div>
+      <div class="a-row">
+        <input type="text" id="aIn" placeholder="Other allergy — type and press Enter"/>
+        <button class="a-add-btn" onclick="addA()">+ Add</button>
+      </div>
+      <div class="a-tags" id="aTags"></div>
+    </div>
+
+    <!-- APPLIANCES -->
+    <div class="field">
+      <div class="field-lbl">Your appliances — select only what you own</div>
+      <div class="warn-box" id="appWarn"></div>
+      <div class="pills" id="apps">
+        <span class="pill mul" data-v="stovetop"  data-m="boiled,pan-fried,fried,sauteed,sautéed,simmered,steamed,poached">Stovetop</span>
+        <span class="pill mul" data-v="microwave" data-m="microwaved,microwave">Microwave</span>
+        <span class="pill mul" data-v="oven"      data-m="baked,roasted,grilled,broiled">Oven</span>
+        <span class="pill mul" data-v="kettle"    data-m="kettle,hot water">Kettle</span>
+        <span class="pill mul" data-v="blender"   data-m="blended,blender">Blender</span>
+        <span class="pill mul" data-v="air fryer" data-m="air-fried,air fried,air fryer">Air fryer</span>
+      </div>
+      <div style="font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--cream-dimmer);margin-top:12px;">
+        Every meal built exclusively around your selected appliances
       </div>
     </div>
 
-    <div class="glass">
-      <div class="lbl">Preferred carbohydrates</div>
-      <div class="pills" id="carbs">
-        <span class="pill multi on" data-v="pasta">Pasta</span>
-        <span class="pill multi on" data-v="potatoes">Potatoes</span>
-        <span class="pill multi on" data-v="oats">Oats</span>
-        <span class="pill multi on" data-v="bread">Bread</span>
-        <span class="pill multi" data-v="rice">Rice</span>
-        <span class="pill multi" data-v="sweet potato">Sweet potato</span>
-        <span class="pill multi" data-v="quinoa">Quinoa</span>
-        <span class="pill multi" data-v="couscous">Couscous</span>
-        <span class="pill multi" data-v="bulgur">Bulgur</span>
-        <span class="pill multi" data-v="wraps">Wraps</span>
-        <span class="pill multi" data-v="rye crispbread">Rye crispbread</span>
+    <!-- SKILL -->
+    <div class="field">
+      <div class="field-lbl">Cooking skill</div>
+      <div class="pills" id="skill">
+        <span class="pill on" data-v="beginner">Beginner</span>
+        <span class="pill" data-v="intermediate">Intermediate</span>
+        <span class="pill" data-v="advanced">Advanced</span>
       </div>
     </div>
 
-    <div class="glass">
-      <div class="lbl">Macro targets</div>
-      <div class="macro-grid">
-        <div class="macro-row">
-          <div class="macro-lbl">Protein</div>
-          <input type="range" id="mP" min="10" max="50" value="25" step="5" oninput="updateMacro()"/>
-          <div class="macro-val" id="mPv">25%</div>
+    <!-- ADVANCED -->
+    <button class="adv-btn" id="advBtn" onclick="toggleAdv()">
+      <span>Advanced options — cuisine, proteins, macros</span>
+      <span id="advArr">+</span>
+    </button>
+
+    <div class="adv-body" id="advBody">
+      <div class="field">
+        <div class="field-lbl">Cuisine style</div>
+        <div class="pills" id="cuisine">
+          <span class="pill on" data-v="any">Any</span>
+          <span class="pill" data-v="italian">Italian</span>
+          <span class="pill" data-v="asian">Asian</span>
+          <span class="pill" data-v="mexican">Mexican</span>
+          <span class="pill" data-v="mediterranean">Mediterranean</span>
+          <span class="pill" data-v="nordic">Nordic</span>
+          <span class="pill" data-v="indian">Indian</span>
+          <span class="pill" data-v="american">American</span>
+          <span class="pill" data-v="middle-eastern">Middle Eastern</span>
+          <span class="pill" data-v="japanese">Japanese</span>
+          <span class="pill" data-v="greek">Greek</span>
         </div>
-        <div class="macro-row">
-          <div class="macro-lbl">Carbs</div>
-          <input type="range" id="mC" min="10" max="70" value="50" step="5" oninput="updateMacro()"/>
-          <div class="macro-val" id="mCv">50%</div>
-        </div>
-        <div class="macro-row">
-          <div class="macro-lbl">Fat</div>
-          <input type="range" id="mF" min="10" max="50" value="25" step="5" oninput="updateMacro()"/>
-          <div class="macro-val" id="mFv">25%</div>
+      </div>
+
+      <div class="field">
+        <div class="field-lbl">Preferred protein sources</div>
+        <div class="pills" id="proteins">
+          <span class="pill mul on" data-v="chicken">Chicken</span>
+          <span class="pill mul on" data-v="eggs">Eggs</span>
+          <span class="pill mul on" data-v="lentils">Lentils</span>
+          <span class="pill mul on" data-v="chickpeas">Chickpeas</span>
+          <span class="pill mul on" data-v="beans">Beans</span>
+          <span class="pill mul" data-v="tuna">Tuna</span>
+          <span class="pill mul" data-v="salmon">Salmon</span>
+          <span class="pill mul" data-v="beef mince">Beef mince</span>
+          <span class="pill mul" data-v="pork">Pork</span>
+          <span class="pill mul" data-v="tofu">Tofu</span>
+          <span class="pill mul" data-v="greek yogurt">Greek yogurt</span>
+          <span class="pill mul" data-v="cottage cheese">Cottage cheese</span>
+          <span class="pill mul" data-v="quorn">Quorn</span>
+          <span class="pill mul" data-v="edamame">Edamame</span>
         </div>
       </div>
-      <div class="macro-note" id="macroNote">Total: 100%</div>
+
+      <div class="field">
+        <div class="field-lbl">Preferred carbohydrates</div>
+        <div class="pills" id="carbs">
+          <span class="pill mul on" data-v="pasta">Pasta</span>
+          <span class="pill mul on" data-v="potatoes">Potatoes</span>
+          <span class="pill mul on" data-v="oats">Oats</span>
+          <span class="pill mul on" data-v="bread">Bread</span>
+          <span class="pill mul" data-v="rice">Rice</span>
+          <span class="pill mul" data-v="sweet potato">Sweet potato</span>
+          <span class="pill mul" data-v="quinoa">Quinoa</span>
+          <span class="pill mul" data-v="couscous">Couscous</span>
+          <span class="pill mul" data-v="bulgur">Bulgur</span>
+          <span class="pill mul" data-v="wraps">Wraps</span>
+          <span class="pill mul" data-v="rye crispbread">Rye crispbread</span>
+        </div>
+      </div>
+
+      <div class="field">
+        <div class="field-lbl">Macro targets</div>
+        <div class="macro-grid">
+          <div class="macro-row">
+            <div class="macro-lbl">Protein</div>
+            <input type="range" id="mP" min="10" max="50" value="25" step="5" oninput="updateMacro()"/>
+            <div class="macro-val" id="mPv">25%</div>
+          </div>
+          <div class="macro-row">
+            <div class="macro-lbl">Carbs</div>
+            <input type="range" id="mC" min="10" max="70" value="50" step="5" oninput="updateMacro()"/>
+            <div class="macro-val" id="mCv">50%</div>
+          </div>
+          <div class="macro-row">
+            <div class="macro-lbl">Fat</div>
+            <input type="range" id="mF" min="10" max="50" value="25" step="5" oninput="updateMacro()"/>
+            <div class="macro-val" id="mFv">25%</div>
+          </div>
+        </div>
+        <div class="macro-note" id="macroNote">Total: 100%</div>
+      </div>
     </div>
 
+    <!-- GENERATE -->
+    <div class="gen-wrap">
+      <button class="gen-btn" id="genBtn" onclick="generate()">
+        Generate My Meal Plan
+      </button>
+    </div>
   </div>
-
-  <!-- GENERATE -->
-  <button class="gen-btn" id="genBtn" onclick="generate()">
-    Generate My Meal Plan
-  </button>
 
   <!-- STATUS -->
   <div class="status-wrap" id="statusWrap">
-    <span class="status-icon">🥘</span>
-    <div class="status-title" id="sTxt">Building your plan</div>
-    <div class="status-sub" id="sSub">5–15 seconds</div>
-    <div class="progress-wrap"><div class="progress-fill" id="pBar"></div></div>
+    <span class="status-ico">🥘</span>
+    <div class="status-h" id="sTxt">Building your plan</div>
+    <div class="status-s" id="sSub">5–15 seconds</div>
+    <div class="prog-wrap"><div class="prog-fill" id="pBar"></div></div>
   </div>
 
   <div class="err-box"  id="errBox"></div>
@@ -1233,13 +1143,12 @@
 </div>
 
 <footer>
-  <div class="footer-logo">Mealzy</div>
-  <div class="footer-text">Free forever · No account · Powered by Claude AI</div>
-  <div style="font-size:10px;letter-spacing:0.1em;color:rgba(245,240,232,0.15);margin-top:6px;">Prices are estimates — verify at your local supermarket</div>
+  <div class="foot-logo">Mealzy</div>
+  <div class="foot-txt">Free forever · No account · Powered by Claude AI</div>
 </footer>
 
 <script>
-// ── CURRENCIES ─────────────────────────────────────────────────────
+// ── CURRENCIES ────────────────────────────────────────────────────
 const CURR=[
   {k:['sweden','sverige'],s:'kr',c:'SEK',n:'Swedish Krona'},
   {k:['norway','norge'],s:'kr',c:'NOK',n:'Norwegian Krone'},
@@ -1267,14 +1176,12 @@ const CURR=[
       'austria','finland','ireland','greece','croatia','slovakia','slovenia',
       'estonia','latvia','lithuania','luxembourg','malta','cyprus','europe'],s:'€',c:'EUR',n:'Euro'},
 ];
-
 const EUR={s:'€',c:'EUR',n:'Euro'};
 let cur=EUR;
 
-function getCurrency(txt){
-  const lo=txt.toLowerCase().trim();
-  if(!lo) return EUR;
-  for(const e of CURR){if(e.k.some(k=>lo.includes(k))) return {s:e.s,c:e.c,n:e.n};}
+function getCurrency(t){
+  const lo=t.toLowerCase().trim();if(!lo)return EUR;
+  for(const e of CURR){if(e.k.some(k=>lo.includes(k)))return{s:e.s,c:e.c,n:e.n};}
   return EUR;
 }
 
@@ -1284,107 +1191,90 @@ function onCountry(){
   document.getElementById('sym').textContent=cur.s;
   document.getElementById('curName').textContent=v.trim()?`${cur.n} (${cur.c})`:'';
   const h=document.getElementById('cHint');
-  if(v.trim()){h.textContent=`Prices in ${cur.n} · ${cur.c}`;h.style.color='rgba(232,197,71,0.7)';}
-  else{h.textContent='Enter your country — local prices & currency will be used';h.style.color='';}
+  if(v.trim()){h.textContent=`Prices in ${cur.n} · ${cur.c}`;h.style.color='rgba(212,130,42,0.8)';}
+  else{h.textContent='Enter your country — local prices & currency will be applied';h.style.color='';}
 }
 
-// ── STORES DATABASE ─────────────────────────────────────────────────
+// ── STORES ────────────────────────────────────────────────────────
 function getStores(country){
   const lo=(country||'').toLowerCase();
   const db={
-    sweden:{n:'Sweden',c:['Lidl','Willys','Netto','Aldi'],t:'Willys typically cheapest for basics. Avoid ICA Maxi for staples.'},
-    norway:{n:'Norway',c:['Rema 1000','Kiwi','Coop Extra'],t:'Rema 1000 and Kiwi consistently beat others on price.'},
-    denmark:{n:'Denmark',c:['Netto','Lidl','Aldi','Rema 1000'],t:'Netto own-brand products offer exceptional value.'},
-    germany:{n:'Germany',c:['Aldi','Lidl','Netto','Penny','Kaufland'],t:'Aldi and Lidl own-brands are excellent quality at low cost.'},
-    uk:{n:'UK',c:['Aldi','Lidl','Asda','Tesco','Iceland'],t:'Aldi and Lidl are consistently cheapest. Tesco Basics for pantry staples.'},
-    france:{n:'France',c:['Lidl','Aldi','Netto','Leader Price'],t:'Lidl France has excellent quality frozen veg and proteins.'},
-    spain:{n:'Spain',c:['Mercadona','Lidl','Aldi','Dia'],t:'Mercadona Hacendado own-brand is superb value.'},
-    usa:{n:'USA',c:['Aldi','Lidl','Walmart','Trader Joe\'s'],t:'Aldi is typically 30–40% cheaper than mainstream stores.'},
-    canada:{n:'Canada',c:['No Frills','Food Basics','Walmart','FreshCo'],t:'No Frills consistently cheapest for groceries.'},
-    australia:{n:'Australia',c:['Aldi','Woolworths Essentials','Coles Smart Buy'],t:'Aldi significantly cheaper than Coles/Woolworths.'},
-    netherlands:{n:'Netherlands',c:['Lidl','Aldi','Dirk','Jumbo'],t:'Dirk is a local budget favourite with great deals.'},
-    poland:{n:'Poland',c:['Biedronka','Lidl','Aldi','Netto'],t:"Biedronka is Poland's cheapest major supermarket."},
-    italy:{n:'Italy',c:['Lidl','Aldi','Eurospin','In\'s Mercato'],t:'Eurospin is the best budget option across Italy.'},
+    sweden:{n:'Sweden',c:['Lidl','Willys','Netto','Aldi'],t:'Willys typically cheapest for basics.'},
+    norway:{n:'Norway',c:['Rema 1000','Kiwi','Coop Extra'],t:'Rema 1000 and Kiwi consistently cheapest.'},
+    denmark:{n:'Denmark',c:['Netto','Lidl','Aldi','Rema 1000'],t:'Netto own-brand excellent value.'},
+    germany:{n:'Germany',c:['Aldi','Lidl','Netto','Penny'],t:'Aldi and Lidl own-brands are best value.'},
+    uk:{n:'UK',c:['Aldi','Lidl','Asda','Iceland'],t:'Aldi and Lidl consistently cheapest.'},
+    france:{n:'France',c:['Lidl','Aldi','Netto','Leader Price'],t:'Lidl France excellent quality frozen veg.'},
+    spain:{n:'Spain',c:['Mercadona','Lidl','Aldi','Dia'],t:'Mercadona Hacendado own-brand superb value.'},
+    usa:{n:'USA',c:['Aldi','Lidl','Walmart','Trader Joe\'s'],t:'Aldi typically 30–40% cheaper than mainstream.'},
+    canada:{n:'Canada',c:['No Frills','Food Basics','Walmart'],t:'No Frills consistently cheapest.'},
+    australia:{n:'Australia',c:['Aldi','Woolworths Essentials','Coles Smart Buy'],t:'Aldi significantly cheaper than alternatives.'},
+    netherlands:{n:'Netherlands',c:['Lidl','Aldi','Dirk'],t:'Dirk is a local budget favourite.'},
+    poland:{n:'Poland',c:['Biedronka','Lidl','Aldi'],t:"Biedronka is Poland's cheapest major chain."},
+    italy:{n:'Italy',c:['Lidl','Aldi','Eurospin'],t:'Eurospin best budget option across Italy.'},
     finland:{n:'Finland',c:['Lidl','Tokmanni','K-Market'],t:'Lidl Finland typically 20% cheaper than S-Group.'},
-    portugal:{n:'Portugal',c:['Lidl','Aldi','Pingo Doce','Minipreço'],t:'Pingo Doce has excellent weekly deals.'},
+    portugal:{n:'Portugal',c:['Lidl','Aldi','Pingo Doce'],t:'Pingo Doce has excellent weekly deals.'},
   };
   for(const[k,v]of Object.entries(db)){
-    if(lo.includes(k)||(k==='uk'&&(lo.includes('england')||lo.includes('britain')||lo.includes('united kingdom')))){
-      return v;
-    }
+    if(lo.includes(k)||(k==='uk'&&(lo.includes('england')||lo.includes('britain')||lo.includes('united kingdom')))){return v;}
   }
   return null;
 }
 
-// ── TOGGLES ─────────────────────────────────────────────────────────
+// ── TOGGLES ───────────────────────────────────────────────────────
 function toggleSample(){
-  const b=document.getElementById('sBody');
-  const btn=document.getElementById('sBtn');
+  const b=document.getElementById('sBody'),btn=document.getElementById('sBtn');
   const open=b.style.display!=='none';
-  b.style.display=open?'none':'block';
-  btn.textContent=open?'+ Show':'− Hide';
+  b.style.display=open?'none':'block';btn.textContent=open?'+ Show':'− Hide';
 }
 
 function toggleAdv(){
-  const b=document.getElementById('advBody');
-  const btn=document.getElementById('advBtn');
-  const arr=document.getElementById('advArr');
+  const b=document.getElementById('advBody'),btn=document.getElementById('advBtn'),arr=document.getElementById('advArr');
   const open=b.style.display==='block';
   b.style.display=open?'none':'block';
-  btn.classList.toggle('open',!open);
-  arr.textContent=open?'+':'−';
+  btn.classList.toggle('open',!open);arr.textContent=open?'+':'−';
 }
 
-// ── MACROS ───────────────────────────────────────────────────────────
+// ── MACROS ────────────────────────────────────────────────────────
 function updateMacro(){
-  const p=+document.getElementById('mP').value;
-  const c=+document.getElementById('mC').value;
-  const f=+document.getElementById('mF').value;
+  const p=+document.getElementById('mP').value,c=+document.getElementById('mC').value,f=+document.getElementById('mF').value;
   document.getElementById('mPv').textContent=p+'%';
   document.getElementById('mCv').textContent=c+'%';
   document.getElementById('mFv').textContent=f+'%';
-  const tot=p+c+f;
-  const n=document.getElementById('macroNote');
+  const tot=p+c+f,n=document.getElementById('macroNote');
   n.textContent=`Total: ${tot}%${tot===100?' ✓':''}`;
-  n.style.color=tot===100?'rgba(200,240,160,0.6)':'';
+  n.style.color=tot===100?'rgba(168,232,128,0.6)':'';
 }
 
-// ── ALLERGIES ────────────────────────────────────────────────────────
+// ── ALLERGIES ─────────────────────────────────────────────────────
 const customA=new Set();
-function addAllergy(){
-  const inp=document.getElementById('aIn');
-  const v=inp.value.trim();
+function addA(){
+  const inp=document.getElementById('aIn'),v=inp.value.trim();
   if(!v||customA.has(v.toLowerCase())){inp.value='';return;}
   customA.add(v.toLowerCase());renderATags();inp.value='';
 }
-document.getElementById('aIn').addEventListener('keydown',e=>{if(e.key==='Enter')addAllergy();});
+document.getElementById('aIn').addEventListener('keydown',e=>{if(e.key==='Enter')addA();});
 function removeA(v){customA.delete(v);renderATags();}
 function renderATags(){
   document.getElementById('aTags').innerHTML=
     [...customA].map(a=>`<span class="a-tag" onclick="removeA('${a}')"><span>${a}</span><span class="a-tag-x">×</span></span>`).join('');
 }
 
-// ── PILLS ────────────────────────────────────────────────────────────
+// ── PILLS ─────────────────────────────────────────────────────────
 ['dur','mpp','goal','diet','skill','cuisine'].forEach(id=>{
   document.getElementById(id).addEventListener('click',e=>{
-    const p=e.target.closest('.pill');
-    if(!p)return;
-    document.querySelectorAll(`#${id} .pill`).forEach(x=>x.classList.remove('on'));
-    p.classList.add('on');
+    const p=e.target.closest('.pill');if(!p)return;
+    document.querySelectorAll(`#${id} .pill`).forEach(x=>x.classList.remove('on'));p.classList.add('on');
   });
 });
-
 ['apps','allergy','proteins','carbs'].forEach(id=>{
-  document.getElementById(id).addEventListener('click',e=>{
-    const p=e.target.closest('.pill');
-    if(p)p.classList.toggle('on');
-  });
+  document.getElementById(id).addEventListener('click',e=>{const p=e.target.closest('.pill');if(p)p.classList.toggle('on');});
 });
 
 function sel(id){const p=document.querySelector(`#${id} .pill.on`);return p?p.dataset.v:null;}
 function multiSel(id){return[...document.querySelectorAll(`#${id} .pill.on`)].map(p=>p.dataset.v);}
 
-// ── APPLIANCES ───────────────────────────────────────────────────────
+// ── APPLIANCES ────────────────────────────────────────────────────
 function allowedMethods(){
   const m=new Set(['no-cook','no cook','raw','assembled','cold','none','mixed']);
   document.querySelectorAll('#apps .pill.on').forEach(p=>{
@@ -1392,104 +1282,59 @@ function allowedMethods(){
   });
   return m;
 }
-
 function methodOk(method,allowed){
-  if(!method)return true;
-  const m=method.toLowerCase();
-  for(const a of allowed){if(m.includes(a))return true;}
-  return false;
+  if(!method)return true;const m=method.toLowerCase();
+  for(const a of allowed){if(m.includes(a))return true;}return false;
+}
+function appPrompt(sel){
+  const d={stovetop:'stovetop — boiling, frying, sautéing, simmering, steaming',microwave:'microwave — reheating only',oven:'oven — baking, roasting, grilling',kettle:'kettle — boiling water only',blender:'blender — blending, smoothies','air fryer':'air fryer — air-frying'};
+  const have=sel.map(a=>d[a]||a),miss=Object.keys(d).filter(a=>!sel.includes(a)).map(a=>d[a]||a);
+  return`APPLIANCE RULE — ABSOLUTE PRIORITY: User ONLY has: ${have.join('; ')}. Does NOT have: ${miss.length?miss.join('; '):'nothing else'}. Every meal MUST be cookable with ONLY listed appliances.`;
 }
 
-function appPrompt(selected){
-  const dets={
-    'stovetop':'stovetop/hob — boiling, frying, sautéing, simmering, steaming',
-    'microwave':'microwave — reheating and microwaving only',
-    'oven':'oven — baking, roasting, grilling',
-    'kettle':'kettle — boiling water only (oats, noodles, couscous)',
-    'blender':'blender — blending, smoothies',
-    'air fryer':'air fryer — air-frying chicken, chips, vegetables'
-  };
-  const have=selected.map(a=>dets[a]||a);
-  const miss=Object.keys(dets).filter(a=>!selected.includes(a)).map(a=>dets[a]||a);
-  return `APPLIANCE RULE — ABSOLUTE PRIORITY:
-User ONLY has: ${have.join('; ')}.
-Does NOT have: ${miss.length?miss.join('; '):'nothing else'}.
-Every single meal MUST be cookable ONLY with listed appliances. No exceptions.
-cookingMethod must match an available appliance.`;
+// ── UI HELPERS ────────────────────────────────────────────────────
+function mealIcon(t){
+  const lo=t.toLowerCase();
+  if(lo.includes('break'))return{e:'🌅',bg:'rgba(255,200,50,0.07)'};
+  if(lo.includes('lunch'))return{e:'☀️',bg:'rgba(80,200,120,0.07)'};
+  if(lo.includes('dinner'))return{e:'🌙',bg:'rgba(100,140,255,0.07)'};
+  if(lo.includes('snack'))return{e:'🍎',bg:'rgba(255,100,100,0.07)'};
+  return{e:'🍴',bg:'rgba(240,232,216,0.04)'};
 }
 
-// ── UI HELPERS ───────────────────────────────────────────────────────
-function mealIcon(type){
-  const t=type.toLowerCase();
-  if(t.includes('break'))return{e:'🌅',bg:'rgba(255,200,50,0.08)'};
-  if(t.includes('lunch'))return{e:'☀️',bg:'rgba(80,200,120,0.08)'};
-  if(t.includes('dinner'))return{e:'🌙',bg:'rgba(100,140,255,0.08)'};
-  if(t.includes('snack'))return{e:'🍎',bg:'rgba(255,100,100,0.08)'};
-  return{e:'🍴',bg:'rgba(255,255,255,0.04)'};
-}
+function catLabel(c){return{produce:'Produce',dairy:'Dairy',grains:'Grains',protein:'Protein',other:'Other',pantry:'Pantry',frozen:'Frozen',bakery:'Bakery',beverages:'Beverages'}[c]||c;}
 
-function catIcon(c){
-  return{produce:'Produce',dairy:'Dairy',grains:'Grains',protein:'Protein',
-         other:'Other',pantry:'Pantry',frozen:'Frozen',bakery:'Bakery',beverages:'Beverages'}[c]||c;
-}
-
-function budgetBadge(totalStr,budget,days,sym){
-  const spent=parseFloat(totalStr.replace(/[^0-9.]/g,''));
-  const limit=parseFloat(budget)*days;
-  const ok=spent<=limit;
-  const diff=Math.abs(limit-spent).toFixed(2);
+function budgBadge(totalStr,budget,days,sym){
+  const spent=parseFloat(totalStr.replace(/[^0-9.]/g,'')),limit=parseFloat(budget)*days;
+  const ok=spent<=limit,diff=Math.abs(limit-spent).toFixed(2);
   const lbl=days>1?`${sym}${budget}/day × ${days} = ${sym}${limit.toFixed(2)}`:`${sym}${budget}`;
-  return`<div class="budget-badge ${ok?'ok':'over'}">
-    ${ok?`✓ Fits budget (${lbl}) — ${sym}${diff} to spare`:`⚠ Over budget (${lbl}) by ${sym}${diff}`}
-  </div>`;
+  return`<div class="budget-badge ${ok?'ok':'over'}">${ok?`✓ Fits (${lbl}) — ${sym}${diff} to spare`:`⚠ Over (${lbl}) by ${sym}${diff}`}</div>`;
 }
 
 function mealCard(meal,allowed){
-  const ic=mealIcon(meal.type);
-  const flagged=meal.cookingMethod&&!methodOk(meal.cookingMethod,allowed);
-
+  const ic=mealIcon(meal.type),flagged=meal.cookingMethod&&!methodOk(meal.cookingMethod,allowed);
   const ings=meal.ingredients?.length
-    ?`<div class="meal-ings">
-        <div class="strip-lbl">Ingredients with quantities</div>
-        <div class="ing-list">${meal.ingredients.map(i=>`<span class="ing">${i}</span>`).join('')}</div>
-      </div>`:'' ;
-
+    ?`<div class="meal-ings"><div class="strip-l">Ingredients with quantities</div><div class="ing-list">${meal.ingredients.map(i=>`<span class="ing">${i}</span>`).join('')}</div></div>`:'';
   const steps=meal.steps?.length
-    ?`<div class="meal-steps">
-        <div class="strip-lbl">Step-by-step guide</div>
-        <div class="steps-list">
-          ${meal.steps.map((s,i)=>`
-            <div class="step-row">
-              <div class="step-num">${i+1}</div>
-              <div class="step-body"><div class="step-text">${s}</div></div>
-            </div>`).join('')}
-        </div>
-      </div>`:'' ;
-
-  const macroTags=meal.macros
-    ?`<span class="tag macro">P ${meal.macros.protein||'?'}</span>
-      <span class="tag macro">C ${meal.macros.carbs||'?'}</span>
-      <span class="tag macro">F ${meal.macros.fat||'?'}</span>`:'';
-
+    ?`<div class="meal-steps"><div class="strip-l">Step-by-step guide</div><div class="steps-list">${meal.steps.map((s,i)=>`<div class="step-row"><div class="step-n">${i+1}</div><div class="step-body"><div class="step-txt">${s}</div></div></div>`).join('')}</div></div>`:'';
+  const macroT=meal.macros?`<span class="tag m">P ${meal.macros.protein||'?'}</span><span class="tag m">C ${meal.macros.carbs||'?'}</span><span class="tag m">F ${meal.macros.fat||'?'}</span>`:'';
   return`<div class="meal-card ${flagged?'flagged':''}">
     <div class="meal-head">
       <div class="meal-ico" style="background:${ic.bg}">${ic.e}</div>
       <div class="meal-info">
-        <div class="meal-type-lbl">${meal.type}</div>
+        <div class="meal-type-l">${meal.type}</div>
         <div class="meal-name">${meal.name}</div>
         <div class="meal-desc">${meal.description}</div>
         <div class="meal-tags">
-          ${meal.cookingMethod?`<span class="tag ${flagged?'warn':'blue'}">${meal.cookingMethod}</span>`:''}
+          ${meal.cookingMethod?`<span class="tag ${flagged?'w':'b'}">${meal.cookingMethod}</span>`:''}
           ${meal.prepTime?`<span class="tag">${meal.prepTime}</span>`:''}
           ${meal.portion?`<span class="tag">${meal.portion}</span>`:''}
           ${meal.calories?`<span class="tag">${meal.calories}</span>`:''}
-          ${macroTags}
+          ${macroT}
         </div>
       </div>
       <div class="meal-price">${meal.cost}</div>
-    </div>
-    ${ings}${steps}
-  </div>`;
+    </div>${ings}${steps}</div>`;
 }
 
 function shopHTML(list){
@@ -1497,10 +1342,7 @@ function shopHTML(list){
   if(typeof list==='object'&&!Array.isArray(list)){
     return Object.entries(list).map(([cat,items])=>{
       if(!items?.length)return'';
-      return`<div class="shop-cat">
-        <div class="shop-cat-lbl">${catIcon(cat)}</div>
-        <div class="shop-items">${items.map(i=>`<div class="shop-item">${i}</div>`).join('')}</div>
-      </div>`;
+      return`<div class="shop-cat"><div class="shop-cat-l">${catLabel(cat)}</div><div class="shop-items">${items.map(i=>`<div class="shop-item">${i}</div>`).join('')}</div></div>`;
     }).join('');
   }
   return`<div class="shop-items">${list.map(i=>`<div class="shop-item">${i}</div>`).join('')}</div>`;
@@ -1508,17 +1350,8 @@ function shopHTML(list){
 
 function storesHTML(country){
   const s=getStores(country);
-  if(!s)return`<div class="stores-card">
-    <div class="stores-title">Budget shopping</div>
-    <div class="stores-text">Look for discount supermarket chains — own-brand products typically save 20–40% vs branded items.</div>
-  </div>`;
-  return`<div class="stores-card">
-    <div class="stores-title">Cheapest supermarkets — ${s.n}</div>
-    <div class="stores-text">
-      ${s.c.map(c=>`<span class="store-chip">${c}</span>`).join('')}
-      <span style="display:block;margin-top:10px;font-size:12px;color:rgba(245,240,232,0.35);">${s.t}</span>
-    </div>
-  </div>`;
+  if(!s)return`<div class="stores-card"><div class="stores-title">Budget shopping tip</div><div class="stores-txt">Look for discount supermarket chains — own-brand products save 20–40%.</div></div>`;
+  return`<div class="stores-card"><div class="stores-title">Cheapest supermarkets — ${s.n}</div><div class="stores-txt">${s.c.map(c=>`<span class="store-chip">${c}</span>`).join('')}<span style="display:block;margin-top:10px;font-size:12px;color:var(--cream-dimmer);">${s.t}</span></div></div>`;
 }
 
 function actRow(){
@@ -1530,201 +1363,111 @@ function actRow(){
 
 function copyPlan(){
   navigator.clipboard.writeText(document.getElementById('results').innerText).then(()=>{
-    document.querySelectorAll('.copy-btn').forEach(b=>{
-      b.textContent='Copied ✓';b.classList.add('done');
-      setTimeout(()=>{b.textContent='Copy plan';b.classList.remove('done');},2500);
-    });
+    document.querySelectorAll('.copy-btn').forEach(b=>{b.textContent='Copied ✓';b.classList.add('done');setTimeout(()=>{b.textContent='Copy plan';b.classList.remove('done');},2500);});
   });
 }
-
 function printPlan(){window.print();}
 
-// ── DISPLAY ──────────────────────────────────────────────────────────
+// ── DISPLAY ───────────────────────────────────────────────────────
 function showResults(plan,budget,sym,allowed,days,country){
   const isMulti=days>1;
   let inner='';
 
   if(isMulti){
-    const daysH=plan.days.map(d=>`
-      <div class="day-block">
-        <div class="day-head">
-          <div class="day-name">${d.day}</div>
-          <div class="day-info">${d.dailyCost} · ${d.calories||''}</div>
-        </div>
-        <div class="meals">${d.meals.map(m=>mealCard(m,allowed)).join('')}</div>
-      </div>`).join('');
-
-    inner=`<div class="res-hero">
-      <div class="res-eyebrow">Your personalised plan</div>
-      <div class="res-title">YOUR<br/><span>${days}-DAY PLAN</span></div>
-      <div class="res-meta-row">
-        <div class="res-stat"><div class="res-stat-label">Total cost</div><div class="res-stat-value accent">${plan.totalCost}</div></div>
-        <div class="res-divider"></div>
-        <div class="res-stat"><div class="res-stat-label">Daily budget</div><div class="res-stat-value">${sym}${budget}</div></div>
-        <div class="res-divider"></div>
-        <div class="res-stat"><div class="res-stat-label">Duration</div><div class="res-stat-value">${days} days</div></div>
+    const daysH=plan.days.map(d=>`<div class="day-block"><div class="day-head"><div class="day-name">${d.day}</div><div class="day-info">${d.dailyCost} · ${d.calories||''}</div></div><div class="meals">${d.meals.map(m=>mealCard(m,allowed)).join('')}</div></div>`).join('');
+    inner=`<div class="res-hero"><div class="res-atmo"></div>
+      <div class="res-over">Your personalised plan</div>
+      <div class="res-title">YOUR<br/><span>${days}-DAY<br/>PLAN</span></div>
+      <div class="res-stats">
+        <div class="res-stat"><div class="res-stat-l">Total cost</div><div class="res-stat-v a">${plan.totalCost}</div></div>
+        <div class="res-stat"><div class="res-stat-l">Daily budget</div><div class="res-stat-v">${sym}${budget}</div></div>
+        <div class="res-stat"><div class="res-stat-l">Duration</div><div class="res-stat-v">${days} days</div></div>
       </div>
-      ${budgetBadge(plan.totalCost,budget,days,sym)}
-      ${actRow()}
-    </div>
-    ${daysH}`;
-  } else {
-    inner=`<div class="res-hero">
-      <div class="res-eyebrow">Your personalised plan</div>
-      <div class="res-title">YOUR<br/><span>MEAL PLAN</span></div>
-      <div class="res-meta-row">
-        <div class="res-stat"><div class="res-stat-label">Total cost</div><div class="res-stat-value accent">${plan.totalCost}</div></div>
-        <div class="res-divider"></div>
-        <div class="res-stat"><div class="res-stat-label">Calories</div><div class="res-stat-value">${plan.calories||'—'}</div></div>
-        <div class="res-divider"></div>
-        <div class="res-stat"><div class="res-stat-label">Budget</div><div class="res-stat-value">${sym}${budget}</div></div>
+      ${budgBadge(plan.totalCost,budget,days,sym)}${actRow()}</div>${daysH}`;
+  }else{
+    inner=`<div class="res-hero"><div class="res-atmo"></div>
+      <div class="res-over">Your personalised plan</div>
+      <div class="res-title">YOUR<br/><span>MEAL<br/>PLAN</span></div>
+      <div class="res-stats">
+        <div class="res-stat"><div class="res-stat-l">Total cost</div><div class="res-stat-v a">${plan.totalCost}</div></div>
+        <div class="res-stat"><div class="res-stat-l">Calories</div><div class="res-stat-v">${plan.calories||'—'}</div></div>
+        <div class="res-stat"><div class="res-stat-l">Budget</div><div class="res-stat-v">${sym}${budget}</div></div>
       </div>
-      ${budgetBadge(plan.totalCost,budget,1,sym)}
-      ${actRow()}
-    </div>
+      ${budgBadge(plan.totalCost,budget,1,sym)}${actRow()}</div>
     <div class="meals">${plan.meals.map(m=>mealCard(m,allowed)).join('')}</div>`;
   }
 
   document.getElementById('results').innerHTML=`<div class="fade">
     ${inner}
-    <div class="shop-card">
-      <div class="shop-title">${isMulti?`${days}-Day `:''}Shopping List</div>
-      ${shopHTML(plan.shoppingList)}
-    </div>
+    <div class="shop-card"><div class="shop-title">${isMulti?`${days}-Day `:''}Shopping List</div>${shopHTML(plan.shoppingList)}</div>
     ${storesHTML(country)}
-    <div class="tip-card"><span class="tip-icon">→</span><span>${plan.tip}</span></div>
+    <div class="tip-card"><span class="tip-arr">→</span><span>${plan.tip}</span></div>
     ${actRow()}
   </div>`;
+
+  document.getElementById('results').scrollIntoView({behavior:'smooth',block:'start'});
 }
 
-// ── PROGRESS ─────────────────────────────────────────────────────────
+// ── PROGRESS ──────────────────────────────────────────────────────
 let prog=null;
 function startProg(days){
-  const bar=document.getElementById('pBar');
-  const total=days>1?35000:12000;
-  const step=100/(total/200);
-  let pct=0;bar.style.width='0%';
-  clearInterval(prog);
-  prog=setInterval(()=>{
-    pct=Math.min(pct+step*(1-pct/110),92);
-    bar.style.width=pct+'%';
-  },200);
+  const bar=document.getElementById('pBar'),total=days>1?35000:12000,step=100/(total/200);
+  let pct=0;bar.style.width='0%';clearInterval(prog);
+  prog=setInterval(()=>{pct=Math.min(pct+step*(1-pct/110),92);bar.style.width=pct+'%';},200);
 }
-function stopProg(){
-  clearInterval(prog);
-  const bar=document.getElementById('pBar');
-  bar.style.width='100%';
-  setTimeout(()=>{bar.style.width='0%';},600);
-}
+function stopProg(){clearInterval(prog);const bar=document.getElementById('pBar');bar.style.width='100%';setTimeout(()=>{bar.style.width='0%';},600);}
 
-// ── PROMPT ───────────────────────────────────────────────────────────
+// ── PROMPT ────────────────────────────────────────────────────────
 function buildPrompt(budget,country,diet,goal,meals,skill,selected,days,allergies,cuisine,proteins,carbs,macros){
-  const dietMap={
-    'none':'no dietary restrictions (omnivore)',
-    'vegetarian':'vegetarian (no meat or fish)',
-    'vegan':'vegan (no animal products)',
-    'high-protein':'high protein (prioritise meat, eggs, legumes)',
-    'carnivore':'carnivore (meat and animal products only)',
-    'flexitarian':'flexitarian (mostly plant-based, occasional meat fine)',
-    'pescatarian':'pescatarian (fish ok, no other meat)',
-    'keto':'ketogenic (under 30g carbs/day, high fat)',
-    'mediterranean':'Mediterranean (olive oil, fish, vegetables, legumes)'
-  };
-  const goalMap={
-    'maintain':'maintain current weight (~2000 kcal/day)',
-    'lose':'lose weight — calorie deficit (~1500–1700 kcal/day), filling foods',
-    'gain':'gain muscle — surplus (~2400–2700 kcal/day), high protein every meal',
-    'cut':'cut fat, keep muscle (~1700–1900 kcal/day), high protein, moderate carbs',
-    'bulk':'bulk up — maximum calories (~3000–3500 kcal/day)',
-    'athletic':'athletic performance (~2500–3000 kcal/day), balanced macros'
-  };
-  const allergyStr=allergies.length?`STRICTLY FORBIDDEN (never include): ${allergies.join(', ')}.`:'';
-  const proteinStr=proteins.length?`Preferred proteins: ${proteins.join(', ')}.`:'';
-  const carbStr=carbs.length?`Preferred carbs: ${carbs.join(', ')}. Do NOT default to rice unless listed.`:'Do NOT default to rice.';
-  const cuisineStr=cuisine!=='any'?`Cuisine style: ${cuisine}.`:'';
-  const macroStr=`Macro targets: ~${macros.p}% protein, ~${macros.c}% carbs, ~${macros.f}% fat.`;
+  const dietMap={none:'no dietary restrictions (omnivore)',vegetarian:'vegetarian (no meat or fish)',vegan:'vegan (no animal products)',
+    'high-protein':'high protein (prioritise meat, eggs, legumes)',carnivore:'carnivore (meat and animal products only)',
+    flexitarian:'flexitarian (mostly plant-based, occasional meat fine)',pescatarian:'pescatarian (fish ok, no other meat)',
+    keto:'ketogenic (under 30g carbs/day, high fat)',mediterranean:'Mediterranean (olive oil, fish, vegetables, legumes)'};
+  const goalMap={maintain:'maintain current weight (~2000 kcal/day)',lose:'lose weight — deficit (~1500–1700 kcal/day)',
+    gain:'gain muscle — surplus (~2400–2700 kcal/day), high protein every meal',
+    cut:'cut fat, keep muscle (~1700–1900 kcal/day), high protein',
+    bulk:'bulk up — maximum calories (~3000–3500 kcal/day)',athletic:'athletic performance (~2500–3000 kcal/day)'};
+  const aStr=allergies.length?`STRICTLY FORBIDDEN — never include: ${allergies.join(', ')}.`:'';
+  const pStr=proteins.length?`Preferred proteins: ${proteins.join(', ')}.`:'';
+  const cStr=carbs.length?`Preferred carbs: ${carbs.join(', ')}. Do NOT default to rice unless listed.`:'Do NOT default to rice.';
+  const cuStr=cuisine!=='any'?`Cuisine: ${cuisine}.`:'';
+  const mStr=`Macro targets: ~${macros.p}% protein, ~${macros.c}% carbs, ~${macros.f}% fat.`;
   const wb=(parseFloat(budget)*days).toFixed(2);
-
   const durStr=days>1
-    ?`Generate a ${days}-day plan labelled Day 1 through Day ${days}.
-- No meal name repeats across all ${days} days.
-- Total within ${cur.s}${wb} (${cur.s}${budget}/day × ${days}).
-- Each day has dailyCost and calories.
-- shoppingList covers the full period.
-- Multi-day: max 3 steps per meal, max 5 ingredients.`
-    :`Generate a 1-day plan. Total cost under ${cur.s}${budget}.`;
+    ?`Generate a ${days}-day plan labelled Day 1 through Day ${days}. No meal name repeats. Total within ${cur.s}${wb}. Each day has dailyCost and calories. shoppingList covers full period. Multi-day: max 3 steps, max 5 ingredients per meal.`
+    :`Generate a 1-day plan. Total under ${cur.s}${budget}.`;
 
-  return`You are a professional budget meal planner. Create a practical, affordable, nutritious meal plan. Write clearly for a ${skill} cook.
-
-LOCATION: ${country||'Europe'}
-CURRENCY: ALL prices in ${cur.n} (${cur.c}), symbol "${cur.s}". Use realistic local supermarket prices.
-Reference prices for Sweden: pasta 500g=kr10–15, eggs 6-pack=kr22–28, chicken breast 500g=kr45–60, oats 500g=kr15–20, lentils 500g=kr18–25. Use similar logic for other countries.
-
-USER:
-- Budget: ${cur.s}${budget} ${cur.c}/day
-- Diet: ${dietMap[diet]||diet}
-- Goal: ${goalMap[goal]||goal}
-- Meals/day: ${meals}
-- Skill: ${skill}
-${cuisineStr?'- '+cuisineStr:''}
-${allergyStr?'- ALLERGIES: '+allergyStr:''}
-${proteinStr?'- '+proteinStr:''}
-- ${carbStr}
-- ${macroStr}
-
+  return`You are a professional budget meal planner. Practical, affordable, nutritious. Write for a ${skill} cook.
+LOCATION: ${country||'Europe'}. CURRENCY: All prices in ${cur.n} (${cur.c}), symbol "${cur.s}". Use realistic local supermarket prices.
+Reference: Sweden — pasta 500g=kr10–15, eggs 6-pack=kr22–28, chicken breast 500g=kr45–60, oats 500g=kr15–20, lentils 500g=kr18–25.
+USER: Budget ${cur.s}${budget}/day. Diet: ${dietMap[diet]||diet}. Goal: ${goalMap[goal]||goal}. Meals/day: ${meals}. ${cuStr} ${aStr} ${pStr} ${cStr} ${mStr}
 ${appPrompt(selected)}
-
 DURATION: ${durStr}
-
-PRICING — CRITICAL: Use realistic local prices. Never underestimate. Show exact cost per meal. Must not exceed budget.
-
-TIMING — CRITICAL: Always give ranges: "20–25 mins". Never write "5 mins" for anything taking longer. Include ALL time: chopping, boiling, waiting. Simple porridge=8–12 mins. Pasta=20–25 mins. Soup=25–35 mins.
-
-PROTEIN: Never rely only on meat. Include eggs, legumes, dairy, fish or tofu. Each meal needs a clear protein source. No two meals same main protein per day.
-
-VARIETY: No repeated main ingredient in same day. Vary cooking methods and flavors. Include 2+ vegetable portions per day.
-
-STEPS: ${days>1?'3':'3–5'} numbered steps per meal. Under 25 words each. Start with action verb. Include exact quantities in steps.
-
-INGREDIENTS: Exact quantities: "80g dried pasta", "2 medium eggs", "1 tsp olive oil", "½ tsp cumin".
-
+PRICING: Realistic local prices. Never underestimate. Must not exceed budget.
+TIMING: Ranges only: "20–25 mins". Never "5 mins" for longer tasks. Porridge=8–12 min. Pasta=20–25 min. Soup=25–35 min.
+PROTEIN: Never only meat. Include eggs, legumes, dairy, fish or tofu. Each meal needs clear protein. No two meals same main protein per day.
+VARIETY: No repeated main ingredient per day. Vary cooking methods and flavors. 2+ vegetable portions per day.
+STEPS: ${days>1?'3':'3–5'} numbered steps. Under 25 words each. Action verb first. Exact quantities in steps.
+INGREDIENTS: Exact quantities — "80g dried pasta", "2 medium eggs", "1 tsp olive oil", "½ tsp cumin".
 Respond ONLY in valid JSON. No text outside JSON.
-
-1-DAY:
-{"totalCost":"${cur.s}X.XX","calories":"~XXXX kcal","budgetConfirmed":true,
-"meals":[{"type":"Breakfast","name":"...","description":"One sentence.","cost":"${cur.s}X.XX","prepTime":"X–Y mins","portion":"e.g. 350g","calories":"~XXX kcal","cookingMethod":"e.g. Simmered","macros":{"protein":"Xg","carbs":"Xg","fat":"Xg"},"ingredients":["80g oats","200ml water","1 banana","1 tsp honey"],"steps":["Boil 200ml water in a small pan — 3 minutes.","Add 80g oats, stir 4–5 minutes until thick.","Top with sliced banana and drizzle 1 tsp honey."]}],
-"shoppingList":{"produce":[],"dairy":[],"grains":[],"protein":[],"other":[]},
-"tip":"Specific actionable tip with concrete example."}
-
-MULTI-DAY:
-{"totalCost":"${cur.s}XX.XX","budgetConfirmed":true,
-"days":[{"day":"Day 1","dailyCost":"${cur.s}X.XX","calories":"~XXXX kcal","meals":[{"type":"Breakfast","name":"...","description":"...","cost":"${cur.s}X.XX","prepTime":"X–Y mins","portion":"...","calories":"~XXX kcal","cookingMethod":"...","macros":{"protein":"Xg","carbs":"Xg","fat":"Xg"},"ingredients":["item"],"steps":["Step.","Step.","Step."]}]}],
-"shoppingList":{"produce":[],"dairy":[],"grains":[],"protein":[],"other":[]},
-"tip":"Specific tip."}`;
+1-DAY: {"totalCost":"${cur.s}X.XX","calories":"~XXXX kcal","budgetConfirmed":true,"meals":[{"type":"Breakfast","name":"...","description":"One sentence.","cost":"${cur.s}X.XX","prepTime":"X–Y mins","portion":"e.g. 350g","calories":"~XXX kcal","cookingMethod":"e.g. Simmered","macros":{"protein":"Xg","carbs":"Xg","fat":"Xg"},"ingredients":["80g oats","200ml water","1 banana","1 tsp honey"],"steps":["Boil 200ml water — 3 minutes.","Add 80g oats, stir 4–5 minutes until thick.","Top with banana and drizzle 1 tsp honey."]}],"shoppingList":{"produce":[],"dairy":[],"grains":[],"protein":[],"other":[]},"tip":"Specific actionable tip."}
+MULTI-DAY: {"totalCost":"${cur.s}XX.XX","budgetConfirmed":true,"days":[{"day":"Day 1","dailyCost":"${cur.s}X.XX","calories":"~XXXX kcal","meals":[{"type":"Breakfast","name":"...","description":"...","cost":"${cur.s}X.XX","prepTime":"X–Y mins","portion":"...","calories":"~XXX kcal","cookingMethod":"...","macros":{"protein":"Xg","carbs":"Xg","fat":"Xg"},"ingredients":["item"],"steps":["Step.","Step.","Step."]}]}],"shoppingList":{"produce":[],"dairy":[],"grains":[],"protein":[],"other":[]},"tip":"Specific tip."}`;
 }
 
-// ── MAIN ─────────────────────────────────────────────────────────────
+// ── MAIN ──────────────────────────────────────────────────────────
 async function generate(){
   const budget=document.getElementById('budget').value||10;
   const country=document.getElementById('country').value.trim()||'Europe';
-  const diet=sel('diet')||'none';
-  const goal=sel('goal')||'maintain';
-  const meals=sel('mpp')||'3';
-  const days=parseInt(sel('dur')||'1');
-  const skill=sel('skill')||'beginner';
-  const cuisine=sel('cuisine')||'any';
-  const selected=multiSel('apps');
-  const allergies=[...multiSel('allergy'),...customA];
-  const proteins=multiSel('proteins');
-  const carbsArr=multiSel('carbs');
+  const diet=sel('diet')||'none',goal=sel('goal')||'maintain',meals=sel('mpp')||'3';
+  const days=parseInt(sel('dur')||'1'),skill=sel('skill')||'beginner',cuisine=sel('cuisine')||'any';
+  const selected=multiSel('apps'),allergies=[...multiSel('allergy'),...customA];
+  const proteins=multiSel('proteins'),carbsArr=multiSel('carbs');
   const macros={p:document.getElementById('mP').value,c:document.getElementById('mC').value,f:document.getElementById('mF').value};
 
   if(!selected.length){showErr('Please select at least one appliance.');return;}
 
-  const btn=document.getElementById('genBtn');
-  const sw=document.getElementById('statusWrap');
-  btn.disabled=true;
-  btn.innerHTML='<span class="spin"></span>Generating';
+  const btn=document.getElementById('genBtn'),sw=document.getElementById('statusWrap');
+  btn.disabled=true;btn.innerHTML='<span class="spin"></span>Generating';
   sw.style.display='block';
   document.getElementById('sTxt').textContent=days>1?`Building your ${days}-day plan`:'Building your meal plan';
   document.getElementById('sSub').textContent=days>1?'20–40 seconds':'5–15 seconds';
@@ -1735,34 +1478,21 @@ async function generate(){
 
   try{
     const prompt=buildPrompt(budget,country,diet,goal,meals,skill,selected,days,allergies,cuisine,proteins,carbsArr,macros);
-    const response=await fetch('/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({prompt})});
-    if(!response.ok){const e=await response.json();throw new Error(e.error||`Server error: ${response.status}`);}
-    const data=await response.json();
-    const raw=data.result.replace(/```json|```/g,'').trim();
-    const plan=JSON.parse(raw);
+    const res=await fetch('/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({prompt})});
+    if(!res.ok){const e=await res.json();throw new Error(e.error||`Server error: ${res.status}`);}
+    const data=await res.json();
+    const plan=JSON.parse(data.result.replace(/```json|```/g,'').trim());
     const allowed=allowedMethods();
     const allMeals=plan.days?plan.days.flatMap(d=>d.meals):plan.meals;
     const bad=allMeals.filter(m=>m.cookingMethod&&!methodOk(m.cookingMethod,allowed));
-    if(bad.length){
-      const w=document.getElementById('warnBox');
-      w.style.display='block';
-      w.textContent=`${bad.length} meal(s) may use appliances you don't have. Try regenerating for a fully compliant plan.`;
-    }
+    if(bad.length){const w=document.getElementById('warnBox');w.style.display='block';w.textContent=`${bad.length} meal(s) may use appliances you don't have. Try regenerating.`;}
     document.getElementById('results').style.display='block';
     showResults(plan,budget,cur.s,allowed,days,country);
-    document.getElementById('results').scrollIntoView({behavior:'smooth',block:'start'});
-  }catch(err){
-    showErr(`Something went wrong: ${err.message}`);
-  }finally{
-    stopProg();
-    btn.disabled=false;
-    btn.innerHTML='Generate My Meal Plan';
-    sw.style.display='none';
-  }
+  }catch(err){showErr(`Something went wrong: ${err.message}`);}
+  finally{stopProg();btn.disabled=false;btn.innerHTML='Generate My Meal Plan';sw.style.display='none';}
 }
 
 function showErr(msg){const b=document.getElementById('errBox');b.style.display='block';b.textContent=msg;}
-
 updateMacro();
 </script>
 </body>
