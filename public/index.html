@@ -927,8 +927,54 @@
       .nav-links { display: none; }
     }
 
+    /* Email subscription section */
+    .email-section {
+      background: rgba(212,130,42,0.05);
+      border: 1px solid rgba(212,130,42,0.15);
+      padding: 24px; margin-top: 1px;
+    }
+
+    .email-title {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 20px; font-weight: 900; letter-spacing: 0.08em;
+      text-transform: uppercase; color: var(--cream); margin-bottom: 6px;
+    }
+
+    .email-sub {
+      font-size: 12px; font-weight: 300; color: var(--cream-dimmer);
+      letter-spacing: 0.04em; line-height: 1.6; margin-bottom: 14px;
+    }
+
+    .email-row { display: flex; gap: 6px; }
+
+    .email-in {
+      font-family: 'Barlow', sans-serif;
+      font-size: 14px; color: var(--cream);
+      background: rgba(240,232,216,0.05);
+      border: 1px solid rgba(240,232,216,0.12);
+      padding: 11px 14px; flex: 1; outline: none; transition: border-color 0.2s;
+    }
+
+    .email-in:focus { border-color: rgba(212,130,42,0.5); }
+    .email-in::placeholder { color: var(--cream-dimmer); }
+
+    .email-btn {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 14px; font-weight: 800; letter-spacing: 0.18em; text-transform: uppercase;
+      padding: 11px 20px; background: var(--amber); border: none;
+      color: #0E0A07; cursor: pointer; transition: all 0.15s; white-space: nowrap;
+    }
+
+    .email-btn:hover { background: var(--amber-lt); }
+
+    .email-confirm {
+      font-size: 12px; font-weight: 600; letter-spacing: 0.08em;
+      margin-top: 10px; min-height: 16px;
+    }
+
     @media print {
-      .atmo,.grain,nav,.gen-wrap,.act-row,.adv-btn,.adv-body,.sample-btn,.sample-body,.how { display: none !important; }
+      .atmo,.grain,nav,.gen-wrap,.act-row,.adv-btn,.adv-body,.sample-btn,.sample-body,.how,
+      .regen-btn,.save-banner,.email-section { display: none !important; }
       body { background: white; color: black; }
     }
   </style>
@@ -1474,6 +1520,7 @@ function storesHTML(country){
 function actRow(){
   return`<div class="act-row">
     <button class="act-btn copy-btn" onclick="copyPlan()">Copy plan</button>
+    <button class="act-btn" onclick="sharePlan()">Share link</button>
     <button class="act-btn" onclick="printPlan()">Print</button>
   </div>`;
 }
@@ -1485,7 +1532,198 @@ function copyPlan(){
 }
 function printPlan(){window.print();}
 
-// ── DAY TAB SWITCHER ─────────────────────────────────────────────
+// ── FEATURE 2: SAVE PLAN TO LOCALSTORAGE ──────────────────────────
+// Stores the last generated plan so it survives page refresh
+let lastPlan = null; // kept in memory too for share encoding
+
+function savePlan(){
+  if(!lastPlan) return;
+  try {
+    localStorage.setItem('mealzy_plan', JSON.stringify(lastPlan));
+    // Show confirmation on the save button
+    document.querySelectorAll('.save-btn.primary').forEach(b=>{
+      const orig = b.textContent;
+      b.textContent = 'Saved ✓';
+      b.style.background = 'var(--green-b)';
+      setTimeout(()=>{ b.textContent=orig; b.style.background=''; }, 2500);
+    });
+  } catch(e) { alert('Could not save — storage may be full.'); }
+}
+
+function loadSavedPlan(){
+  try {
+    const raw = localStorage.getItem('mealzy_plan');
+    if(!raw) return;
+    const saved = JSON.parse(raw);
+    // Re-render the saved plan
+    const allowed = allowedMethods();
+    document.getElementById('results').style.display = 'block';
+    showResults(saved.plan, saved.budget, saved.sym, allowed, saved.days, saved.country);
+    lastPlan = saved;
+    // Show a "restored" notice at top of results
+    const notice = document.createElement('div');
+    notice.className = 'save-banner';
+    notice.style.marginBottom = '1px';
+    notice.innerHTML = `<div class="save-banner-txt">⚡ Restored your last saved plan</div>
+      <div class="save-banner-btns">
+        <button class="save-btn danger" onclick="clearSavedPlan()">Clear</button>
+      </div>`;
+    document.getElementById('results').prepend(notice);
+  } catch(e) { localStorage.removeItem('mealzy_plan'); }
+}
+
+function clearSavedPlan(){
+  localStorage.removeItem('mealzy_plan');
+  document.getElementById('results').style.display = 'none';
+  lastPlan = null;
+}
+
+// ── FEATURE 3: SHARE VIA LINK ─────────────────────────────────────
+// Encodes plan summary into URL hash — anyone with the link sees it
+function sharePlan(){
+  if(!lastPlan) return;
+  try {
+    // Encode a lightweight summary (not full JSON — too long for URLs)
+    const summary = {
+      b: lastPlan.budget,
+      s: lastPlan.sym,
+      d: lastPlan.days,
+      c: lastPlan.country,
+      t: lastPlan.plan.totalCost,
+      cal: lastPlan.plan.calories || '',
+      meals: (lastPlan.plan.meals || lastPlan.plan.days?.[0]?.meals || [])
+        .map(m=>({ n:m.name, t:m.type, c:m.cost }))
+    };
+    const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(summary))));
+    const url = `${location.origin}${location.pathname}#plan=${encoded}`;
+    navigator.clipboard.writeText(url).then(()=>{
+      document.querySelectorAll('.act-btn').forEach(b=>{
+        if(b.textContent.includes('Share')){
+          const orig = b.textContent;
+          b.textContent = 'Link copied ✓';
+          b.classList.add('done');
+          setTimeout(()=>{ b.textContent=orig; b.classList.remove('done'); }, 2500);
+        }
+      });
+      // Also update the save-btn.ghost
+      document.querySelectorAll('.save-btn.ghost').forEach(b=>{
+        if(b.textContent.includes('Share')){
+          b.textContent = 'Link copied ✓';
+          setTimeout(()=>{ b.textContent='Share link'; }, 2500);
+        }
+      });
+    });
+  } catch(e) { alert('Could not generate share link.'); }
+}
+
+// Check on load if there's a shared plan in the URL hash
+function checkSharedPlan(){
+  const hash = location.hash;
+  if(!hash.startsWith('#plan=')) return;
+  try {
+    const encoded = hash.replace('#plan=','');
+    const summary = JSON.parse(decodeURIComponent(escape(atob(encoded))));
+    // Show a lightweight preview of the shared plan
+    const el = document.getElementById('results');
+    el.style.display = 'block';
+    el.innerHTML = `<div class="fade">
+      <div class="res-hero" style="min-height:auto;padding:40px 0 32px;">
+        <div class="res-over">Shared meal plan</div>
+        <div class="res-title" style="font-size:clamp(36px,8vw,64px);">SHARED<br/><span>PLAN</span></div>
+        <div class="res-stats">
+          <div class="res-stat"><div class="res-stat-l">Total cost</div><div class="res-stat-v a">${summary.t}</div></div>
+          <div class="res-stat"><div class="res-stat-l">Budget</div><div class="res-stat-v">${summary.s}${summary.b}/day</div></div>
+          <div class="res-stat"><div class="res-stat-l">Duration</div><div class="res-stat-v">${summary.d} day${summary.d>1?'s':''}</div></div>
+        </div>
+      </div>
+      <div class="meals" style="margin-top:4px;">
+        ${(summary.meals||[]).map(m=>{
+          const ic=mealIcon(m.t||'');
+          return`<div class="meal-card">
+            <div class="meal-head">
+              <div class="meal-ico" style="background:${ic.bg}">${ic.e}</div>
+              <div class="meal-info">
+                <div class="meal-type-l">${m.t}</div>
+                <div class="meal-name">${m.n}</div>
+              </div>
+              <div class="meal-price">${m.c}</div>
+            </div>
+          </div>`;
+        }).join('')}
+      </div>
+      <div class="save-banner" style="margin-top:4px;">
+        <div class="save-banner-txt">Generate your own personalised version below ↓</div>
+      </div>
+    </div>`;
+    el.scrollIntoView({behavior:'smooth'});
+    // Clear hash so it doesn't re-trigger
+    history.replaceState(null,'',location.pathname);
+  } catch(e) { location.hash=''; }
+}
+
+// ── FEATURE 4: EMAIL SUBSCRIPTION ────────────────────────────────
+// Stores emails in localStorage (demo) — swap out for your backend
+function subscribeEmail(){
+  const inp = document.getElementById('emailIn');
+  const confirm = document.getElementById('emailConfirm');
+  if(!inp) return;
+  const email = inp.value.trim();
+  if(!email || !email.includes('@')){
+    confirm.textContent = 'Please enter a valid email address.';
+    confirm.style.color = '#FF9090';
+    return;
+  }
+  // Save locally — replace this fetch() with your real backend/Mailchimp/etc
+  try {
+    const list = JSON.parse(localStorage.getItem('mealzy_emails')||'[]');
+    if(!list.includes(email)) list.push(email);
+    localStorage.setItem('mealzy_emails', JSON.stringify(list));
+  } catch(e){}
+  inp.value = '';
+  confirm.textContent = '✓ You\'re subscribed! We\'ll send your first plan soon.';
+  confirm.style.color = '#A8E880';
+  // TODO: Replace with real API call e.g:
+  // await fetch('/subscribe', { method:'POST', body: JSON.stringify({ email }) });
+}
+
+// ── CHECKBOX SHOPPING LIST ────────────────────────────────────────
+function toggleShopItem(el){
+  el.classList.toggle('ticked');
+  el.querySelector('.shop-cb').textContent = el.classList.contains('ticked') ? '✓' : '';
+}
+
+// ── REGENERATE SINGLE MEAL ────────────────────────────────────────
+async function regenMeal(regenId, mealType){
+  const btn = document.getElementById('rb-'+regenId);
+  const card = document.getElementById('mc-'+regenId);
+  if(!btn || !card) return;
+  btn.disabled = true;
+  btn.textContent = '↻ Regenerating...';
+  try {
+    const budget  = lastPlan?.budget || document.getElementById('budget').value || 10;
+    const country = lastPlan?.country || document.getElementById('country').value.trim() || 'Europe';
+    const prompt  = `You are a budget meal planner. Generate a single ${mealType} meal only.
+Country: ${country}. Budget for this meal: ${cur.s}${(parseFloat(budget)/3).toFixed(2)}.
+Diet: ${sel('diet')||'none'}. Appliances: ${multiSel('apps').join(', ')}.
+Rules: Simple ingredients with exact quantities. Realistic prep time as a range. One vegetable minimum.
+Respond ONLY in valid JSON with this exact structure:
+{"type":"${mealType}","name":"Descriptive meal name 4-7 words","description":"One sentence.","cost":"${cur.s}X.XX","prepTime":"X–Y mins","portion":"e.g. 350g","calories":"~XXX kcal","cookingMethod":"e.g. Pan-fried","macros":{"protein":"Xg","carbs":"Xg","fat":"Xg"},"ingredients":["80g item","1 tsp item"],"steps":["Verb + action with quantity.","Verb + action.","Verb + action."]}`;
+
+    const res = await fetch('/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({prompt})});
+    if(!res.ok) throw new Error('Server error');
+    const data = await res.json();
+    const meal = JSON.parse(data.result.replace(/```json|```/g,'').trim());
+    const allowed = allowedMethods();
+    // Replace card HTML in place
+    card.outerHTML = mealCard(meal, allowed,
+      regenId.startsWith('d') ? parseInt(regenId.match(/d(\d+)/)?.[1]) : undefined,
+      parseInt(regenId.match(/m(\d+)/)?.[1]));
+  } catch(e) {
+    btn.disabled = false;
+    btn.textContent = '↻ Regenerate this meal';
+    alert('Could not regenerate — try again.');
+  }
+}
 function switchDay(idx){
   // Deactivate all tabs and panels
   document.querySelectorAll('.day-tab').forEach(t=>t.classList.remove('active'));
@@ -1546,6 +1784,22 @@ function showResults(plan,budget,sym,allowed,days,country){
     <div class="shop-card"><div class="shop-title">${isMulti?`${days}-Day `:''}Shopping List</div>${shopHTML(plan.shoppingList)}</div>
     ${storesHTML(country)}
     <div class="tip-card"><span class="tip-arr">→</span><span>${plan.tip}</span></div>
+    <div class="save-banner">
+      <div class="save-banner-txt">💾 Save this plan to your browser</div>
+      <div class="save-banner-btns">
+        <button class="save-btn primary" onclick="savePlan()">Save plan</button>
+        <button class="save-btn ghost" onclick="sharePlan()">Share link</button>
+      </div>
+    </div>
+    <div class="email-section">
+      <div class="email-title">📬 Get a new plan every week</div>
+      <div class="email-sub">We'll send you a fresh meal plan based on your preferences. Free, no spam, unsubscribe anytime.</div>
+      <div class="email-row">
+        <input class="email-in" type="email" id="emailIn" placeholder="your@email.com"/>
+        <button class="email-btn" onclick="subscribeEmail()">Subscribe</button>
+      </div>
+      <div class="email-confirm" id="emailConfirm"></div>
+    </div>
     ${actRow()}
   </div>`;
 
@@ -1633,6 +1887,8 @@ async function generate(){
     const allMeals=plan.days?plan.days.flatMap(d=>d.meals):plan.meals;
     const bad=allMeals.filter(m=>m.cookingMethod&&!methodOk(m.cookingMethod,allowed));
     if(bad.length){const w=document.getElementById('warnBox');w.style.display='block';w.textContent=`${bad.length} meal(s) may use appliances you don't have. Try regenerating.`;}
+    // Store for save/share features
+    lastPlan = { plan, budget, sym: cur.s, days, country };
     document.getElementById('results').style.display='block';
     showResults(plan,budget,cur.s,allowed,days,country);
   }catch(err){showErr(`Something went wrong: ${err.message}`);}
@@ -1641,6 +1897,9 @@ async function generate(){
 
 function showErr(msg){const b=document.getElementById('errBox');b.style.display='block';b.textContent=msg;}
 updateMacro();
+// On page load: check for shared plan in URL, then restore saved plan
+checkSharedPlan();
+if(!location.hash.startsWith('#plan=')) loadSavedPlan();
 </script>
 </body>
 </html>
