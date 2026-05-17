@@ -1,83 +1,1480 @@
-<!DOCTYPE html>
+mealzy/                                                                                             0000755 0000000 0000000 00000000000 15202357426 011063  5                                                                                                    ustar   root                            root                                                                                                                                                                                                                   mealzy/public/                                                                                      0000755 0000000 0000000 00000000000 15202360611 012327  5                                                                                                    ustar   root                            root                                                                                                                                                                                                                   mealzy/public/onboarding.html                                                                       0000644 0000000 0000000 00000050635 15202357062 015356  0                                                                                                    ustar   root                            root                                                                                                                                                                                                                   <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Get Started — Mealzy</title>
+  <link rel="stylesheet" href="/style.css" />
+  <style>
+    body { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 2rem 1rem; background: var(--clr-bg); }
+
+    .ob-logo { display: flex; align-items: center; gap: 0.6rem; font-weight: 800; font-size: 1.2rem; margin-bottom: 2rem; }
+    .ob-logo .logo-icon { width: 34px; height: 34px; font-size: 1rem; }
+
+    .ob-card {
+      background: var(--clr-card);
+      border: 1px solid var(--clr-border);
+      border-radius: 1.5rem;
+      box-shadow: var(--shadow-lg);
+      padding: 2.5rem;
+      width: 100%;
+      max-width: 560px;
+    }
+
+    /* Progress bar */
+    .ob-progress-wrap { margin-bottom: 1.75rem; }
+    .ob-step-label { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; }
+    .ob-step-text { font-size: 0.8rem; font-weight: 600; color: var(--clr-text-muted); }
+    .ob-step-title { font-size: 0.8rem; font-weight: 700; color: var(--clr-primary); }
+
+    /* Step */
+    .step { display: none; }
+    .step.active { display: block; animation: stepFade 0.35s ease; }
+    @keyframes stepFade {
+      from { opacity: 0; transform: translateX(12px); }
+      to   { opacity: 1; transform: translateX(0); }
+    }
+
+    .step-heading { margin-bottom: 1.5rem; }
+    .step-heading h2 { font-family: 'Playfair Display', serif; font-size: 1.4rem; font-weight: 700; margin-bottom: 0.25rem; }
+    .step-heading p { color: var(--clr-text-muted); font-size: 0.88rem; }
+
+    /* Grid layout for fields */
+    .fields-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
+    .fields-grid .full { grid-column: 1 / -1; }
+
+    /* Radio gender */
+    .radio-group { display: flex; gap: 0.75rem; flex-wrap: wrap; }
+    .radio-chip {
+      display: flex; align-items: center; gap: 0.4rem;
+      padding: 0.4rem 1rem;
+      border: 1.5px solid var(--clr-border);
+      border-radius: 99px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      font-weight: 500;
+      transition: all var(--transition);
+    }
+    .radio-chip input { display: none; }
+    .radio-chip:has(input:checked) { border-color: var(--clr-primary); background: var(--clr-primary); color: #fff; }
+    .radio-chip:hover { border-color: var(--clr-primary); }
+
+    /* Goal cards */
+    .goal-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+    .goal-card {
+      border: 2px solid var(--clr-border);
+      border-radius: var(--radius-lg);
+      padding: 1.1rem;
+      cursor: pointer;
+      text-align: center;
+      transition: all var(--transition);
+    }
+    .goal-card:hover { border-color: var(--clr-primary); }
+    .goal-card.selected { border-color: var(--clr-primary); background: var(--clr-primary-light); }
+    .goal-card .goal-icon { font-size: 1.8rem; margin-bottom: 0.4rem; }
+    .goal-card .goal-label { font-weight: 700; font-size: 0.88rem; }
+
+    /* Activity cards */
+    .activity-list { display: flex; flex-direction: column; gap: 0.6rem; }
+    .activity-card {
+      border: 2px solid var(--clr-border);
+      border-radius: var(--radius);
+      padding: 0.85rem 1rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+      transition: all var(--transition);
+    }
+    .activity-card:hover { border-color: var(--clr-primary); }
+    .activity-card.selected { border-color: var(--clr-primary); background: var(--clr-primary-light); }
+    .activity-icon { font-size: 1.3rem; }
+    .activity-label { font-weight: 600; font-size: 0.9rem; }
+    .activity-desc { font-size: 0.78rem; color: var(--clr-text-muted); }
+
+    /* Chips */
+    .chips-wrap { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+
+    /* Skill cards */
+    .skill-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.75rem; }
+    .skill-card {
+      border: 2px solid var(--clr-border);
+      border-radius: var(--radius);
+      padding: 1rem;
+      cursor: pointer;
+      text-align: center;
+      transition: all var(--transition);
+      font-size: 0.85rem;
+    }
+    .skill-card:hover { border-color: var(--clr-primary); }
+    .skill-card.selected { border-color: var(--clr-primary); background: var(--clr-primary-light); }
+    .skill-card .skill-icon { font-size: 1.5rem; margin-bottom: 0.35rem; }
+    .skill-card .skill-label { font-weight: 700; }
+    .skill-card .skill-sub { color: var(--clr-text-muted); font-size: 0.75rem; }
+
+    /* Range slider */
+    .range-wrap { display: flex; align-items: center; gap: 1rem; }
+    .range-wrap input[type=range] { flex: 1; accent-color: var(--clr-primary); }
+    .range-val { font-weight: 700; min-width: 50px; text-align: right; }
+
+    /* Results boxes */
+    .results-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem; margin-top: 1.25rem; }
+    .result-box {
+      background: var(--clr-primary-light);
+      border: 1px solid rgba(42,144,85,.2);
+      border-radius: var(--radius);
+      padding: 0.9rem;
+      text-align: center;
+    }
+    .result-box .r-val { font-size: 1.5rem; font-weight: 800; color: var(--clr-primary); line-height: 1; }
+    .result-box .r-lbl { font-size: 0.75rem; color: var(--clr-text-muted); margin-top: 0.2rem; font-weight: 600; }
+
+    /* Navigation row */
+    .step-nav { display: flex; align-items: center; justify-content: space-between; margin-top: 2rem; }
+    .btn-back { background: none; border: none; color: var(--clr-text-muted); font-size: 0.88rem; font-weight: 500; cursor: pointer; display: flex; align-items: center; gap: 0.3rem; }
+    .btn-back:hover { color: var(--clr-text); }
+
+    @media (max-width: 500px) {
+      .ob-card { padding: 1.5rem; }
+      .fields-grid { grid-template-columns: 1fr; }
+      .goal-grid { grid-template-columns: 1fr 1fr; }
+      .skill-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<a href="/" class="ob-logo">
+  <div class="logo-icon">🔥</div>
+  <span>Mealzy</span>
+</a>
+
+<div class="ob-card">
+  <!-- Progress -->
+  <div class="ob-progress-wrap">
+    <div class="ob-step-label">
+      <span class="ob-step-text" id="step-label">Step 1 of 5</span>
+      <span class="ob-step-title" id="step-title">Your Body</span>
+    </div>
+    <div class="progress-bar-wrap">
+      <div class="progress-bar-fill" id="ob-progress" style="width: 20%"></div>
+    </div>
+  </div>
+
+  <!-- Step 1: Body Stats -->
+  <div class="step active" id="step-1">
+    <div class="step-heading">
+      <h2>Tell us about yourself</h2>
+      <p>We'll use this to calculate your personalized calorie and macro targets.</p>
+    </div>
+    <div class="fields-grid">
+      <div class="form-group">
+        <label class="form-label">Age</label>
+        <input type="number" class="form-input" id="age" placeholder="25" min="10" max="100" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Weight (kg)</label>
+        <input type="number" class="form-input" id="weight" placeholder="70" min="30" max="300" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Height (cm)</label>
+        <input type="number" class="form-input" id="height" placeholder="175" min="100" max="250" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Gender</label>
+        <div class="radio-group" style="margin-top:.3rem;">
+          <label class="radio-chip"><input type="radio" name="gender" value="Male" /> Male</label>
+          <label class="radio-chip"><input type="radio" name="gender" value="Female" /> Female</label>
+          <label class="radio-chip"><input type="radio" name="gender" value="Other" /> Other</label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Step 2: Goal -->
+  <div class="step" id="step-2">
+    <div class="step-heading">
+      <h2>What's your goal?</h2>
+      <p>This shapes your calorie targets and meal recommendations.</p>
+    </div>
+    <div class="goal-grid">
+      <div class="goal-card" data-goal="Lose Weight">
+        <div class="goal-icon">🔥</div>
+        <div class="goal-label">Lose Weight</div>
+      </div>
+      <div class="goal-card" data-goal="Build Muscle">
+        <div class="goal-icon">💪</div>
+        <div class="goal-label">Build Muscle</div>
+      </div>
+      <div class="goal-card" data-goal="Maintain">
+        <div class="goal-icon">⚖️</div>
+        <div class="goal-label">Maintain</div>
+      </div>
+      <div class="goal-card" data-goal="Eat Healthier">
+        <div class="goal-icon">🥗</div>
+        <div class="goal-label">Eat Healthier</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Step 3: Activity -->
+  <div class="step" id="step-3">
+    <div class="step-heading">
+      <h2>Activity level</h2>
+      <p>How active are you on a typical week?</p>
+    </div>
+    <div class="activity-list">
+      <div class="activity-card" data-activity="Sedentary">
+        <span class="activity-icon">🛋️</span>
+        <div>
+          <div class="activity-label">Sedentary</div>
+          <div class="activity-desc">Little or no exercise, desk job</div>
+        </div>
+      </div>
+      <div class="activity-card" data-activity="Lightly Active">
+        <span class="activity-icon">🚶</span>
+        <div>
+          <div class="activity-label">Lightly Active</div>
+          <div class="activity-desc">Light exercise 1–3 days/week</div>
+        </div>
+      </div>
+      <div class="activity-card" data-activity="Moderately Active">
+        <span class="activity-icon">🏃</span>
+        <div>
+          <div class="activity-label">Moderately Active</div>
+          <div class="activity-desc">Moderate exercise 3–5 days/week</div>
+        </div>
+      </div>
+      <div class="activity-card" data-activity="Very Active">
+        <span class="activity-icon">⚡</span>
+        <div>
+          <div class="activity-label">Very Active</div>
+          <div class="activity-desc">Hard exercise 6–7 days/week</div>
+        </div>
+      </div>
+      <div class="activity-card" data-activity="Extra Active">
+        <span class="activity-icon">🏋️</span>
+        <div>
+          <div class="activity-label">Extra Active</div>
+          <div class="activity-desc">Very hard exercise & physical job</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Step 4: Preferences & Allergies -->
+  <div class="step" id="step-4">
+    <div class="step-heading">
+      <h2>Dietary preferences</h2>
+      <p>Select all that apply — Mealzy will respect these in every meal plan.</p>
+    </div>
+    <div class="form-group" style="margin-bottom:1.25rem;">
+      <label class="form-label">Dietary Preferences</label>
+      <div class="chips-wrap" id="dietary-chips">
+        <span class="chip" data-value="Vegan">🌱 Vegan</span>
+        <span class="chip" data-value="Vegetarian">🥦 Vegetarian</span>
+        <span class="chip" data-value="Pescatarian">🐟 Pescatarian</span>
+        <span class="chip" data-value="Keto">🥑 Keto</span>
+        <span class="chip" data-value="Paleo">🍖 Paleo</span>
+        <span class="chip" data-value="Mediterranean">🫒 Mediterranean</span>
+        <span class="chip" data-value="Gluten-Free">🌾 Gluten-Free</span>
+        <span class="chip" data-value="Dairy-Free">🥛 Dairy-Free</span>
+        <span class="chip" data-value="Low-Carb">📉 Low-Carb</span>
+        <span class="chip" data-value="High-Protein">💪 High-Protein</span>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Allergies</label>
+      <div class="chips-wrap" id="allergy-chips">
+        <span class="chip" data-value="Nuts">🥜 Nuts</span>
+        <span class="chip" data-value="Shellfish">🦐 Shellfish</span>
+        <span class="chip" data-value="Eggs">🥚 Eggs</span>
+        <span class="chip" data-value="Soy">🫘 Soy</span>
+        <span class="chip" data-value="Wheat">🌾 Wheat</span>
+        <span class="chip" data-value="Sesame">🫙 Sesame</span>
+        <span class="chip" data-value="Fish">🐠 Fish</span>
+        <span class="chip" data-value="Dairy">🧀 Dairy</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Step 5: Cooking & Results -->
+  <div class="step" id="step-5">
+    <div class="step-heading">
+      <h2>Cooking preferences</h2>
+      <p>Help us tailor recipes to your kitchen skills and schedule.</p>
+    </div>
+    <div class="form-group" style="margin-bottom:1rem;">
+      <label class="form-label">Cooking Skill</label>
+      <div class="skill-grid">
+        <div class="skill-card" data-skill="Beginner">
+          <div class="skill-icon">🍳</div>
+          <div class="skill-label">Beginner</div>
+          <div class="skill-sub">Simple, quick recipes</div>
+        </div>
+        <div class="skill-card" data-skill="Intermediate">
+          <div class="skill-icon">👨‍🍳</div>
+          <div class="skill-label">Intermediate</div>
+          <div class="skill-sub">Comfortable cooking</div>
+        </div>
+        <div class="skill-card" data-skill="Advanced">
+          <div class="skill-icon">⭐</div>
+          <div class="skill-label">Advanced</div>
+          <div class="skill-sub">Complex techniques</div>
+        </div>
+      </div>
+    </div>
+    <div class="fields-grid" style="margin-top:.75rem;">
+      <div class="form-group">
+        <label class="form-label">Max cook time</label>
+        <div class="range-wrap">
+          <input type="range" id="cook-time" min="15" max="120" step="5" value="45" />
+          <span class="range-val" id="cook-time-val">45 min</span>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Weekly budget</label>
+        <div style="display:flex;gap:.5rem;">
+          <select class="form-select" id="currency" style="width:80px;">
+            <option value="USD">$ USD</option>
+            <option value="EUR">€ EUR</option>
+            <option value="GBP">£ GBP</option>
+            <option value="SEK">kr SEK</option>
+          </select>
+          <input type="number" class="form-input" id="weekly-budget" placeholder="100" min="20" />
+        </div>
+      </div>
+    </div>
+
+    <!-- Calculated results -->
+    <div id="results-section" style="display:none;">
+      <div class="divider"></div>
+      <div style="font-size:.85rem;font-weight:700;color:var(--clr-primary);margin-bottom:.75rem;">✦ Your Personalized Targets</div>
+      <div class="results-grid">
+        <div class="result-box"><div class="r-val" id="r-cal">—</div><div class="r-lbl">Daily Calories</div></div>
+        <div class="result-box"><div class="r-val" id="r-prot">—</div><div class="r-lbl">Protein (g)</div></div>
+        <div class="result-box"><div class="r-val" id="r-carbs">—</div><div class="r-lbl">Carbs (g)</div></div>
+        <div class="result-box"><div class="r-val" id="r-fat">—</div><div class="r-lbl">Fat (g)</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Nav buttons -->
+  <div class="step-nav">
+    <button class="btn-back" id="btn-back" style="visibility:hidden;">← Back</button>
+    <button class="btn btn-primary" id="btn-next" style="min-width:160px;">Continue →</button>
+  </div>
+</div>
+
+<script src="/shared.js"></script>
+<script>
+  let currentStep = 1;
+  const totalSteps = 5;
+
+  const stepTitles = ['Your Body', 'Your Goal', 'Activity', 'Preferences', 'Cooking'];
+  const profile = {};
+
+  function updateProgress() {
+    document.getElementById('ob-progress').style.width = `${(currentStep / totalSteps) * 100}%`;
+    document.getElementById('step-label').textContent = `Step ${currentStep} of ${totalSteps}`;
+    document.getElementById('step-title').textContent = stepTitles[currentStep - 1];
+    document.getElementById('btn-back').style.visibility = currentStep === 1 ? 'hidden' : 'visible';
+    document.getElementById('btn-next').textContent = currentStep === totalSteps ? 'Get Started 🎉' : 'Continue →';
+  }
+
+  function showStep(n) {
+    document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+    document.getElementById(`step-${n}`).classList.add('active');
+    currentStep = n;
+    updateProgress();
+    if (n === 5) showResults();
+  }
+
+  // Goal cards
+  document.querySelectorAll('.goal-card').forEach(card => {
+    card.addEventListener('click', () => {
+      document.querySelectorAll('.goal-card').forEach(c => c.classList.remove('selected'));
+      card.classList.add('selected');
+      profile.goal = card.dataset.goal;
+    });
+  });
+
+  // Activity cards
+  document.querySelectorAll('.activity-card').forEach(card => {
+    card.addEventListener('click', () => {
+      document.querySelectorAll('.activity-card').forEach(c => c.classList.remove('selected'));
+      card.classList.add('selected');
+      profile.activity_level = card.dataset.activity;
+    });
+  });
+
+  // Skill cards
+  document.querySelectorAll('.skill-card').forEach(card => {
+    card.addEventListener('click', () => {
+      document.querySelectorAll('.skill-card').forEach(c => c.classList.remove('selected'));
+      card.classList.add('selected');
+      profile.cooking_skill = card.dataset.skill;
+    });
+  });
+
+  // Chip toggles
+  function initChips(containerId, profileKey) {
+    const chips = document.querySelectorAll(`#${containerId} .chip`);
+    chips.forEach(chip => {
+      chip.addEventListener('click', () => {
+        chip.classList.toggle('active');
+        profile[profileKey] = Array.from(chips)
+          .filter(c => c.classList.contains('active'))
+          .map(c => c.dataset.value);
+      });
+    });
+  }
+  initChips('dietary-chips', 'dietary_preferences');
+  initChips('allergy-chips', 'allergies');
+
+  // Cook time slider
+  const slider = document.getElementById('cook-time');
+  slider.addEventListener('input', () => {
+    document.getElementById('cook-time-val').textContent = `${slider.value} min`;
+  });
+
+  function showResults() {
+    const age    = parseInt(document.getElementById('age').value) || 25;
+    const weight = parseInt(document.getElementById('weight').value) || 70;
+    const height = parseInt(document.getElementById('height').value) || 175;
+    const gender = document.querySelector('input[name="gender"]:checked')?.value || 'Male';
+
+    Object.assign(profile, { age, weight, height, gender });
+
+    const calc = calculateNutrition(profile);
+    document.getElementById('r-cal').textContent  = calc.calories;
+    document.getElementById('r-prot').textContent = calc.protein + 'g';
+    document.getElementById('r-carbs').textContent= calc.carbs + 'g';
+    document.getElementById('r-fat').textContent  = calc.fat + 'g';
+
+    profile.daily_calories = calc.calories;
+    profile.daily_protein  = calc.protein;
+    profile.daily_carbs    = calc.carbs;
+    profile.daily_fat      = calc.fat;
+
+    document.getElementById('results-section').style.display = 'block';
+  }
+
+  function validateStep() {
+    if (currentStep === 1) {
+      const age = document.getElementById('age').value;
+      const weight = document.getElementById('weight').value;
+      const height = document.getElementById('height').value;
+      const gender = document.querySelector('input[name="gender"]:checked');
+      if (!age || !weight || !height || !gender) {
+        showToast('Please fill in all fields', 'error');
+        return false;
+      }
+    }
+    if (currentStep === 2 && !profile.goal) {
+      showToast('Please select a goal', 'error');
+      return false;
+    }
+    if (currentStep === 3 && !profile.activity_level) {
+      showToast('Please select an activity level', 'error');
+      return false;
+    }
+    return true;
+  }
+
+  document.getElementById('btn-next').addEventListener('click', () => {
+    if (!validateStep()) return;
+
+    if (currentStep === totalSteps) {
+      // Save profile
+      const finalProfile = {
+        ...profile,
+        age:          parseInt(document.getElementById('age').value),
+        weight:       parseInt(document.getElementById('weight').value),
+        height:       parseInt(document.getElementById('height').value),
+        gender:       document.querySelector('input[name="gender"]:checked')?.value || 'Other',
+        max_cook_time: parseInt(document.getElementById('cook-time').value),
+        weekly_budget: parseFloat(document.getElementById('weekly-budget').value) || 100,
+        currency:     document.getElementById('currency').value,
+        name:         'Friend',
+        created_at:   new Date().toISOString(),
+      };
+      saveProfile(finalProfile);
+      showToast('Profile saved! Redirecting…', 'success');
+      setTimeout(() => { window.location.href = '/dashboard.html'; }, 1200);
+    } else {
+      showStep(currentStep + 1);
+    }
+  });
+
+  document.getElementById('btn-back').addEventListener('click', () => {
+    if (currentStep > 1) showStep(currentStep - 1);
+  });
+
+  updateProgress();
+</script>
+</body>
+</html>
+                                                                                                   mealzy/public/style.css                                                                             0000644 0000000 0000000 00000037061 15202356557 014226  0                                                                                                    ustar   root                            root                                                                                                                                                                                                                   /* ============================================================
+   MEALZY — Global Design System
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap');
+
+/* ── CSS Variables ───────────────────────────────────────── */
+:root {
+  --clr-primary:      hsl(152, 58%, 38%);
+  --clr-primary-dark: hsl(152, 58%, 28%);
+  --clr-primary-light:hsl(152, 58%, 95%);
+  --clr-accent:       hsl(35, 90%, 55%);
+  --clr-accent-light: hsl(35, 90%, 95%);
+
+  --clr-bg:           hsl(140, 20%, 99%);
+  --clr-bg-muted:     hsl(145, 15%, 96%);
+  --clr-card:         #ffffff;
+  --clr-border:       hsl(145, 15%, 90%);
+
+  --clr-text:         hsl(150, 15%, 12%);
+  --clr-text-muted:   hsl(150, 10%, 45%);
+  --clr-text-subtle:  hsl(150, 8%, 65%);
+
+  --clr-danger:       hsl(0, 72%, 51%);
+  --clr-danger-light: hsl(0, 72%, 97%);
+  --clr-info:         hsl(210, 85%, 55%);
+  --clr-info-light:   hsl(210, 85%, 95%);
+
+  --radius-sm: 0.5rem;
+  --radius:    0.75rem;
+  --radius-lg: 1.25rem;
+  --radius-xl: 1.75rem;
+
+  --shadow-sm: 0 1px 3px rgba(0,0,0,.06), 0 1px 2px rgba(0,0,0,.04);
+  --shadow:    0 4px 16px rgba(0,0,0,.07), 0 1px 4px rgba(0,0,0,.04);
+  --shadow-lg: 0 12px 40px rgba(0,0,0,.10), 0 4px 12px rgba(0,0,0,.05);
+
+  --sidebar-w: 240px;
+  --nav-h:     64px;
+
+  --transition: 0.2s ease;
+}
+
+/* ── Reset ───────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: var(--clr-bg);
+  color: var(--clr-text);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+img { max-width: 100%; display: block; }
+a { color: inherit; text-decoration: none; }
+button { cursor: pointer; font-family: inherit; }
+input, select, textarea { font-family: inherit; }
+
+/* ── Utility Classes ─────────────────────────────────────── */
+.glass {
+  background: rgba(255,255,255,0.75);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255,255,255,0.25);
+}
+
+.text-gradient {
+  background: linear-gradient(135deg, var(--clr-primary), #34c97a);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.gradient-primary {
+  background: linear-gradient(135deg, var(--clr-primary), var(--clr-primary-dark));
+}
+
+/* ── Card ────────────────────────────────────────────────── */
+.card {
+  background: var(--clr-card);
+  border: 1px solid var(--clr-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+}
+.card:hover { box-shadow: var(--shadow); }
+
+/* ── Buttons ─────────────────────────────────────────────── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.625rem 1.25rem;
+  border-radius: var(--radius);
+  font-size: 0.9rem;
+  font-weight: 600;
+  border: 2px solid transparent;
+  transition: all var(--transition);
+  white-space: nowrap;
+}
+
+.btn-primary {
+  background: var(--clr-primary);
+  color: #fff;
+  border-color: var(--clr-primary);
+}
+.btn-primary:hover {
+  background: var(--clr-primary-dark);
+  border-color: var(--clr-primary-dark);
+  box-shadow: 0 4px 16px rgba(42,144,85,.35);
+  transform: translateY(-1px);
+}
+
+.btn-outline {
+  background: transparent;
+  color: var(--clr-primary);
+  border-color: var(--clr-primary);
+}
+.btn-outline:hover {
+  background: var(--clr-primary-light);
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--clr-text);
+  border-color: transparent;
+}
+.btn-ghost:hover {
+  background: var(--clr-bg-muted);
+}
+
+.btn-danger {
+  background: var(--clr-danger-light);
+  color: var(--clr-danger);
+  border-color: hsl(0,72%,85%);
+}
+.btn-danger:hover { background: hsl(0,72%,93%); }
+
+.btn-sm { padding: 0.4rem 0.85rem; font-size: 0.8rem; }
+.btn-lg { padding: 0.875rem 2rem; font-size: 1rem; }
+.btn-full { width: 100%; justify-content: center; }
+
+.btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+/* ── Badge ───────────────────────────────────────────────── */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.2rem 0.65rem;
+  border-radius: 99px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+.badge-green  { background: var(--clr-primary-light); color: var(--clr-primary); }
+.badge-orange { background: var(--clr-accent-light);  color: hsl(35,80%,40%); }
+.badge-blue   { background: var(--clr-info-light);    color: var(--clr-info); }
+.badge-red    { background: var(--clr-danger-light);  color: var(--clr-danger); }
+.badge-muted  { background: var(--clr-bg-muted);      color: var(--clr-text-muted); }
+
+/* ── Chip (toggleable) ───────────────────────────────────── */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.35rem 0.9rem;
+  border-radius: 99px;
+  border: 1.5px solid var(--clr-border);
+  font-size: 0.82rem;
+  font-weight: 500;
+  background: var(--clr-card);
+  color: var(--clr-text-muted);
+  cursor: pointer;
+  transition: all var(--transition);
+  user-select: none;
+}
+.chip:hover { border-color: var(--clr-primary); color: var(--clr-primary); }
+.chip.active {
+  background: var(--clr-primary);
+  border-color: var(--clr-primary);
+  color: #fff;
+}
+
+/* ── Form Controls ───────────────────────────────────────── */
+.form-group { display: flex; flex-direction: column; gap: 0.4rem; }
+.form-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--clr-text);
+}
+.form-input, .form-select, .form-textarea {
+  height: 2.5rem;
+  padding: 0 0.875rem;
+  border: 1.5px solid var(--clr-border);
+  border-radius: var(--radius);
+  font-size: 0.9rem;
+  background: var(--clr-card);
+  color: var(--clr-text);
+  transition: border-color var(--transition), box-shadow var(--transition);
+  width: 100%;
+}
+.form-textarea { height: auto; padding: 0.75rem 0.875rem; resize: vertical; }
+.form-input:focus, .form-select:focus, .form-textarea:focus {
+  outline: none;
+  border-color: var(--clr-primary);
+  box-shadow: 0 0 0 3px rgba(42,144,85,.12);
+}
+.form-input::placeholder { color: var(--clr-text-subtle); }
+
+/* ── Progress Bar ────────────────────────────────────────── */
+.progress-bar-wrap {
+  width: 100%;
+  height: 6px;
+  background: var(--clr-bg-muted);
+  border-radius: 99px;
+  overflow: hidden;
+}
+.progress-bar-fill {
+  height: 100%;
+  border-radius: 99px;
+  background: var(--clr-primary);
+  transition: width 0.4s ease;
+}
+
+/* ── Macro Ring (SVG wrapper) ────────────────────────────── */
+.macro-ring { position: relative; display: inline-flex; align-items: center; justify-content: center; }
+.macro-ring svg { transform: rotate(-90deg); }
+.macro-ring-label {
+  position: absolute;
+  text-align: center;
+  line-height: 1.2;
+}
+.macro-ring-label .val { font-size: 1.4rem; font-weight: 700; }
+.macro-ring-label .unit { font-size: 0.7rem; color: var(--clr-text-muted); }
+
+/* ── App Layout ──────────────────────────────────────────── */
+.app-layout { display: flex; min-height: 100vh; }
+
+/* Sidebar */
+.sidebar {
+  width: var(--sidebar-w);
+  min-height: 100vh;
+  background: var(--clr-card);
+  border-right: 1px solid var(--clr-border);
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  left: 0; top: 0;
+  z-index: 100;
+  transition: transform var(--transition);
+}
+.sidebar-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1.25rem 1.25rem 1rem;
+  border-bottom: 1px solid var(--clr-border);
+}
+.logo-icon {
+  width: 36px; height: 36px;
+  background: var(--clr-primary);
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+.logo-text { font-weight: 700; font-size: 1.15rem; }
+
+.sidebar-nav { flex: 1; padding: 0.75rem 0.75rem; display: flex; flex-direction: column; gap: 2px; }
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.65rem 0.875rem;
+  border-radius: var(--radius);
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--clr-text-muted);
+  transition: all var(--transition);
+}
+.nav-item:hover { background: var(--clr-bg-muted); color: var(--clr-text); }
+.nav-item.active { background: var(--clr-primary); color: #fff; }
+.nav-item .nav-icon { width: 18px; text-align: center; font-size: 1rem; flex-shrink: 0; }
+
+.sidebar-footer {
+  padding: 1rem;
+  border-top: 1px solid var(--clr-border);
+  font-size: 0.78rem;
+  color: var(--clr-text-subtle);
+  text-align: center;
+}
+
+/* Main content area */
+.main-content {
+  margin-left: var(--sidebar-w);
+  flex: 1;
+  min-height: 100vh;
+  padding: 2rem;
+}
+
+/* Top mobile nav */
+.top-nav {
+  display: none;
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: var(--nav-h);
+  background: var(--clr-card);
+  border-bottom: 1px solid var(--clr-border);
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1.25rem;
+  z-index: 200;
+}
+.hamburger {
+  width: 36px; height: 36px;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: var(--radius-sm);
+  border: none;
+  background: transparent;
+  color: var(--clr-text);
+  font-size: 1.25rem;
+}
+.hamburger:hover { background: var(--clr-bg-muted); }
+
+/* Bottom mobile nav */
+.bottom-nav {
+  display: none;
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  height: 60px;
+  background: var(--clr-card);
+  border-top: 1px solid var(--clr-border);
+  z-index: 200;
+}
+.bottom-nav-items {
+  display: flex;
+  height: 100%;
+}
+.bottom-nav-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  font-size: 0.65rem;
+  font-weight: 500;
+  color: var(--clr-text-muted);
+  transition: color var(--transition);
+}
+.bottom-nav-item.active { color: var(--clr-primary); }
+.bottom-nav-item .nav-icon { font-size: 1.15rem; }
+
+/* Page overlay (mobile sidebar) */
+.sidebar-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.35);
+  z-index: 99;
+}
+.sidebar-overlay.active { display: block; }
+
+/* ── Section / Grid Utilities ────────────────────────────── */
+.section { margin-bottom: 2rem; }
+.section-header { margin-bottom: 1.25rem; }
+.section-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.35rem;
+  font-weight: 700;
+}
+
+.grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+.grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+.grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; }
+
+.flex { display: flex; }
+.flex-center { display: flex; align-items: center; justify-content: center; }
+.items-center { align-items: center; }
+.justify-between { justify-content: space-between; }
+.gap-1 { gap: 0.5rem; }
+.gap-2 { gap: 1rem; }
+.gap-3 { gap: 1.5rem; }
+
+/* ── Stat Card ───────────────────────────────────────────── */
+.stat-card {
+  background: var(--clr-card);
+  border: 1px solid var(--clr-border);
+  border-radius: var(--radius-lg);
+  padding: 1.25rem;
+  box-shadow: var(--shadow-sm);
+}
+.stat-label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--clr-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.35rem;
+}
+.stat-value {
+  font-size: 1.75rem;
+  font-weight: 700;
+  line-height: 1;
+  margin-bottom: 0.5rem;
+}
+.stat-sub { font-size: 0.8rem; color: var(--clr-text-muted); }
+
+/* ── Toast / Notification ────────────────────────────────── */
+.toast-container {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.toast {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: var(--clr-text);
+  color: #fff;
+  padding: 0.75rem 1.1rem;
+  border-radius: var(--radius);
+  font-size: 0.875rem;
+  box-shadow: var(--shadow-lg);
+  animation: slideInToast 0.3s ease;
+}
+.toast.success { background: var(--clr-primary); }
+.toast.error   { background: var(--clr-danger); }
+
+@keyframes slideInToast {
+  from { transform: translateX(100%); opacity: 0; }
+  to   { transform: translateX(0);   opacity: 1; }
+}
+
+/* ── Loading Spinner ─────────────────────────────────────── */
+.spinner {
+  width: 24px; height: 24px;
+  border: 3px solid rgba(255,255,255,.3);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  display: inline-block;
+}
+.spinner-dark {
+  border-color: rgba(42,144,85,.2);
+  border-top-color: var(--clr-primary);
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── Divider ─────────────────────────────────────────────── */
+.divider {
+  height: 1px;
+  background: var(--clr-border);
+  margin: 1.5rem 0;
+}
+
+/* ── Page Header ─────────────────────────────────────────── */
+.page-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+.page-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.8rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+.page-subtitle { color: var(--clr-text-muted); font-size: 0.9rem; margin-top: 0.25rem; }
+
+/* ── Empty State ─────────────────────────────────────────── */
+.empty-state {
+  text-align: center;
+  padding: 3rem 1.5rem;
+  color: var(--clr-text-muted);
+}
+.empty-state-icon { font-size: 3rem; margin-bottom: 1rem; }
+.empty-state-title { font-weight: 600; font-size: 1.05rem; color: var(--clr-text); margin-bottom: 0.5rem; }
+.empty-state-text { font-size: 0.9rem; margin-bottom: 1.25rem; }
+
+/* ── Responsive ──────────────────────────────────────────── */
+@media (max-width: 900px) {
+  .sidebar { transform: translateX(-100%); }
+  .sidebar.open { transform: translateX(0); }
+  .main-content { margin-left: 0; padding-top: calc(var(--nav-h) + 1.25rem); padding-bottom: 80px; padding-left: 1.25rem; padding-right: 1.25rem; }
+  .top-nav { display: flex; }
+  .bottom-nav { display: block; }
+  .grid-4 { grid-template-columns: repeat(2, 1fr); }
+  .grid-3 { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 600px) {
+  .grid-4 { grid-template-columns: 1fr; }
+  .grid-3 { grid-template-columns: 1fr; }
+  .grid-2 { grid-template-columns: 1fr; }
+  .page-header { flex-direction: column; align-items: flex-start; }
+  .main-content { padding-left: 1rem; padding-right: 1rem; }
+}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                               mealzy/public/dashboard.html                                                                        0000644 0000000 0000000 00000030106 15202357153 015153  0                                                                                                    ustar   root                            root                                                                                                                                                                                                                   <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard — Mealzy</title>
+  <link rel="stylesheet" href="/style.css" />
+  <style>
+    /* Macro rings */
+    .rings-section { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+    .ring-card { background: var(--clr-card); border: 1px solid var(--clr-border); border-radius: var(--radius-lg); padding: 1.5rem; text-align: center; box-shadow: var(--shadow-sm); }
+    .ring-card h4 { font-size: 0.82rem; font-weight: 700; color: var(--clr-text-muted); text-transform: uppercase; letter-spacing: .05em; margin-bottom: 1rem; }
+    .ring-card .ring-sub { font-size: 0.8rem; color: var(--clr-text-muted); margin-top: 0.5rem; }
+
+    /* Meal cards */
+    .meals-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+    .meal-card { background: var(--clr-card); border: 1px solid var(--clr-border); border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-sm); transition: box-shadow var(--transition); }
+    .meal-card:hover { box-shadow: var(--shadow); }
+    .meal-card-img { width: 100%; height: 130px; object-fit: cover; }
+    .meal-card-body { padding: 1rem; }
+    .meal-card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.5rem; }
+    .meal-card-title { font-weight: 700; font-size: 0.95rem; margin-bottom: 0.4rem; }
+    .meal-card-macros { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 0.75rem; }
+    .meal-card-footer { display: flex; align-items: center; justify-content: space-between; }
+
+    /* Quick links */
+    .quick-links { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+    .quick-link-card {
+      background: var(--clr-card);
+      border: 1px solid var(--clr-border);
+      border-radius: var(--radius-lg);
+      padding: 1.25rem;
+      text-align: center;
+      cursor: pointer;
+      transition: all var(--transition);
+      box-shadow: var(--shadow-sm);
+    }
+    .quick-link-card:hover { box-shadow: var(--shadow); border-color: rgba(42,144,85,.3); transform: translateY(-2px); }
+    .quick-link-card .ql-icon { font-size: 1.75rem; margin-bottom: 0.5rem; }
+    .quick-link-card .ql-title { font-weight: 700; font-size: 0.9rem; }
+    .quick-link-card .ql-sub { font-size: 0.78rem; color: var(--clr-text-muted); margin-top: 0.2rem; }
+
+    /* Streak badge */
+    .streak-badge { display: inline-flex; align-items: center; gap: 0.35rem; background: var(--clr-accent-light); color: hsl(35,80%,38%); border: 1px solid hsl(35,90%,80%); border-radius: 99px; padding: 0.25rem 0.75rem; font-size: 0.82rem; font-weight: 700; }
+
+    @media (max-width: 768px) {
+      .rings-section { grid-template-columns: 1fr; }
+      .meals-grid { grid-template-columns: 1fr; }
+      .quick-links { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+<div class="app-layout">
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar"></aside>
+  <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+  <!-- Top nav (mobile) -->
+  <nav class="top-nav" id="top-nav"></nav>
+
+  <!-- Main -->
+  <main class="main-content">
+    <!-- Header -->
+    <div class="page-header">
+      <div>
+        <h1 class="page-title" id="greeting-text">Good morning! 👋</h1>
+        <p class="page-subtitle" id="date-text">Loading…</p>
+      </div>
+      <span class="streak-badge" id="streak-badge">🔥 0 day streak</span>
+    </div>
+
+    <!-- Stat Cards -->
+    <div class="grid-4 section" id="stat-cards">
+      <!-- Populated by JS -->
+    </div>
+
+    <!-- Macro Rings -->
+    <div class="section">
+      <div class="section-header flex justify-between items-center">
+        <h2 class="section-title">Today's Macros</h2>
+        <a href="/analytics.html" class="btn btn-ghost btn-sm">View Analytics →</a>
+      </div>
+      <div class="rings-section" id="rings-section">
+        <!-- Populated by JS -->
+      </div>
+    </div>
+
+    <!-- Today's Meals -->
+    <div class="section">
+      <div class="section-header flex justify-between items-center">
+        <h2 class="section-title">Today's Meals</h2>
+        <a href="/meal-planner.html" class="btn btn-ghost btn-sm">View Planner →</a>
+      </div>
+      <div id="meals-container">
+        <!-- Populated by JS -->
+      </div>
+    </div>
+
+    <!-- Quick Links -->
+    <div class="section">
+      <h2 class="section-title" style="margin-bottom:1rem;">Quick Actions</h2>
+      <div class="quick-links">
+        <a href="/meal-planner.html" class="quick-link-card">
+          <div class="ql-icon">🤖</div>
+          <div class="ql-title">Generate Meal Plan</div>
+          <div class="ql-sub">AI-powered for today</div>
+        </a>
+        <a href="/grocery-list.html" class="quick-link-card">
+          <div class="ql-icon">🛒</div>
+          <div class="ql-title">Grocery List</div>
+          <div class="ql-sub">View this week's list</div>
+        </a>
+        <a href="/analytics.html" class="quick-link-card">
+          <div class="ql-icon">📈</div>
+          <div class="ql-title">Track Progress</div>
+          <div class="ql-sub">See your nutrition trends</div>
+        </a>
+      </div>
+    </div>
+  </main>
+
+  <!-- Bottom nav (mobile) -->
+  <nav class="bottom-nav" id="bottom-nav"></nav>
+</div>
+
+<div class="toast-container"></div>
+
+<script src="/shared.js"></script>
+<script>
+  if (redirectIfNoProfile()) throw new Error('redirect');
+
+  initAppShell('dashboard', 'Dashboard');
+
+  const profile = loadProfile();
+  const today   = new Date();
+  const dateKey = toDateKey(today);
+  const plan    = loadMealPlan(dateKey);
+
+  // Header
+  document.getElementById('greeting-text').textContent = `${getGreeting()}, ${profile.name || 'there'}! 👋`;
+  document.getElementById('date-text').textContent = formatDate(today);
+  document.getElementById('streak-badge').textContent = `🔥 ${calculateStreak()} day streak`;
+
+  // Compute consumed from plan
+  let consumed = { calories: 0, protein: 0 };
+  let completedMeals = 0;
+  if (plan && plan.meals) {
+    plan.meals.forEach(m => {
+      if (m.completed) {
+        consumed.calories += m.calories || 0;
+        consumed.protein  += m.protein  || 0;
+        completedMeals++;
+      }
+    });
+  }
+
+  const targets = {
+    calories: profile.daily_calories || 2000,
+    protein:  profile.daily_protein  || 150,
+    carbs:    profile.daily_carbs     || 200,
+    fat:      profile.daily_fat       || 65,
+  };
+
+  // Stat cards
+  const stats = [
+    {
+      label: 'Calories',
+      value: consumed.calories,
+      sub: `/ ${targets.calories} kcal`,
+      progress: Math.min(100, Math.round((consumed.calories / targets.calories) * 100)),
+      color: 'var(--clr-primary)',
+    },
+    {
+      label: 'Protein',
+      value: `${consumed.protein}g`,
+      sub: `/ ${targets.protein}g target`,
+      progress: Math.min(100, Math.round((consumed.protein / targets.protein) * 100)),
+      color: 'var(--clr-primary)',
+    },
+    {
+      label: 'Meals',
+      value: `${completedMeals}/4`,
+      sub: 'completed today',
+      progress: completedMeals * 25,
+      color: 'var(--clr-accent)',
+    },
+    {
+      label: 'Water',
+      value: '6',
+      sub: 'glasses today',
+      progress: 75,
+      color: 'var(--clr-info)',
+    },
+  ];
+
+  document.getElementById('stat-cards').innerHTML = stats.map(s => `
+    <div class="stat-card">
+      <div class="stat-label">${s.label}</div>
+      <div class="stat-value">${s.value}</div>
+      <div class="stat-sub">${s.sub}</div>
+      <div class="progress-bar-wrap" style="margin-top:.75rem;">
+        <div class="progress-bar-fill" style="width:${s.progress}%;background:${s.color}"></div>
+      </div>
+    </div>
+  `).join('');
+
+  // Macro rings
+  function makeSVGRing(pct, color, size = 100, strokeW = 10) {
+    const r = (size - strokeW * 2) / 2;
+    const circ = 2 * Math.PI * r;
+    const dash = circ * (pct / 100);
+    const cx = size / 2, cy = size / 2;
+    return `<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" style="transform:rotate(-90deg)">
+      <circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="var(--clr-bg-muted)" stroke-width="${strokeW}" />
+      <circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="${color}" stroke-width="${strokeW}"
+        stroke-dasharray="${dash} ${circ}" stroke-linecap="round" />
+    </svg>`;
+  }
+
+  const rings = [
+    { label: 'Protein', key: 'protein', color: 'var(--clr-primary)', unit: 'g' },
+    { label: 'Carbs',   key: 'carbs',   color: 'var(--clr-info)',    unit: 'g' },
+    { label: 'Fat',     key: 'fat',      color: 'var(--clr-accent)',  unit: 'g' },
+  ];
+
+  document.getElementById('rings-section').innerHTML = rings.map(r => {
+    const target  = targets[r.key] || 1;
+    const current = 0; // Could be loaded from today's log
+    const pct     = Math.min(100, Math.round((current / target) * 100));
+    return `<div class="ring-card">
+      <h4>${r.label}</h4>
+      <div class="macro-ring" style="position:relative;display:inline-flex;align-items:center;justify-content:center;">
+        ${makeSVGRing(pct, r.color, 120, 12)}
+        <div style="position:absolute;text-align:center;">
+          <div style="font-size:1.4rem;font-weight:800;color:${r.color}">${current}</div>
+          <div style="font-size:.7rem;color:var(--clr-text-muted);">${r.unit}</div>
+        </div>
+      </div>
+      <div class="ring-sub">${pct}% of ${target}${r.unit}</div>
+    </div>`;
+  }).join('');
+
+  // Meals section
+  const mealImages = {
+    Breakfast: 'https://images.unsplash.com/photo-1484723091739-30a097e8f929?w=400&h=200&fit=crop',
+    Lunch:     'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400&h=200&fit=crop',
+    Dinner:    'https://images.unsplash.com/photo-1467003909585-2f8a72700288?w=400&h=200&fit=crop',
+    Snack:     'https://images.unsplash.com/photo-1490474418585-ba9bad8fd0ea?w=400&h=200&fit=crop',
+  };
+
+  const mealsContainer = document.getElementById('meals-container');
+
+  if (!plan || !plan.meals || !plan.meals.length) {
+    mealsContainer.innerHTML = `<div class="empty-state card" style="padding:2.5rem;">
+      <div class="empty-state-icon">🍽️</div>
+      <div class="empty-state-title">No meal plan for today</div>
+      <div class="empty-state-text">Generate a personalized AI meal plan to get started.</div>
+      <a href="/meal-planner.html" class="btn btn-primary">Generate Today's Plan ✦</a>
+    </div>`;
+  } else {
+    mealsContainer.innerHTML = `<div class="meals-grid">
+      ${plan.meals.map((meal, idx) => `
+        <div class="meal-card">
+          <img class="meal-card-img" src="${mealImages[meal.type] || mealImages.Breakfast}" alt="${meal.recipe_name}" loading="lazy" />
+          <div class="meal-card-body">
+            <div class="meal-card-header">
+              <span class="badge badge-green">${meal.type}</span>
+              <label style="display:flex;align-items:center;gap:.4rem;cursor:pointer;font-size:.8rem;font-weight:600;color:var(--clr-text-muted);">
+                <input type="checkbox" ${meal.completed ? 'checked' : ''} onchange="toggleMeal(${idx}, this.checked)" />
+                Done
+              </label>
+            </div>
+            <div class="meal-card-title">${meal.recipe_name}</div>
+            <div class="meal-card-macros">
+              <span class="badge badge-orange">${meal.calories} cal</span>
+              <span class="badge badge-green">${meal.protein}g protein</span>
+              <span class="badge badge-blue">${meal.carbs}g carbs</span>
+              <span class="badge badge-muted">${meal.fat}g fat</span>
+            </div>
+            <div class="meal-card-footer">
+              <span style="font-size:.78rem;color:var(--clr-text-muted);">⏱ ${(meal.prep_time_minutes||0) + (meal.cook_time_minutes||0)} min</span>
+              <a href="/meal-planner.html" class="btn btn-ghost btn-sm">View Recipe →</a>
+            </div>
+          </div>
+        </div>
+      `).join('')}
+    </div>`;
+  }
+
+  function toggleMeal(idx, checked) {
+    const current = loadMealPlan(dateKey);
+    if (!current || !current.meals) return;
+    current.meals[idx].completed = checked;
+    saveMealPlan(dateKey, current);
+    showToast(checked ? 'Meal marked complete! ✓' : 'Meal unchecked', checked ? 'success' : 'default');
+  }
+</script>
+</body>
+</html>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                          mealzy/public/index.html                                                                            0000644 0000000 0000000 00000050416 15202360611 014332  0                                                                                                    ustar   root                            root                                                                                                                                                                                                                   <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Mealzy — AI-Powered Nutrition Platform</title>
-  <link rel="stylesheet" href="/style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet" />
   <style>
-    /* ── Landing-specific styles ────────────────────────── */
-    body { background: var(--clr-bg); }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    /* Fixed top nav */
-    .lp-nav {
+    :root {
+      --green:        #2a9055;
+      --green-dark:   #1e7a45;
+      --green-light:  #eaf7ef;
+      --orange:       #f0901a;
+      --orange-light: #fff4e6;
+      --blue:         #3b82f6;
+      --bg:           hsl(140,20%,99%);
+      --bg-muted:     hsl(145,15%,96%);
+      --card:         #ffffff;
+      --border:       hsl(145,15%,90%);
+      --text:         hsl(150,15%,12%);
+      --muted:        hsl(150,10%,45%);
+      --shadow-sm:    0 1px 3px rgba(0,0,0,.06),0 1px 2px rgba(0,0,0,.04);
+      --shadow:       0 4px 16px rgba(0,0,0,.07),0 1px 4px rgba(0,0,0,.04);
+      --shadow-lg:    0 12px 40px rgba(0,0,0,.10),0 4px 12px rgba(0,0,0,.05);
+      --r:            0.75rem;
+      --r-lg:         1.25rem;
+      --r-xl:         1.75rem;
+      --ease:         0.2s ease;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    img { max-width: 100%; display: block; }
+
+    .text-gradient {
+      background: linear-gradient(135deg, var(--green), #34c97a);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      padding: 0.625rem 1.25rem;
+      border-radius: var(--r);
+      font-size: 0.9rem;
+      font-weight: 600;
+      font-family: inherit;
+      border: 2px solid transparent;
+      cursor: pointer;
+      transition: all var(--ease);
+      white-space: nowrap;
+    }
+    .btn-primary { background: var(--green); color: #fff; border-color: var(--green); }
+    .btn-primary:hover { background: var(--green-dark); border-color: var(--green-dark); box-shadow: 0 4px 16px rgba(42,144,85,.35); transform: translateY(-1px); }
+    .btn-outline { background: transparent; color: var(--green); border-color: var(--green); }
+    .btn-outline:hover { background: var(--green-light); }
+    .btn-ghost { background: transparent; color: var(--text); border-color: transparent; }
+    .btn-ghost:hover { background: var(--bg-muted); }
+    .btn-lg { padding: 0.875rem 2rem; font-size: 1rem; }
+
+    /* ── Navigation ── */
+    .nav {
       position: fixed;
       top: 0; left: 0; right: 0;
       height: 68px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 0 2rem;
+      padding: 0 2.5rem;
       z-index: 200;
-      transition: background 0.3s, box-shadow 0.3s;
+      transition: background 0.3s, box-shadow 0.3s, border-color 0.3s;
     }
-    .lp-nav.scrolled {
-      background: rgba(255,255,255,0.82);
+    .nav.scrolled {
+      background: rgba(255,255,255,0.87);
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
-      border-bottom: 1px solid var(--clr-border);
+      border-bottom: 1px solid var(--border);
       box-shadow: var(--shadow-sm);
     }
-    .lp-nav-logo { display: flex; align-items: center; gap: 0.6rem; font-weight: 800; font-size: 1.2rem; }
-    .lp-nav-logo .logo-icon { width: 34px; height: 34px; font-size: 1rem; }
-    .lp-nav-links { display: flex; align-items: center; gap: 0.25rem; }
-    .lp-nav-links a {
-      padding: 0.45rem 0.9rem;
-      border-radius: var(--radius);
-      font-size: 0.9rem;
-      font-weight: 500;
-      color: var(--clr-text);
-      transition: background var(--transition);
+    .nav-logo { display: flex; align-items: center; gap: 0.6rem; font-weight: 800; font-size: 1.2rem; }
+    .logo-icon {
+      width: 34px; height: 34px;
+      background: var(--green);
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem;
+      flex-shrink: 0;
     }
-    .lp-nav-links a:hover { background: var(--clr-bg-muted); }
-    .lp-nav-actions { display: flex; align-items: center; gap: 0.5rem; }
+    .nav-links { display: flex; align-items: center; gap: 0.15rem; }
+    .nav-links a { padding: 0.45rem 0.9rem; border-radius: var(--r); font-size: 0.9rem; font-weight: 500; color: var(--text); transition: background var(--ease); }
+    .nav-links a:hover { background: var(--bg-muted); }
+    .nav-actions { display: flex; align-items: center; gap: 0.5rem; }
 
-    /* Hero */
+    /* ── Hero ── */
     .hero {
-      padding: 9rem 2rem 5rem;
+      padding: 9.5rem 1.5rem 4rem;
       text-align: center;
-      max-width: 860px;
+      max-width: 820px;
       margin: 0 auto;
     }
     .hero-badge {
       display: inline-flex;
       align-items: center;
       gap: 0.4rem;
-      background: var(--clr-primary-light);
-      color: var(--clr-primary);
+      background: var(--green-light);
+      color: var(--green);
       border: 1px solid rgba(42,144,85,.2);
       border-radius: 99px;
       padding: 0.3rem 1rem;
       font-size: 0.82rem;
       font-weight: 600;
       margin-bottom: 1.5rem;
-      animation: fadeInDown 0.6s ease both;
+      animation: fadeDown 0.6s ease both;
     }
     .hero h1 {
-      font-family: 'Playfair Display', serif;
-      font-size: clamp(2.8rem, 6vw, 4.5rem);
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: clamp(2.6rem, 6vw, 4.4rem);
       line-height: 1.1;
       font-weight: 700;
       margin-bottom: 1.25rem;
-      animation: fadeInDown 0.6s 0.1s ease both;
+      animation: fadeDown 0.6s 0.1s ease both;
     }
-    .hero-subtitle {
+    .hero-sub {
       font-size: 1.1rem;
-      color: var(--clr-text-muted);
-      max-width: 600px;
+      color: var(--muted);
+      max-width: 580px;
       margin: 0 auto 2.25rem;
       line-height: 1.7;
-      animation: fadeInDown 0.6s 0.2s ease both;
+      animation: fadeDown 0.6s 0.2s ease both;
     }
     .hero-ctas {
       display: flex;
@@ -86,425 +1483,357 @@
       gap: 0.75rem;
       flex-wrap: wrap;
       margin-bottom: 2rem;
-      animation: fadeInDown 0.6s 0.3s ease both;
+      animation: fadeDown 0.6s 0.3s ease both;
     }
     .hero-social {
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 0.6rem;
+      gap: 0.65rem;
       font-size: 0.85rem;
-      color: var(--clr-text-muted);
-      animation: fadeInDown 0.6s 0.4s ease both;
+      color: var(--muted);
+      animation: fadeDown 0.6s 0.4s ease both;
     }
-    .avatar-row { display: flex; }
-    .avatar-circle {
+    .avatars { display: flex; }
+    .av {
       width: 28px; height: 28px;
       border-radius: 50%;
-      background: var(--clr-primary);
+      background: var(--green);
       border: 2px solid #fff;
       display: flex; align-items: center; justify-content: center;
-      font-size: 0.65rem;
+      font-size: 0.62rem;
       color: #fff;
       font-weight: 700;
       margin-left: -6px;
     }
-    .avatar-circle:first-child { margin-left: 0; }
-    .stars { color: #f59e0b; letter-spacing: 1px; }
+    .av:first-child { margin-left: 0; }
+    .av:nth-child(2) { background: #3b82f6; }
+    .av:nth-child(3) { background: var(--orange); }
+    .stars { color: #f59e0b; }
 
     /* Hero image */
-    .hero-image-wrap {
+    .hero-img-wrap {
       position: relative;
-      max-width: 900px;
-      margin: 3rem auto 0;
-      border-radius: var(--radius-xl);
-      overflow: visible;
-      animation: fadeInUp 0.8s 0.5s ease both;
+      max-width: 920px;
+      margin: 3.5rem auto 0;
+      animation: fadeUp 0.9s 0.5s ease both;
     }
-    .hero-image-wrap img {
+    .hero-img-wrap img {
       width: 100%;
-      border-radius: var(--radius-xl);
+      border-radius: var(--r-xl);
       box-shadow: var(--shadow-lg);
       display: block;
+      aspect-ratio: 2 / 1;
+      object-fit: cover;
     }
-    .hero-badge-float {
+    .float-badge {
       position: absolute;
-      background: var(--clr-card);
-      border: 1px solid var(--clr-border);
-      border-radius: var(--radius-lg);
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--r-lg);
       padding: 0.6rem 1rem;
       display: flex;
       align-items: center;
-      gap: 0.5rem;
+      gap: 0.55rem;
       font-size: 0.82rem;
       font-weight: 600;
       box-shadow: var(--shadow);
       white-space: nowrap;
     }
-    .hero-badge-float .badge-icon { font-size: 1rem; }
-    .hero-badge-1 { top: 1.5rem; left: -1.5rem; }
-    .hero-badge-2 { top: 50%; right: -1.5rem; transform: translateY(-50%); }
-    .hero-badge-3 { bottom: 1.5rem; left: 50%; transform: translateX(-50%); }
+    .fb-icon { font-size: 1rem; }
+    .fb-label { font-size: 0.7rem; color: var(--muted); font-weight: 500; }
+    .fb-val   { font-size: 0.88rem; font-weight: 700; }
+    .fb-1 { top: 1.25rem; left: -0.5rem; }
+    .fb-2 { top: 50%; right: -0.5rem; transform: translateY(-50%); }
+    .fb-3 { bottom: 1.25rem; left: 50%; transform: translateX(-50%); }
 
-    /* Stats bar */
+    /* ── Stats bar ── */
     .stats-bar {
-      background: var(--clr-bg-muted);
-      border-top: 1px solid var(--clr-border);
-      border-bottom: 1px solid var(--clr-border);
-      padding: 2.5rem 2rem;
+      background: var(--bg-muted);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 2.75rem 2rem;
       margin-top: 5rem;
     }
-    .stats-bar-inner {
-      max-width: 900px;
+    .stats-inner {
+      max-width: 860px;
       margin: 0 auto;
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      gap: 1.5rem;
+      gap: 1rem;
       text-align: center;
     }
-    .stats-bar-item .num {
+    .stat-num {
       font-family: 'Playfair Display', serif;
       font-size: 2rem;
       font-weight: 700;
       line-height: 1;
       margin-bottom: 0.3rem;
     }
-    .stats-bar-item .lbl { font-size: 0.85rem; color: var(--clr-text-muted); }
+    .stat-lbl { font-size: 0.85rem; color: var(--muted); }
 
-    /* Sections wrapper */
-    .lp-section {
+    /* ── Section ── */
+    .section {
       max-width: 1100px;
       margin: 0 auto;
       padding: 5rem 2rem;
     }
-    .section-eyebrow {
+    .eyebrow {
       display: inline-flex;
       align-items: center;
-      gap: 0.4rem;
-      background: var(--clr-primary-light);
-      color: var(--clr-primary);
+      gap: 0.35rem;
+      background: var(--green-light);
+      color: var(--green);
       border-radius: 99px;
       padding: 0.25rem 0.85rem;
-      font-size: 0.78rem;
+      font-size: 0.75rem;
       font-weight: 700;
       text-transform: uppercase;
-      letter-spacing: 0.06em;
+      letter-spacing: 0.07em;
       margin-bottom: 0.85rem;
     }
-    .lp-section h2 {
+    .section-h2 {
       font-family: 'Playfair Display', serif;
-      font-size: clamp(1.8rem, 3.5vw, 2.6rem);
+      font-size: clamp(1.8rem, 3.5vw, 2.5rem);
       font-weight: 700;
-      margin-bottom: 0.5rem;
+      line-height: 1.2;
+      margin-bottom: 0.55rem;
     }
-    .lp-section .sub {
-      color: var(--clr-text-muted);
+    .section-sub {
+      color: var(--muted);
       font-size: 1rem;
-      margin-bottom: 2.5rem;
-      max-width: 550px;
+      max-width: 520px;
+      margin-bottom: 2.75rem;
+      line-height: 1.65;
     }
 
-    /* Feature grid */
-    .feature-grid {
+    /* ── Features ── */
+    .features-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 1.25rem;
     }
     .feature-card {
-      background: var(--clr-card);
-      border: 1px solid var(--clr-border);
-      border-radius: var(--radius-lg);
-      padding: 1.5rem;
-      transition: box-shadow var(--transition), border-color var(--transition), transform var(--transition);
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--r-lg);
+      padding: 1.6rem;
+      transition: box-shadow var(--ease), border-color var(--ease), transform var(--ease);
     }
-    .feature-card:hover {
-      box-shadow: var(--shadow);
-      border-color: rgba(42,144,85,.25);
-      transform: translateY(-2px);
-    }
-    .feature-icon-wrap {
-      width: 44px; height: 44px;
-      background: var(--clr-primary-light);
+    .feature-card:hover { box-shadow: var(--shadow); border-color: rgba(42,144,85,.3); transform: translateY(-2px); }
+    .feat-icon {
+      width: 46px; height: 46px;
+      background: var(--green-light);
       border-radius: 12px;
       display: flex; align-items: center; justify-content: center;
       font-size: 1.3rem;
       margin-bottom: 1rem;
     }
-    .feature-card h3 { font-weight: 700; font-size: 1rem; margin-bottom: 0.4rem; }
-    .feature-card p { font-size: 0.875rem; color: var(--clr-text-muted); line-height: 1.55; }
+    .feature-card h3 { font-weight: 700; font-size: 0.98rem; margin-bottom: 0.45rem; }
+    .feature-card p { font-size: 0.875rem; color: var(--muted); line-height: 1.6; }
 
-    /* Testimonials */
-    .testimonials-section { background: var(--clr-bg-muted); }
-    .testimonial-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 1.25rem;
-    }
-    .testimonial-card {
-      background: var(--clr-card);
-      border: 1px solid var(--clr-border);
-      border-radius: var(--radius-lg);
-      padding: 1.5rem;
-    }
-    .t-stars { color: #f59e0b; margin-bottom: 0.75rem; font-size: 0.9rem; letter-spacing: 2px; }
-    .t-quote { font-size: 0.9rem; color: var(--clr-text-muted); line-height: 1.65; margin-bottom: 1.25rem; }
+    /* ── Testimonials ── */
+    .testimonials-bg { background: var(--bg-muted); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+    .testimonials-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; }
+    .t-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--r-lg); padding: 1.6rem; }
+    .t-stars { color: #f59e0b; font-size: 0.88rem; letter-spacing: 2px; margin-bottom: 0.8rem; }
+    .t-quote { font-size: 0.9rem; color: var(--muted); line-height: 1.7; margin-bottom: 1.25rem; font-style: italic; }
     .t-author { display: flex; align-items: center; gap: 0.65rem; }
-    .t-avatar {
+    .t-av {
       width: 38px; height: 38px;
       border-radius: 50%;
-      background: var(--clr-primary);
+      background: var(--green);
       display: flex; align-items: center; justify-content: center;
-      color: #fff; font-weight: 700; font-size: 0.85rem;
+      color: #fff; font-weight: 700; font-size: 0.82rem;
+      flex-shrink: 0;
     }
-    .t-name { font-weight: 600; font-size: 0.88rem; }
-    .t-result { font-size: 0.75rem; color: var(--clr-primary); font-weight: 600; }
+    .t-name { font-weight: 700; font-size: 0.88rem; }
+    .t-result { font-size: 0.75rem; color: var(--green); font-weight: 600; margin-top: 0.15rem; }
 
-    /* CTA section */
+    /* ── CTA ── */
     .cta-section { padding: 5rem 2rem; }
     .cta-card {
-      max-width: 800px;
+      max-width: 780px;
       margin: 0 auto;
-      background: linear-gradient(135deg, var(--clr-primary), var(--clr-primary-dark));
-      border-radius: var(--radius-xl);
-      padding: 4rem 3rem;
+      background: linear-gradient(135deg, var(--green), var(--green-dark));
+      border-radius: var(--r-xl);
+      padding: 4.5rem 3rem;
       text-align: center;
       color: #fff;
       box-shadow: 0 20px 60px rgba(42,144,85,.3);
+      position: relative;
+      overflow: hidden;
     }
-    .cta-card h2 {
-      font-family: 'Playfair Display', serif;
-      font-size: 2.2rem;
-      font-weight: 700;
-      margin-bottom: 0.75rem;
+    .cta-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 70% 30%, rgba(255,255,255,.08) 0%, transparent 60%);
+      pointer-events: none;
     }
-    .cta-card p { opacity: 0.85; margin-bottom: 2rem; font-size: 1.05rem; }
+    .cta-card h2 { font-family: 'Playfair Display', serif; font-size: clamp(1.8rem, 4vw, 2.4rem); font-weight: 700; margin-bottom: 0.8rem; position: relative; }
+    .cta-card p { opacity: 0.88; font-size: 1.05rem; margin-bottom: 2.25rem; position: relative; }
     .btn-white {
       display: inline-flex;
       align-items: center;
       gap: 0.5rem;
       background: #fff;
-      color: var(--clr-primary);
-      padding: 0.875rem 2rem;
-      border-radius: var(--radius);
+      color: var(--green);
+      padding: 0.9rem 2.25rem;
+      border-radius: var(--r);
       font-weight: 700;
       font-size: 1rem;
-      transition: transform var(--transition), box-shadow var(--transition);
+      font-family: inherit;
+      border: none;
+      cursor: pointer;
+      transition: transform var(--ease), box-shadow var(--ease);
+      position: relative;
     }
-    .btn-white:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,.2); }
+    .btn-white:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(0,0,0,.22); }
 
-    /* Footer */
-    footer {
-      background: var(--clr-card);
-      border-top: 1px solid var(--clr-border);
-      padding: 1.5rem 2rem;
-    }
-    .footer-inner {
-      max-width: 1100px;
-      margin: 0 auto;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 1rem;
-    }
-    .footer-logo { display: flex; align-items: center; gap: 0.5rem; font-weight: 700; }
-    .footer-copy { font-size: 0.82rem; color: var(--clr-text-muted); }
+    /* ── Footer ── */
+    footer { background: var(--card); border-top: 1px solid var(--border); padding: 1.5rem 2.5rem; }
+    .footer-inner { max-width: 1100px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
+    .footer-logo { display: flex; align-items: center; gap: 0.5rem; font-weight: 700; font-size: 1rem; }
+    .footer-copy { font-size: 0.82rem; color: var(--muted); }
     .footer-links { display: flex; gap: 1.25rem; }
-    .footer-links a { font-size: 0.82rem; color: var(--clr-text-muted); transition: color var(--transition); }
-    .footer-links a:hover { color: var(--clr-primary); }
+    .footer-links a { font-size: 0.82rem; color: var(--muted); transition: color var(--ease); }
+    .footer-links a:hover { color: var(--green); }
 
-    /* Animations */
-    @keyframes fadeInDown {
-      from { opacity: 0; transform: translateY(-16px); }
+    /* ── Animations ── */
+    @keyframes fadeDown {
+      from { opacity: 0; transform: translateY(-14px); }
       to   { opacity: 1; transform: translateY(0); }
     }
-    @keyframes fadeInUp {
-      from { opacity: 0; transform: translateY(24px); }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(22px); }
       to   { opacity: 1; transform: translateY(0); }
     }
 
-    /* Responsive */
-    @media (max-width: 900px) {
-      .feature-grid { grid-template-columns: repeat(2, 1fr); }
-      .testimonial-grid { grid-template-columns: 1fr; }
-      .stats-bar-inner { grid-template-columns: repeat(2, 1fr); }
-      .hero-badge-1, .hero-badge-2, .hero-badge-3 { display: none; }
-      .lp-nav-links { display: none; }
+    /* ── Responsive ── */
+    @media (max-width: 960px) {
+      .features-grid { grid-template-columns: repeat(2, 1fr); }
+      .testimonials-grid { grid-template-columns: 1fr; }
+      .stats-inner { grid-template-columns: repeat(2, 1fr); }
+      .fb-1, .fb-2, .fb-3 { display: none; }
+      .nav-links { display: none; }
+      .nav { padding: 0 1.5rem; }
     }
     @media (max-width: 600px) {
-      .feature-grid { grid-template-columns: 1fr; }
-      .stats-bar-inner { grid-template-columns: 1fr 1fr; }
-      .cta-card { padding: 2.5rem 1.5rem; }
-      .cta-card h2 { font-size: 1.6rem; }
+      .features-grid { grid-template-columns: 1fr; }
+      .stats-inner { grid-template-columns: 1fr 1fr; }
+      .cta-card { padding: 2.75rem 1.5rem; }
+      .section { padding: 3.5rem 1.25rem; }
+      .hero { padding: 8rem 1.25rem 3rem; }
+      .footer-inner { flex-direction: column; align-items: center; text-align: center; }
     }
   </style>
 </head>
 <body>
 
 <!-- Navigation -->
-<nav class="lp-nav" id="lp-nav">
-  <a href="/" class="lp-nav-logo">
+<nav class="nav" id="main-nav">
+  <a href="/" class="nav-logo">
     <div class="logo-icon">🔥</div>
     <span>Mealzy</span>
   </a>
-  <div class="lp-nav-links">
+  <div class="nav-links">
     <a href="#features">Features</a>
-    <a href="#testimonials">Reviews</a>
+    <a href="#reviews">Reviews</a>
     <a href="#pricing">Pricing</a>
   </div>
-  <div class="lp-nav-actions">
-    <a href="/dashboard.html" class="btn btn-ghost">Log in</a>
-    <a href="/onboarding.html" class="btn btn-primary">Start Free →</a>
+  <div class="nav-actions">
+    <a href="dashboard.html" class="btn btn-ghost" id="login-btn">Log in</a>
+    <a href="onboarding.html" class="btn btn-primary">Start Free →</a>
   </div>
 </nav>
 
 <!-- Hero -->
 <section class="hero">
   <div class="hero-badge">✦ AI-Powered Nutrition Platform</div>
-  <h1>Your Personal AI<br /><span class="text-gradient">Nutritionist</span></h1>
-  <p class="hero-subtitle">Mealzy generates personalized meal plans, tracks your nutrition, and creates smart grocery lists — all powered by AI that learns your preferences.</p>
+  <h1>Your Personal AI<br><span class="text-gradient">Nutritionist</span></h1>
+  <p class="hero-sub">Mealzy generates personalized meal plans, tracks your nutrition, and creates smart grocery lists — all powered by AI that learns your preferences.</p>
   <div class="hero-ctas">
-    <a href="/onboarding.html" class="btn btn-primary btn-lg">Start Free Trial →</a>
+    <a href="onboarding.html" class="btn btn-primary btn-lg">Start Free Trial →</a>
     <a href="#features" class="btn btn-outline btn-lg">See How It Works</a>
   </div>
   <div class="hero-social">
-    <div class="avatar-row">
-      <div class="avatar-circle">A</div>
-      <div class="avatar-circle">B</div>
-      <div class="avatar-circle">C</div>
+    <div class="avatars">
+      <div class="av">A</div>
+      <div class="av">M</div>
+      <div class="av">E</div>
     </div>
     <span>Loved by 50,000+ users</span>
     <span class="stars">★★★★★</span>
   </div>
 
-  <div class="hero-image-wrap">
-    <img src="https://images.unsplash.com/photo-1490818387583-1baba5e638af?w=1200&h=600&fit=crop" alt="Healthy meal planning" loading="lazy" />
-    <div class="hero-badge-float hero-badge-1">
-      <span class="badge-icon">⚡</span>
-      <div>
-        <div style="font-size:.75rem;color:var(--clr-text-muted);font-weight:500;">Daily Target</div>
-        <div>1,850 cal</div>
-      </div>
+  <div class="hero-img-wrap">
+    <img
+      src="https://images.unsplash.com/photo-1490818387583-1baba5e638af?w=1200&h=600&fit=crop"
+      alt="Colourful healthy meal spread"
+      loading="eager"
+    />
+    <div class="float-badge fb-1">
+      <span class="fb-icon">⚡</span>
+      <div><div class="fb-label">Daily Target</div><div class="fb-val">1,850 cal</div></div>
     </div>
-    <div class="hero-badge-float hero-badge-2">
-      <span class="badge-icon">🎯</span>
-      <div>
-        <div style="font-size:.75rem;color:var(--clr-text-muted);font-weight:500;">Protein</div>
-        <div>142g</div>
-      </div>
+    <div class="float-badge fb-2">
+      <span class="fb-icon">🎯</span>
+      <div><div class="fb-label">Protein</div><div class="fb-val">142 g</div></div>
     </div>
-    <div class="hero-badge-float hero-badge-3">
-      <span class="badge-icon">📈</span>
-      <div>
-        <div style="font-size:.75rem;color:var(--clr-text-muted);font-weight:500;">Streak</div>
-        <div>7 Days 🔥</div>
-      </div>
+    <div class="float-badge fb-3">
+      <span class="fb-icon">📈</span>
+      <div><div class="fb-label">Streak</div><div class="fb-val">7 Days 🔥</div></div>
     </div>
   </div>
 </section>
 
-<!-- Stats Bar -->
+<!-- Stats bar -->
 <div class="stats-bar">
-  <div class="stats-bar-inner">
-    <div class="stats-bar-item">
-      <div class="num text-gradient">50K+</div>
-      <div class="lbl">Active Users</div>
-    </div>
-    <div class="stats-bar-item">
-      <div class="num text-gradient">2M+</div>
-      <div class="lbl">Meals Planned</div>
-    </div>
-    <div class="stats-bar-item">
-      <div class="num text-gradient">4.9</div>
-      <div class="lbl">App Rating</div>
-    </div>
-    <div class="stats-bar-item">
-      <div class="num text-gradient">$180</div>
-      <div class="lbl">Avg Monthly Savings</div>
-    </div>
+  <div class="stats-inner">
+    <div><div class="stat-num text-gradient">50K+</div><div class="stat-lbl">Active Users</div></div>
+    <div><div class="stat-num text-gradient">2M+</div><div class="stat-lbl">Meals Planned</div></div>
+    <div><div class="stat-num text-gradient">4.9</div><div class="stat-lbl">App Rating</div></div>
+    <div><div class="stat-num text-gradient">$180</div><div class="stat-lbl">Avg Monthly Savings</div></div>
   </div>
 </div>
 
 <!-- Features -->
-<section class="lp-section" id="features">
-  <div class="section-eyebrow">✦ Features</div>
-  <h2>Everything you need to<br /><span class="text-gradient">eat smarter</span></h2>
-  <p class="sub">From AI meal planning to smart grocery lists — Mealzy handles the hard work so you can focus on eating well.</p>
-
-  <div class="feature-grid">
-    <div class="feature-card">
-      <div class="feature-icon-wrap">🧠</div>
-      <h3>AI-Powered Plans</h3>
-      <p>Get personalized meal plans generated by GPT-4o-mini, tailored to your goals, dietary needs, and flavor preferences.</p>
-    </div>
-    <div class="feature-card">
-      <div class="feature-icon-wrap">📊</div>
-      <h3>Nutrition Tracking</h3>
-      <p>Monitor calories, protein, carbs, and fat in real time with beautiful dashboards and daily progress rings.</p>
-    </div>
-    <div class="feature-card">
-      <div class="feature-icon-wrap">🛒</div>
-      <h3>Smart Grocery Lists</h3>
-      <p>Automatically generate consolidated, budget-aware grocery lists organized by aisle category.</p>
-    </div>
-    <div class="feature-card">
-      <div class="feature-icon-wrap">⏱</div>
-      <h3>Save 5+ Hours Weekly</h3>
-      <p>Skip the meal planning research. Mealzy creates a full week of meals in under 60 seconds.</p>
-    </div>
-    <div class="feature-card">
-      <div class="feature-icon-wrap">💰</div>
-      <h3>Budget Optimized</h3>
-      <p>Set your weekly food budget and get meal plans and grocery lists that keep you on track financially.</p>
-    </div>
-    <div class="feature-card">
-      <div class="feature-icon-wrap">❤️</div>
-      <h3>Dietary Friendly</h3>
-      <p>Supports vegan, vegetarian, gluten-free, keto, paleo, and dozens of other dietary preferences and allergies.</p>
-    </div>
+<section class="section" id="features">
+  <div class="eyebrow">✦ Features</div>
+  <h2 class="section-h2">Everything you need to<br><span class="text-gradient">eat smarter</span></h2>
+  <p class="section-sub">From AI meal planning to smart grocery lists — Mealzy handles the hard work so you can focus on eating well.</p>
+  <div class="features-grid">
+    <div class="feature-card"><div class="feat-icon">🧠</div><h3>AI-Powered Plans</h3><p>Personalized meal plans generated by GPT-4o-mini, tailored to your goals, dietary needs, and taste preferences.</p></div>
+    <div class="feature-card"><div class="feat-icon">📊</div><h3>Nutrition Tracking</h3><p>Monitor calories, protein, carbs, and fat in real time with beautiful dashboards and daily progress rings.</p></div>
+    <div class="feature-card"><div class="feat-icon">🛒</div><h3>Smart Grocery Lists</h3><p>Auto-generate consolidated, budget-aware grocery lists organized by category — ready to shop in seconds.</p></div>
+    <div class="feature-card"><div class="feat-icon">⏱</div><h3>Save 5+ Hours Weekly</h3><p>Skip the research. Mealzy builds a full week of meals tailored to your kitchen and schedule in under a minute.</p></div>
+    <div class="feature-card"><div class="feat-icon">💰</div><h3>Budget Optimized</h3><p>Set your weekly food budget and get meal plans and grocery lists that keep you financially on track.</p></div>
+    <div class="feature-card"><div class="feat-icon">❤️</div><h3>Dietary Friendly</h3><p>Supports vegan, keto, gluten-free, paleo, Mediterranean, and dozens of other diets and allergy profiles.</p></div>
   </div>
 </section>
 
 <!-- Testimonials -->
-<section class="testimonials-section" id="testimonials">
-  <div class="lp-section">
-    <div class="section-eyebrow">✦ Reviews</div>
-    <h2>Loved by <span class="text-gradient">thousands</span></h2>
-    <p class="sub">Real results from real Mealzy users around the world.</p>
-
-    <div class="testimonial-grid">
-      <div class="testimonial-card">
+<section class="testimonials-bg" id="reviews">
+  <div class="section">
+    <div class="eyebrow">✦ Reviews</div>
+    <h2 class="section-h2">Loved by <span class="text-gradient">thousands</span></h2>
+    <p class="section-sub">Real results from real Mealzy users around the world.</p>
+    <div class="testimonials-grid">
+      <div class="t-card">
         <div class="t-stars">★★★★★</div>
         <p class="t-quote">"I lost 18 lbs in 3 months without feeling deprived. The AI actually understands my tastes and the grocery lists save me hours every week."</p>
-        <div class="t-author">
-          <div class="t-avatar">SJ</div>
-          <div>
-            <div class="t-name">Sarah Johnson</div>
-            <div class="t-result">🏆 Lost 18 lbs in 90 days</div>
-          </div>
-        </div>
+        <div class="t-author"><div class="t-av">SJ</div><div><div class="t-name">Sarah Johnson</div><div class="t-result">🏆 Lost 18 lbs in 90 days</div></div></div>
       </div>
-      <div class="testimonial-card">
+      <div class="t-card">
         <div class="t-stars">★★★★★</div>
         <p class="t-quote">"As someone with multiple food allergies, meal planning was a nightmare. Mealzy makes it effortless — every plan is safe and delicious."</p>
-        <div class="t-author">
-          <div class="t-avatar" style="background:var(--clr-accent);">MR</div>
-          <div>
-            <div class="t-name">Marcus Rivera</div>
-            <div class="t-result">🥗 Manages 4 food allergies</div>
-          </div>
-        </div>
+        <div class="t-author"><div class="t-av" style="background:#f0901a;">MR</div><div><div class="t-name">Marcus Rivera</div><div class="t-result">🥗 Manages 4 food allergies</div></div></div>
       </div>
-      <div class="testimonial-card">
+      <div class="t-card">
         <div class="t-stars">★★★★★</div>
         <p class="t-quote">"My protein intake jumped 40g per day and I finally started building the muscle I wanted. The analytics dashboard is phenomenal."</p>
-        <div class="t-author">
-          <div class="t-avatar" style="background:var(--clr-info);">EK</div>
-          <div>
-            <div class="t-name">Emma Kim</div>
-            <div class="t-result">💪 Gained 8 lbs of muscle</div>
-          </div>
-        </div>
+        <div class="t-author"><div class="t-av" style="background:#3b82f6;">EK</div><div><div class="t-name">Emma Kim</div><div class="t-result">💪 Gained 8 lbs of muscle</div></div></div>
       </div>
     </div>
   </div>
@@ -515,40 +1844,1609 @@
   <div class="cta-card">
     <h2>Start eating smarter today</h2>
     <p>Join 50,000+ users who transformed their nutrition with AI. Free to get started.</p>
-    <a href="/onboarding.html" class="btn-white">Get Started Free ›</a>
+    <a href="onboarding.html" class="btn-white">Get Started Free ›</a>
   </div>
 </section>
 
 <!-- Footer -->
 <footer>
   <div class="footer-inner">
-    <div class="footer-logo">
-      <div class="logo-icon" style="width:28px;height:28px;font-size:.85rem;">🔥</div>
-      <span>Mealzy</span>
-    </div>
+    <div class="footer-logo"><div class="logo-icon" style="width:28px;height:28px;font-size:.85rem;border-radius:8px;">🔥</div><span>Mealzy</span></div>
     <p class="footer-copy">© 2026 Mealzy. All rights reserved.</p>
-    <div class="footer-links">
-      <a href="#">Privacy</a>
-      <a href="#">Terms</a>
-      <a href="#">Support</a>
-    </div>
+    <div class="footer-links"><a href="#">Privacy</a><a href="#">Terms</a><a href="#">Support</a></div>
   </div>
 </footer>
 
 <script>
-  // Scroll-aware nav
-  const nav = document.getElementById('lp-nav');
+  const nav = document.getElementById('main-nav');
   window.addEventListener('scroll', () => {
-    nav.classList.toggle('scrolled', window.scrollY > 20);
-  });
+    nav.classList.toggle('scrolled', window.scrollY > 24);
+  }, { passive: true });
 
-  // If user already has profile, redirect nav links to dashboard
-  const profile = localStorage.getItem('mealzy_profile');
-  if (profile) {
-    document.querySelectorAll('a[href="/dashboard.html"]').forEach(el => {
-      el.textContent = 'Dashboard →';
-    });
-  }
+  try {
+    if (localStorage.getItem('mealzy_profile')) {
+      document.getElementById('login-btn').textContent = 'Dashboard →';
+    }
+  } catch(e) {}
 </script>
 </body>
 </html>
+                                                                                                                                                                                                                                                  mealzy/public/analytics.html                                                                        0000644 0000000 0000000 00000014632 15202357336 015224  0                                                                                                    ustar   root                            root                                                                                                                                                                                                                   <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Analytics — Mealzy</title>
+  <link rel="stylesheet" href="/style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+  <style>
+    .chart-card {
+      background: var(--clr-card);
+      border: 1px solid var(--clr-border);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+      box-shadow: var(--shadow-sm);
+    }
+    .chart-card h3 {
+      font-weight: 700;
+      font-size: 1rem;
+      margin-bottom: 1.25rem;
+      color: var(--clr-text);
+    }
+    .charts-row { display: grid; grid-template-columns: 2fr 1fr; gap: 1.25rem; margin-bottom: 1.25rem; }
+    .chart-wrap { position: relative; height: 240px; }
+
+    @media (max-width: 768px) {
+      .charts-row { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+<div class="app-layout">
+  <aside class="sidebar" id="sidebar"></aside>
+  <div class="sidebar-overlay" id="sidebar-overlay"></div>
+  <nav class="top-nav" id="top-nav"></nav>
+
+  <main class="main-content">
+    <div class="page-header">
+      <div>
+        <h1 class="page-title">Nutrition Analytics</h1>
+        <p class="page-subtitle">Track your progress over time</p>
+      </div>
+    </div>
+
+    <!-- Stat cards -->
+    <div class="grid-4 section" id="analytics-stats"></div>
+
+    <!-- Charts -->
+    <div class="charts-row">
+      <div class="chart-card">
+        <h3>📈 Calories — Last 7 Days</h3>
+        <div class="chart-wrap"><canvas id="calories-chart"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <h3>🥧 Avg Macro Distribution</h3>
+        <div class="chart-wrap"><canvas id="macro-chart"></canvas></div>
+      </div>
+    </div>
+
+    <div class="chart-card">
+      <h3>💪 Protein per Day</h3>
+      <div class="chart-wrap" style="height:200px;"><canvas id="protein-chart"></canvas></div>
+    </div>
+  </main>
+
+  <nav class="bottom-nav" id="bottom-nav"></nav>
+</div>
+
+<div class="toast-container"></div>
+
+<script src="/shared.js"></script>
+<script>
+  if (redirectIfNoProfile()) throw new Error('redirect');
+  initAppShell('analytics', 'Analytics');
+
+  const profile = loadProfile();
+
+  // Build last 7 days data
+  const days = [];
+  const caloriesData = [];
+  const proteinData  = [];
+  const targetCal    = profile.daily_calories || 2000;
+  const targetProt   = profile.daily_protein  || 150;
+
+  for (let i = 6; i >= 0; i--) {
+    const d = new Date();
+    d.setDate(d.getDate() - i);
+    const key = toDateKey(d);
+    const plan = loadMealPlan(key);
+
+    days.push(d.toLocaleDateString('en-US', { weekday: 'short', month: 'numeric', day: 'numeric' }));
+
+    let totalCal = 0, totalProt = 0;
+    if (plan && plan.meals) {
+      plan.meals.forEach(m => {
+        if (m.completed) {
+          totalCal  += m.calories || 0;
+          totalProt += m.protein  || 0;
+        }
+      });
+    }
+    caloriesData.push(totalCal || Math.floor(Math.random() * 400 + 1600)); // demo fallback
+    proteinData.push(totalProt  || Math.floor(Math.random() * 60 + 90));
+  }
+
+  const avgCal     = Math.round(caloriesData.reduce((s, v) => s + v, 0) / 7);
+  const avgProt    = Math.round(proteinData.reduce((s, v) => s + v, 0) / 7);
+  const goalHitRate = caloriesData.filter(c => Math.abs(c - targetCal) < 300).length;
+  const streak     = calculateStreak();
+
+  // Stat cards
+  document.getElementById('analytics-stats').innerHTML = [
+    { label: 'Avg Daily Calories', value: avgCal, sub: `Target: ${targetCal}`, color: 'var(--clr-primary)' },
+    { label: 'Avg Protein',        value: `${avgProt}g`, sub: `Target: ${targetProt}g`, color: 'var(--clr-primary)' },
+    { label: 'Goal Hit Rate',      value: `${goalHitRate}/7`, sub: 'Days on target', color: 'var(--clr-accent)' },
+    { label: 'Current Streak',     value: `${streak}`, sub: 'days in a row 🔥', color: 'var(--clr-info)' },
+  ].map(s => `<div class="stat-card">
+    <div class="stat-label">${s.label}</div>
+    <div class="stat-value" style="color:${s.color}">${s.value}</div>
+    <div class="stat-sub">${s.sub}</div>
+  </div>`).join('');
+
+  // Chart defaults
+  Chart.defaults.font.family = "'Inter', sans-serif";
+  Chart.defaults.color = 'hsl(150,10%,45%)';
+
+  // Calories chart (line/area)
+  new Chart(document.getElementById('calories-chart'), {
+    type: 'line',
+    data: {
+      labels: days,
+      datasets: [
+        {
+          label: 'Calories',
+          data: caloriesData,
+          borderColor: '#2a9055',
+          backgroundColor: 'rgba(42,144,85,.12)',
+          fill: true,
+          tension: 0.4,
+          pointBackgroundColor: '#2a9055',
+          pointRadius: 4,
+        },
+        {
+          label: 'Target',
+          data: Array(7).fill(targetCal),
+          borderColor: '#f0901a',
+          borderDash: [6, 4],
+          borderWidth: 2,
+          pointRadius: 0,
+          fill: false,
+        },
+      ],
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: { legend: { position: 'bottom' } },
+      scales: { y: { beginAtZero: false, min: 800 } },
+    },
+  });
+
+  // Macro donut
+  const avgCarbs = Math.round((profile.daily_carbs || 200) * 0.9);
+  const avgFat   = Math.round((profile.daily_fat   || 65)  * 0.9);
+  new Chart(document.getElementById('macro-chart'), {
+    type: 'doughnut',
+    data: {
+      labels: ['Protein', 'Carbs', 'Fat'],
+      datasets: [{
+        data: [avgProt * 4, avgCarbs * 4, avgFat * 9],
+        backgroundColor: ['#2a9055', '#3b82f6', '#f0901a'],
+        borderWidth: 0,
+      }],
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      cutout: '68%',
+      plugins: { legend: { position: 'bottom' } },
+    },
+  });
+
+  // Protein bar chart
+  new Chart(document.getElementById('protein-chart'), {
+    type: 'bar',
+    data: {
+      labels: days,
+      datasets: [
+        {
+          label: 'Protein (g)',
+          data: proteinData,
+          backgroundColor: 'rgba(42,144,85,.75)',
+          borderRadius: 6,
+        },
+        {
+          label: 'Target',
+          data: Array(7).fill(targetProt),
+          type: 'line',
+          borderColor: '#f0901a',
+          borderDash: [6,4],
+          borderWidth: 2,
+          pointRadius: 0,
+          fill: false,
+        },
+      ],
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: { legend: { position: 'bottom' } },
+      scales: { y: { beginAtZero: true } },
+    },
+  });
+</script>
+</body>
+</html>
+                                                                                                      mealzy/public/shared.js                                                                             0000644 0000000 0000000 00000024122 15202356622 014143  0                                                                                                    ustar   root                            root                                                                                                                                                                                                                   /* ============================================================
+   MEALZY — shared.js
+   All shared utilities, data helpers, and UI components
+   ============================================================ */
+
+// ── localStorage Keys ──────────────────────────────────────
+const KEYS = {
+  PROFILE:    'mealzy_profile',
+  MEAL_PLANS: 'mealzy_meal_plans',
+  GROCERY:    'mealzy_grocery_lists',
+  NUTRITION:  'mealzy_nutrition_logs',
+};
+
+// ── Profile ────────────────────────────────────────────────
+function loadProfile() {
+  const raw = localStorage.getItem(KEYS.PROFILE);
+  return raw ? JSON.parse(raw) : null;
+}
+
+function saveProfile(data) {
+  localStorage.setItem(KEYS.PROFILE, JSON.stringify(data));
+}
+
+// ── Meal Plans ─────────────────────────────────────────────
+function loadAllMealPlans() {
+  const raw = localStorage.getItem(KEYS.MEAL_PLANS);
+  return raw ? JSON.parse(raw) : {};
+}
+
+function loadMealPlan(date) {
+  const all = loadAllMealPlans();
+  return all[date] || null;
+}
+
+function saveMealPlan(date, data) {
+  const all = loadAllMealPlans();
+  all[date] = data;
+  localStorage.setItem(KEYS.MEAL_PLANS, JSON.stringify(all));
+}
+
+// ── Grocery Lists ──────────────────────────────────────────
+function loadAllGroceryLists() {
+  const raw = localStorage.getItem(KEYS.GROCERY);
+  return raw ? JSON.parse(raw) : {};
+}
+
+function loadGroceryList(week) {
+  const all = loadAllGroceryLists();
+  return all[week] || null;
+}
+
+function saveGroceryList(week, data) {
+  const all = loadAllGroceryLists();
+  all[week] = data;
+  localStorage.setItem(KEYS.GROCERY, JSON.stringify(all));
+}
+
+// ── Nutrition Logs ─────────────────────────────────────────
+function loadAllNutritionLogs() {
+  const raw = localStorage.getItem(KEYS.NUTRITION);
+  return raw ? JSON.parse(raw) : {};
+}
+
+function loadNutritionLog(date) {
+  const all = loadAllNutritionLogs();
+  return all[date] || null;
+}
+
+function saveNutritionLog(date, data) {
+  const all = loadAllNutritionLogs();
+  all[date] = data;
+  localStorage.setItem(KEYS.NUTRITION, JSON.stringify(all));
+}
+
+// ── Date Helpers ───────────────────────────────────────────
+function formatDate(date) {
+  const d = date instanceof Date ? date : new Date(date);
+  return d.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+}
+
+function toDateKey(date) {
+  const d = date instanceof Date ? date : new Date(date);
+  return d.toISOString().split('T')[0];
+}
+
+function getWeekKey(date) {
+  const d = date instanceof Date ? date : new Date(date);
+  const day = d.getDay();
+  const diff = d.getDate() - day + (day === 0 ? -6 : 1);
+  const monday = new Date(d);
+  monday.setDate(diff);
+  return toDateKey(monday);
+}
+
+function getGreeting() {
+  const h = new Date().getHours();
+  if (h < 12) return 'Good morning';
+  if (h < 17) return 'Good afternoon';
+  return 'Good evening';
+}
+
+// ── Redirect Guard ─────────────────────────────────────────
+function redirectIfNoProfile() {
+  if (!loadProfile()) {
+    window.location.href = '/onboarding.html';
+    return true;
+  }
+  return false;
+}
+
+// ── API: Generate Meal Plan ────────────────────────────────
+async function generateMealPlan(profile, date) {
+  const res = await fetch('/api/generate-meal', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ profile, date }),
+  });
+  if (!res.ok) {
+    const err = await res.json();
+    throw new Error(err.error || 'Failed to generate meal plan');
+  }
+  return res.json();
+}
+
+// ── API: Generate Grocery List ─────────────────────────────
+async function generateGroceryList(meals, budget, currency) {
+  const res = await fetch('/api/generate-grocery-list', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ meals, budget, currency }),
+  });
+  if (!res.ok) {
+    const err = await res.json();
+    throw new Error(err.error || 'Failed to generate grocery list');
+  }
+  return res.json();
+}
+
+// ── Toast Notifications ────────────────────────────────────
+function showToast(message, type = 'default', duration = 3500) {
+  let container = document.querySelector('.toast-container');
+  if (!container) {
+    container = document.createElement('div');
+    container.className = 'toast-container';
+    document.body.appendChild(container);
+  }
+
+  const toast = document.createElement('div');
+  toast.className = `toast ${type}`;
+  const icons = { success: '✓', error: '✕', default: 'ℹ' };
+  toast.innerHTML = `<span>${icons[type] || icons.default}</span><span>${message}</span>`;
+  container.appendChild(toast);
+
+  setTimeout(() => {
+    toast.style.opacity = '0';
+    toast.style.transform = 'translateX(100%)';
+    toast.style.transition = '0.3s ease';
+    setTimeout(() => toast.remove(), 300);
+  }, duration);
+}
+
+// ── Sidebar Nav ────────────────────────────────────────────
+const NAV_ITEMS = [
+  { icon: '🏠', label: 'Dashboard',    href: '/dashboard.html' },
+  { icon: '📅', label: 'Meal Planner', href: '/meal-planner.html' },
+  { icon: '🛒', label: 'Grocery List', href: '/grocery-list.html' },
+  { icon: '📊', label: 'Analytics',    href: '/analytics.html' },
+  { icon: '⚙️', label: 'Settings',     href: '/settings.html' },
+];
+
+function renderSidebar(activePage) {
+  const sidebar = document.getElementById('sidebar');
+  if (!sidebar) return;
+
+  const navHTML = NAV_ITEMS.map(item => {
+    const isActive = activePage && item.href.includes(activePage);
+    return `<a href="${item.href}" class="nav-item ${isActive ? 'active' : ''}">
+      <span class="nav-icon">${item.icon}</span>
+      <span>${item.label}</span>
+    </a>`;
+  }).join('');
+
+  sidebar.innerHTML = `
+    <div class="sidebar-logo">
+      <div class="logo-icon">🔥</div>
+      <span class="logo-text">Mealzy</span>
+    </div>
+    <nav class="sidebar-nav">
+      ${navHTML}
+    </nav>
+    <div class="sidebar-footer">© 2026 Mealzy</div>
+  `;
+}
+
+function renderTopNav(title) {
+  const nav = document.getElementById('top-nav');
+  if (!nav) return;
+  nav.innerHTML = `
+    <button class="hamburger" id="hamburger-btn" aria-label="Open menu">☰</button>
+    <div class="flex items-center gap-1">
+      <div class="logo-icon" style="width:28px;height:28px;font-size:.9rem;">🔥</div>
+      <span style="font-weight:700;font-size:1rem;">${title || 'Mealzy'}</span>
+    </div>
+    <div style="width:36px;"></div>
+  `;
+}
+
+function renderBottomNav(activePage) {
+  const nav = document.getElementById('bottom-nav');
+  if (!nav) return;
+
+  const mobileItems = NAV_ITEMS.slice(0, 5);
+  nav.innerHTML = `<div class="bottom-nav-items">
+    ${mobileItems.map(item => `
+      <a href="${item.href}" class="bottom-nav-item ${activePage && item.href.includes(activePage) ? 'active' : ''}">
+        <span class="nav-icon">${item.icon}</span>
+        <span>${item.label.split(' ')[0]}</span>
+      </a>
+    `).join('')}
+  </div>`;
+}
+
+function initSidebarToggle() {
+  const hamburger = document.getElementById('hamburger-btn');
+  const sidebar = document.getElementById('sidebar');
+  const overlay = document.getElementById('sidebar-overlay');
+  if (!hamburger || !sidebar) return;
+
+  hamburger.addEventListener('click', () => {
+    sidebar.classList.toggle('open');
+    if (overlay) overlay.classList.toggle('active');
+  });
+  if (overlay) {
+    overlay.addEventListener('click', () => {
+      sidebar.classList.remove('open');
+      overlay.classList.remove('active');
+    });
+  }
+}
+
+// ── App Shell Init ─────────────────────────────────────────
+function initAppShell(activePage, pageTitle) {
+  renderSidebar(activePage);
+  renderTopNav(pageTitle);
+  renderBottomNav(activePage);
+  initSidebarToggle();
+}
+
+// ── Nutrition Calculations ─────────────────────────────────
+function calculateNutrition(profile) {
+  const { age, weight, height, gender, goal, activity_level } = profile;
+
+  // Mifflin-St Jeor BMR
+  let bmr;
+  if (gender === 'Male') {
+    bmr = 10 * weight + 6.25 * height - 5 * age + 5;
+  } else {
+    bmr = 10 * weight + 6.25 * height - 5 * age - 161;
+  }
+
+  const activityFactors = {
+    'Sedentary':         1.2,
+    'Lightly Active':    1.375,
+    'Moderately Active': 1.55,
+    'Very Active':       1.725,
+    'Extra Active':      1.9,
+  };
+  const factor = activityFactors[activity_level] || 1.55;
+  let tdee = Math.round(bmr * factor);
+
+  let calories;
+  if (goal === 'Lose Weight')    calories = Math.round(tdee * 0.8);
+  else if (goal === 'Build Muscle') calories = Math.round(tdee * 1.1);
+  else                            calories = tdee;
+
+  const protein = Math.round(weight * 2.0);
+  const fat     = Math.round((calories * 0.28) / 9);
+  const carbs   = Math.round((calories - protein * 4 - fat * 9) / 4);
+
+  return { calories, protein, carbs, fat };
+}
+
+// ── Streak Calculator ──────────────────────────────────────
+function calculateStreak() {
+  const logs = loadAllNutritionLogs();
+  const plans = loadAllMealPlans();
+  let streak = 0;
+  const today = new Date();
+
+  for (let i = 0; i < 365; i++) {
+    const d = new Date(today);
+    d.setDate(d.getDate() - i);
+    const key = toDateKey(d);
+    if (logs[key] || plans[key]) {
+      streak++;
+    } else {
+      break;
+    }
+  }
+  return streak;
+}
+                                                                                                                                                                                                                                                                                                                                                                                                                                              mealzy/public/settings.html                                                                         0000644 0000000 0000000 00000031217 15202357410 015064  0                                                                                                    ustar   root                            root                                                                                                                                                                                                                   <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Settings — Mealzy</title>
+  <link rel="stylesheet" href="/style.css" />
+  <style>
+    .settings-section {
+      background: var(--clr-card);
+      border: 1px solid var(--clr-border);
+      border-radius: var(--radius-lg);
+      padding: 1.75rem;
+      margin-bottom: 1.25rem;
+      box-shadow: var(--shadow-sm);
+    }
+    .settings-section h3 {
+      font-weight: 700;
+      font-size: 1rem;
+      margin-bottom: 1.25rem;
+      padding-bottom: .75rem;
+      border-bottom: 1px solid var(--clr-border);
+    }
+    .settings-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .settings-grid .full { grid-column: 1 / -1; }
+
+    .danger-section {
+      border-color: hsl(0,72%,85%);
+      background: var(--clr-danger-light);
+    }
+    .danger-section h3 { border-color: hsl(0,72%,85%); color: var(--clr-danger); }
+
+    .save-row { display: flex; justify-content: flex-end; margin-top: 1rem; }
+
+    .chips-wrap { display: flex; flex-wrap: wrap; gap: .5rem; }
+
+    @media (max-width: 600px) {
+      .settings-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+<div class="app-layout">
+  <aside class="sidebar" id="sidebar"></aside>
+  <div class="sidebar-overlay" id="sidebar-overlay"></div>
+  <nav class="top-nav" id="top-nav"></nav>
+
+  <main class="main-content">
+    <div class="page-header">
+      <div>
+        <h1 class="page-title">Settings</h1>
+        <p class="page-subtitle">Manage your profile and preferences</p>
+      </div>
+    </div>
+
+    <!-- Body Stats -->
+    <div class="settings-section">
+      <h3>🧍 Body Stats</h3>
+      <div class="settings-grid">
+        <div class="form-group">
+          <label class="form-label">Name</label>
+          <input type="text" class="form-input" id="s-name" placeholder="Your name" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Age</label>
+          <input type="number" class="form-input" id="s-age" placeholder="25" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Weight (kg)</label>
+          <input type="number" class="form-input" id="s-weight" placeholder="70" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Height (cm)</label>
+          <input type="number" class="form-input" id="s-height" placeholder="175" />
+        </div>
+        <div class="form-group full">
+          <label class="form-label">Gender</label>
+          <select class="form-select" id="s-gender">
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+      </div>
+      <div class="save-row"><button class="btn btn-primary" onclick="saveSection('body')">Save Changes</button></div>
+    </div>
+
+    <!-- Fitness Goals -->
+    <div class="settings-section">
+      <h3>🎯 Fitness Goals</h3>
+      <div class="settings-grid">
+        <div class="form-group">
+          <label class="form-label">Goal</label>
+          <select class="form-select" id="s-goal">
+            <option value="Lose Weight">Lose Weight</option>
+            <option value="Build Muscle">Build Muscle</option>
+            <option value="Maintain">Maintain</option>
+            <option value="Eat Healthier">Eat Healthier</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Activity Level</label>
+          <select class="form-select" id="s-activity">
+            <option value="Sedentary">Sedentary</option>
+            <option value="Lightly Active">Lightly Active</option>
+            <option value="Moderately Active">Moderately Active</option>
+            <option value="Very Active">Very Active</option>
+            <option value="Extra Active">Extra Active</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Daily Calorie Target</label>
+          <input type="number" class="form-input" id="s-calories" placeholder="2000" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Daily Protein Target (g)</label>
+          <input type="number" class="form-input" id="s-protein" placeholder="150" />
+        </div>
+      </div>
+      <div class="save-row"><button class="btn btn-primary" onclick="saveSection('goals')">Save Changes</button></div>
+    </div>
+
+    <!-- Food Preferences -->
+    <div class="settings-section">
+      <h3>🥗 Food Preferences</h3>
+      <div class="form-group" style="margin-bottom:1rem;">
+        <label class="form-label">Dietary Preferences</label>
+        <div class="chips-wrap" id="s-dietary-chips">
+          <span class="chip" data-value="Vegan">🌱 Vegan</span>
+          <span class="chip" data-value="Vegetarian">🥦 Vegetarian</span>
+          <span class="chip" data-value="Pescatarian">🐟 Pescatarian</span>
+          <span class="chip" data-value="Keto">🥑 Keto</span>
+          <span class="chip" data-value="Paleo">🍖 Paleo</span>
+          <span class="chip" data-value="Mediterranean">🫒 Mediterranean</span>
+          <span class="chip" data-value="Gluten-Free">🌾 Gluten-Free</span>
+          <span class="chip" data-value="Dairy-Free">🥛 Dairy-Free</span>
+          <span class="chip" data-value="Low-Carb">📉 Low-Carb</span>
+          <span class="chip" data-value="High-Protein">💪 High-Protein</span>
+        </div>
+      </div>
+      <div class="form-group" style="margin-bottom:1rem;">
+        <label class="form-label">Allergies</label>
+        <div class="chips-wrap" id="s-allergy-chips">
+          <span class="chip" data-value="Nuts">🥜 Nuts</span>
+          <span class="chip" data-value="Shellfish">🦐 Shellfish</span>
+          <span class="chip" data-value="Eggs">🥚 Eggs</span>
+          <span class="chip" data-value="Soy">🫘 Soy</span>
+          <span class="chip" data-value="Wheat">🌾 Wheat</span>
+          <span class="chip" data-value="Sesame">🫙 Sesame</span>
+          <span class="chip" data-value="Fish">🐠 Fish</span>
+          <span class="chip" data-value="Dairy">🧀 Dairy</span>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Disliked Foods (comma-separated)</label>
+        <input type="text" class="form-input" id="s-disliked" placeholder="e.g. broccoli, tofu, liver" />
+      </div>
+      <div class="save-row"><button class="btn btn-primary" onclick="saveSection('preferences')">Save Changes</button></div>
+    </div>
+
+    <!-- Cooking -->
+    <div class="settings-section">
+      <h3>🍳 Cooking</h3>
+      <div class="settings-grid">
+        <div class="form-group">
+          <label class="form-label">Cooking Skill</label>
+          <select class="form-select" id="s-skill">
+            <option value="Beginner">Beginner</option>
+            <option value="Intermediate">Intermediate</option>
+            <option value="Advanced">Advanced</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Max Cook Time (min)</label>
+          <input type="number" class="form-input" id="s-cooktime" placeholder="45" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Weekly Budget</label>
+          <input type="number" class="form-input" id="s-budget" placeholder="100" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Currency</label>
+          <select class="form-select" id="s-currency">
+            <option value="USD">USD ($)</option>
+            <option value="EUR">EUR (€)</option>
+            <option value="GBP">GBP (£)</option>
+            <option value="SEK">SEK (kr)</option>
+          </select>
+        </div>
+      </div>
+      <div class="save-row"><button class="btn btn-primary" onclick="saveSection('cooking')">Save Changes</button></div>
+    </div>
+
+    <!-- Danger Zone -->
+    <div class="settings-section danger-section">
+      <h3>⚠️ Danger Zone</h3>
+      <p style="font-size:.875rem;color:var(--clr-text-muted);margin-bottom:1.25rem;">Resetting your profile will delete all your data including meal plans, grocery lists, and nutrition logs. This cannot be undone.</p>
+      <button class="btn btn-danger" onclick="confirmReset()">🗑 Reset Profile & All Data</button>
+    </div>
+  </main>
+
+  <nav class="bottom-nav" id="bottom-nav"></nav>
+</div>
+
+<div class="toast-container"></div>
+
+<script src="/shared.js"></script>
+<script>
+  if (redirectIfNoProfile()) throw new Error('redirect');
+  initAppShell('settings', 'Settings');
+
+  const profile = loadProfile();
+
+  // Populate all fields
+  function populate() {
+    const p = loadProfile();
+    if (!p) return;
+    document.getElementById('s-name').value     = p.name         || '';
+    document.getElementById('s-age').value      = p.age          || '';
+    document.getElementById('s-weight').value   = p.weight       || '';
+    document.getElementById('s-height').value   = p.height       || '';
+    document.getElementById('s-gender').value   = p.gender       || 'Other';
+    document.getElementById('s-goal').value     = p.goal         || 'Maintain';
+    document.getElementById('s-activity').value = p.activity_level || 'Moderately Active';
+    document.getElementById('s-calories').value = p.daily_calories || '';
+    document.getElementById('s-protein').value  = p.daily_protein  || '';
+    document.getElementById('s-skill').value    = p.cooking_skill  || 'Intermediate';
+    document.getElementById('s-cooktime').value = p.max_cook_time  || 45;
+    document.getElementById('s-budget').value   = p.weekly_budget  || 100;
+    document.getElementById('s-currency').value = p.currency        || 'USD';
+    document.getElementById('s-disliked').value = (p.disliked_foods || []).join(', ');
+
+    // Chips
+    activateChips('s-dietary-chips', p.dietary_preferences || []);
+    activateChips('s-allergy-chips', p.allergies || []);
+  }
+
+  function activateChips(containerId, activeValues) {
+    document.querySelectorAll(`#${containerId} .chip`).forEach(chip => {
+      chip.classList.toggle('active', activeValues.includes(chip.dataset.value));
+      chip.addEventListener('click', () => chip.classList.toggle('active'));
+    });
+  }
+
+  function getChipValues(containerId) {
+    return Array.from(document.querySelectorAll(`#${containerId} .chip.active`)).map(c => c.dataset.value);
+  }
+
+  function saveSection(section) {
+    const p = loadProfile() || {};
+
+    if (section === 'body') {
+      p.name   = document.getElementById('s-name').value;
+      p.age    = parseInt(document.getElementById('s-age').value);
+      p.weight = parseInt(document.getElementById('s-weight').value);
+      p.height = parseInt(document.getElementById('s-height').value);
+      p.gender = document.getElementById('s-gender').value;
+    }
+    if (section === 'goals') {
+      p.goal           = document.getElementById('s-goal').value;
+      p.activity_level = document.getElementById('s-activity').value;
+      p.daily_calories = parseInt(document.getElementById('s-calories').value) || p.daily_calories;
+      p.daily_protein  = parseInt(document.getElementById('s-protein').value)  || p.daily_protein;
+      // Recalculate macros
+      const calc = calculateNutrition(p);
+      if (!document.getElementById('s-calories').value) p.daily_calories = calc.calories;
+      if (!document.getElementById('s-protein').value)  p.daily_protein  = calc.protein;
+      p.daily_carbs = calc.carbs;
+      p.daily_fat   = calc.fat;
+    }
+    if (section === 'preferences') {
+      p.dietary_preferences = getChipValues('s-dietary-chips');
+      p.allergies           = getChipValues('s-allergy-chips');
+      p.disliked_foods      = document.getElementById('s-disliked').value.split(',').map(s => s.trim()).filter(Boolean);
+    }
+    if (section === 'cooking') {
+      p.cooking_skill  = document.getElementById('s-skill').value;
+      p.max_cook_time  = parseInt(document.getElementById('s-cooktime').value);
+      p.weekly_budget  = parseFloat(document.getElementById('s-budget').value);
+      p.currency       = document.getElementById('s-currency').value;
+    }
+
+    saveProfile(p);
+    showToast('Changes saved ✓', 'success');
+  }
+
+  function confirmReset() {
+    if (confirm('Are you sure? This will delete ALL your Mealzy data and cannot be undone.')) {
+      Object.values({ ...window.KEYS }).forEach(k => localStorage.removeItem(k));
+      // Clear all mealzy keys
+      ['mealzy_profile','mealzy_meal_plans','mealzy_grocery_lists','mealzy_nutrition_logs'].forEach(k => localStorage.removeItem(k));
+      showToast('Profile reset. Redirecting…', 'default');
+      setTimeout(() => { window.location.href = '/onboarding.html'; }, 1500);
+    }
+  }
+
+  populate();
+</script>
+</body>
+</html>
+                                                                                                                                                                                                                                                                                                                                                                                 mealzy/public/grocery-list.html                                                                     0000644 0000000 0000000 00000022603 15202357300 015644  0                                                                                                    ustar   root                            root                                                                                                                                                                                                                   <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Grocery List — Mealzy</title>
+  <link rel="stylesheet" href="/style.css" />
+  <style>
+    .gl-header-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    .gl-progress-card {
+      background: var(--clr-card);
+      border: 1px solid var(--clr-border);
+      border-radius: var(--radius-lg);
+      padding: 1.25rem;
+      margin-bottom: 1.5rem;
+    }
+    .gl-progress-label { display: flex; justify-content: space-between; font-size: .85rem; font-weight: 600; margin-bottom: .5rem; }
+
+    .category-group { margin-bottom: 1.5rem; }
+    .category-header {
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+      margin-bottom: .5rem;
+      padding: .4rem .75rem;
+      border-radius: var(--radius);
+      font-weight: 700;
+      font-size: .82rem;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+    }
+    .cat-Produce  { background: hsl(130,50%,90%); color: hsl(130,50%,30%); }
+    .cat-Protein  { background: hsl(0,60%,92%);   color: hsl(0,60%,38%); }
+    .cat-Dairy    { background: hsl(210,60%,92%);  color: hsl(210,60%,38%); }
+    .cat-Grains   { background: hsl(45,80%,90%);   color: hsl(45,80%,35%); }
+    .cat-Pantry   { background: hsl(30,70%,90%);   color: hsl(30,70%,38%); }
+    .cat-Beverages{ background: hsl(190,60%,90%);  color: hsl(190,60%,35%); }
+    .cat-Frozen   { background: hsl(240,40%,92%);  color: hsl(240,40%,38%); }
+    .cat-Other    { background: var(--clr-bg-muted); color: var(--clr-text-muted); }
+
+    .gl-item {
+      display: flex;
+      align-items: center;
+      gap: .75rem;
+      padding: .7rem .875rem;
+      background: var(--clr-card);
+      border: 1px solid var(--clr-border);
+      border-radius: var(--radius);
+      margin-bottom: .4rem;
+      transition: all var(--transition);
+    }
+    .gl-item:hover { border-color: rgba(42,144,85,.2); }
+    .gl-item.checked { opacity: .5; }
+    .gl-item.checked .gl-item-name { text-decoration: line-through; }
+    .gl-item input[type=checkbox] { accent-color: var(--clr-primary); width: 17px; height: 17px; cursor: pointer; flex-shrink: 0; }
+    .gl-item-name { flex: 1; font-size: .9rem; font-weight: 500; }
+    .gl-item-qty  { font-size: .8rem; color: var(--clr-text-muted); font-weight: 500; }
+    .gl-item-cost { font-size: .82rem; font-weight: 700; color: var(--clr-primary); min-width: 45px; text-align: right; }
+
+    .gl-footer-card {
+      background: var(--clr-card);
+      border: 1px solid var(--clr-border);
+      border-radius: var(--radius-lg);
+      padding: 1.25rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+    .gl-total { font-size: 1.1rem; font-weight: 800; }
+    .gl-budget { font-size: .875rem; color: var(--clr-text-muted); }
+
+    .gen-spinner { width: 44px; height: 44px; border: 4px solid var(--clr-primary-light); border-top-color: var(--clr-primary); border-radius: 50%; animation: spin .8s linear infinite; margin: 0 auto 1rem; }
+  </style>
+</head>
+<body>
+<div class="app-layout">
+  <aside class="sidebar" id="sidebar"></aside>
+  <div class="sidebar-overlay" id="sidebar-overlay"></div>
+  <nav class="top-nav" id="top-nav"></nav>
+
+  <main class="main-content">
+    <div class="gl-header-row">
+      <div>
+        <h1 class="page-title">Grocery List</h1>
+        <p class="page-subtitle" id="week-label">Week of …</p>
+      </div>
+      <button class="btn btn-primary" id="btn-generate">🛒 Generate This Week's List</button>
+    </div>
+
+    <div id="grocery-content">
+      <!-- Populated by JS -->
+    </div>
+  </main>
+
+  <nav class="bottom-nav" id="bottom-nav"></nav>
+</div>
+
+<div class="toast-container"></div>
+
+<script src="/shared.js"></script>
+<script>
+  if (redirectIfNoProfile()) throw new Error('redirect');
+  initAppShell('grocery-list', 'Grocery');
+
+  const profile  = loadProfile();
+  const weekKey  = getWeekKey(new Date());
+  document.getElementById('week-label').textContent = `Week of ${new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}`;
+
+  const CAT_ICONS = { Produce:'🥦', Protein:'🥩', Dairy:'🥛', Grains:'🌾', Pantry:'🏺', Beverages:'🧃', Frozen:'🧊', Other:'📦' };
+
+  function renderList() {
+    const list = loadGroceryList(weekKey);
+    const content = document.getElementById('grocery-content');
+
+    if (!list || !list.items || !list.items.length) {
+      content.innerHTML = `<div class="empty-state card" style="padding:3rem;text-align:center;">
+        <div class="empty-state-icon">🛒</div>
+        <div class="empty-state-title">No grocery list yet</div>
+        <div class="empty-state-text">Generate your meal plan first, then create a smart grocery list from it.</div>
+      </div>`;
+      return;
+    }
+
+    const checked   = list.items.filter(i => i.checked).length;
+    const total     = list.items.length;
+    const pct       = Math.round((checked / total) * 100);
+    const totalCost = list.items.reduce((s, i) => s + (parseFloat(i.estimated_cost) || 0), 0);
+    const budget    = profile.weekly_budget || 100;
+
+    // Group by category
+    const groups = {};
+    list.items.forEach((item, idx) => {
+      const cat = item.category || 'Other';
+      if (!groups[cat]) groups[cat] = [];
+      groups[cat].push({ ...item, _idx: idx });
+    });
+
+    let html = `
+      <div class="gl-progress-card">
+        <div class="gl-progress-label">
+          <span>Shopping progress</span>
+          <span>${checked} / ${total} items</span>
+        </div>
+        <div class="progress-bar-wrap">
+          <div class="progress-bar-fill" id="gl-progress-fill" style="width:${pct}%"></div>
+        </div>
+      </div>
+    `;
+
+    Object.entries(groups).forEach(([cat, items]) => {
+      const icon = CAT_ICONS[cat] || '📦';
+      html += `<div class="category-group">
+        <div class="category-header cat-${cat.replace(/\s/g,'')}">
+          <span>${icon}</span> ${cat} <span style="font-weight:400;opacity:.7;">(${items.length})</span>
+        </div>
+        ${items.map(item => `
+          <div class="gl-item ${item.checked ? 'checked' : ''}" id="gl-item-${item._idx}">
+            <input type="checkbox" ${item.checked ? 'checked' : ''} onchange="toggleItem(${item._idx}, this.checked)" />
+            <span class="gl-item-name">${item.name}</span>
+            <span class="gl-item-qty">${item.quantity || ''}</span>
+            <span class="gl-item-cost">${item.estimated_cost ? '$' + parseFloat(item.estimated_cost).toFixed(2) : ''}</span>
+          </div>
+        `).join('')}
+      </div>`;
+    });
+
+    html += `
+      <div class="gl-footer-card">
+        <div>
+          <div class="gl-total text-gradient">$${totalCost.toFixed(2)}</div>
+          <div class="gl-budget">Estimated Total</div>
+        </div>
+        <div style="text-align:right;">
+          <div class="gl-total">$${parseFloat(budget).toFixed(2)}</div>
+          <div class="gl-budget">Weekly Budget</div>
+        </div>
+        <div>
+          <span class="badge ${totalCost <= budget ? 'badge-green' : 'badge-red'}">
+            ${totalCost <= budget ? '✓ Within budget' : '⚠ Over budget'}
+          </span>
+        </div>
+      </div>
+    `;
+
+    content.innerHTML = html;
+  }
+
+  function toggleItem(idx, checked) {
+    const list = loadGroceryList(weekKey);
+    list.items[idx].checked = checked;
+    saveGroceryList(weekKey, list);
+
+    const el = document.getElementById(`gl-item-${idx}`);
+    if (el) el.classList.toggle('checked', checked);
+
+    const checkedCount = list.items.filter(i => i.checked).length;
+    const pct = Math.round((checkedCount / list.items.length) * 100);
+    const fill = document.getElementById('gl-progress-fill');
+    if (fill) fill.style.width = pct + '%';
+
+    if (checkedCount === list.items.length) {
+      showToast('All items checked! 🎉', 'success');
+    }
+  }
+
+  document.getElementById('btn-generate').addEventListener('click', async () => {
+    const btn = document.getElementById('btn-generate');
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner"></span> Generating…';
+
+    // Collect this week's meals
+    const allMeals = [];
+    for (let i = 0; i < 7; i++) {
+      const d = new Date();
+      d.setDate(d.getDate() - d.getDay() + 1 + i);
+      const plan = loadMealPlan(toDateKey(d));
+      if (plan && plan.meals) allMeals.push(...plan.meals);
+    }
+
+    document.getElementById('grocery-content').innerHTML = `
+      <div class="empty-state card" style="padding:3rem;">
+        <div class="gen-spinner"></div>
+        <div style="font-weight:600;">Building your grocery list…</div>
+        <div style="color:var(--clr-text-muted);font-size:.875rem;margin-top:.3rem;">Consolidating ingredients from ${allMeals.length} meals</div>
+      </div>
+    `;
+
+    try {
+      if (!allMeals.length) throw new Error('No meal plans found this week. Generate meal plans first!');
+      const result = await generateGroceryList(allMeals, profile.weekly_budget, profile.currency);
+      saveGroceryList(weekKey, result);
+      renderList();
+      showToast('Grocery list generated! 🛒', 'success');
+    } catch (err) {
+      showToast(err.message, 'error');
+      renderList();
+    } finally {
+      btn.disabled = false;
+      btn.innerHTML = '🛒 Generate This Week\'s List';
+    }
+  });
+
+  renderList();
+</script>
+</body>
+</html>
+                                                                                                                             mealzy/public/meal-planner.html                                                                     0000644 0000000 0000000 00000027431 15202357230 015602  0                                                                                                    ustar   root                            root                                                                                                                                                                                                                   <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Meal Planner — Mealzy</title>
+  <link rel="stylesheet" href="/style.css" />
+  <style>
+    /* Date nav */
+    .date-nav {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      background: var(--clr-card);
+      border: 1px solid var(--clr-border);
+      border-radius: var(--radius-lg);
+      padding: 0.75rem 1rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+    .date-nav-arrow {
+      width: 36px; height: 36px;
+      display: flex; align-items: center; justify-content: center;
+      border-radius: var(--radius);
+      border: 1.5px solid var(--clr-border);
+      background: var(--clr-card);
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all var(--transition);
+      flex-shrink: 0;
+    }
+    .date-nav-arrow:hover { border-color: var(--clr-primary); color: var(--clr-primary); }
+    .date-nav-label { font-weight: 700; flex: 1; text-align: center; font-size: 1rem; }
+
+    /* Meal cards */
+    .mp-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.25rem; }
+    .mp-card {
+      background: var(--clr-card);
+      border: 1px solid var(--clr-border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+      transition: box-shadow var(--transition);
+    }
+    .mp-card:hover { box-shadow: var(--shadow); }
+    .mp-card-header {
+      padding: 1rem 1rem 0.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .mp-card-body { padding: 0 1rem 1rem; }
+    .mp-card-name { font-weight: 800; font-size: 1rem; margin-bottom: 0.6rem; }
+    .mp-card-macros { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 0.75rem; }
+    .mp-card-meta { display: flex; gap: 1rem; font-size: 0.78rem; color: var(--clr-text-muted); margin-bottom: 0.75rem; }
+    .mp-card-footer { display: flex; align-items: center; justify-content: space-between; }
+
+    /* Ingredients/instructions toggle */
+    .mp-details { display: none; border-top: 1px solid var(--clr-border); margin-top: 0.75rem; padding-top: 0.75rem; }
+    .mp-details.open { display: block; animation: fadeIn .2s ease; }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    .mp-details h5 { font-size: 0.82rem; font-weight: 700; color: var(--clr-text-muted); text-transform: uppercase; letter-spacing: .05em; margin-bottom: 0.5rem; }
+    .ingredient-list { list-style: none; display: flex; flex-direction: column; gap: .3rem; }
+    .ingredient-list li { font-size: 0.82rem; display: flex; justify-content: space-between; }
+    .ingredient-list li .name { color: var(--clr-text); }
+    .ingredient-list li .cost { color: var(--clr-text-muted); font-size: .75rem; }
+    .instruction-list { list-style: none; counter-reset: step; display: flex; flex-direction: column; gap: .5rem; }
+    .instruction-list li { font-size: 0.82rem; display: flex; gap: .5rem; color: var(--clr-text-muted); counter-increment: step; }
+    .instruction-list li::before { content: counter(step); display: inline-flex; align-items: center; justify-content: center; width: 20px; height: 20px; min-width: 20px; background: var(--clr-primary); color: #fff; border-radius: 50%; font-size: .7rem; font-weight: 700; }
+
+    /* Totals bar */
+    .totals-bar {
+      background: var(--clr-card);
+      border: 1px solid var(--clr-border);
+      border-radius: var(--radius-lg);
+      padding: 1rem 1.5rem;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+    .total-item { text-align: center; }
+    .total-item .t-val { font-size: 1.25rem; font-weight: 800; }
+    .total-item .t-lbl { font-size: 0.75rem; color: var(--clr-text-muted); font-weight: 600; }
+
+    /* Loading */
+    .gen-loading { text-align: center; padding: 3rem; }
+    .gen-spinner { width: 48px; height: 48px; border: 4px solid var(--clr-primary-light); border-top-color: var(--clr-primary); border-radius: 50%; animation: spin .8s linear infinite; margin: 0 auto 1rem; }
+
+    @media (max-width: 700px) {
+      .mp-grid { grid-template-columns: 1fr; }
+      .totals-bar { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+</head>
+<body>
+<div class="app-layout">
+  <aside class="sidebar" id="sidebar"></aside>
+  <div class="sidebar-overlay" id="sidebar-overlay"></div>
+  <nav class="top-nav" id="top-nav"></nav>
+
+  <main class="main-content">
+    <div class="page-header">
+      <div>
+        <h1 class="page-title">Meal Planner</h1>
+        <p class="page-subtitle">AI-generated daily meal plans tailored to your goals</p>
+      </div>
+      <button class="btn btn-primary" id="btn-generate">✦ Generate AI Meal Plan</button>
+    </div>
+
+    <!-- Date nav -->
+    <div class="date-nav">
+      <button class="date-nav-arrow" id="btn-prev">←</button>
+      <div class="date-nav-label" id="date-label">Loading…</div>
+      <button class="date-nav-arrow" id="btn-next">→</button>
+    </div>
+
+    <!-- Content -->
+    <div id="planner-content">
+      <!-- Populated by JS -->
+    </div>
+  </main>
+
+  <nav class="bottom-nav" id="bottom-nav"></nav>
+</div>
+
+<div class="toast-container"></div>
+
+<script src="/shared.js"></script>
+<script>
+  if (redirectIfNoProfile()) throw new Error('redirect');
+  initAppShell('meal-planner', 'Meal Planner');
+
+  const profile = loadProfile();
+  let currentDate = new Date();
+
+  const mealImages = {
+    Breakfast: 'https://images.unsplash.com/photo-1484723091739-30a097e8f929?w=500&h=220&fit=crop',
+    Lunch:     'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=500&h=220&fit=crop',
+    Dinner:    'https://images.unsplash.com/photo-1467003909585-2f8a72700288?w=500&h=220&fit=crop',
+    Snack:     'https://images.unsplash.com/photo-1490474418585-ba9bad8fd0ea?w=500&h=220&fit=crop',
+  };
+
+  function renderMealCard(meal, idx) {
+    const totalTime = (meal.prep_time_minutes || 0) + (meal.cook_time_minutes || 0);
+    return `
+      <div class="mp-card" id="card-${idx}">
+        <div class="mp-card-header">
+          <span class="badge badge-green">${meal.type}</span>
+          <label style="display:flex;align-items:center;gap:.4rem;cursor:pointer;font-size:.8rem;font-weight:600;color:var(--clr-text-muted);">
+            <input type="checkbox" ${meal.completed ? 'checked' : ''} onchange="toggleComplete(${idx}, this.checked)" />
+            Complete
+          </label>
+        </div>
+        <div class="mp-card-body">
+          <div class="mp-card-name">${meal.recipe_name}</div>
+          <div class="mp-card-macros">
+            <span class="badge badge-orange">${meal.calories} cal</span>
+            <span class="badge badge-green">${meal.protein}g protein</span>
+            <span class="badge badge-blue">${meal.carbs}g carbs</span>
+            <span class="badge badge-muted">${meal.fat}g fat</span>
+          </div>
+          <div class="mp-card-meta">
+            <span>⏱ Prep: ${meal.prep_time_minutes || 0}m</span>
+            <span>🍳 Cook: ${meal.cook_time_minutes || 0}m</span>
+            <span>⏰ Total: ${totalTime}m</span>
+          </div>
+          <div class="mp-card-footer">
+            <button class="btn btn-outline btn-sm" onclick="toggleDetails(${idx})">View Recipe →</button>
+          </div>
+          <div class="mp-details" id="details-${idx}">
+            ${meal.ingredients && meal.ingredients.length ? `
+              <h5>Ingredients</h5>
+              <ul class="ingredient-list">
+                ${meal.ingredients.map(i => `<li><span class="name">${i.amount} ${i.name}</span><span class="cost">${i.estimated_cost ? '$'+parseFloat(i.estimated_cost).toFixed(2) : ''}</span></li>`).join('')}
+              </ul>
+            ` : ''}
+            ${meal.instructions && meal.instructions.length ? `
+              <h5 style="margin-top:.85rem;">Instructions</h5>
+              <ol class="instruction-list">
+                ${meal.instructions.map(step => `<li><span>${step}</span></li>`).join('')}
+              </ol>
+            ` : ''}
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  function renderTotalsBar(plan) {
+    const totalCost = plan.meals.reduce((s, m) => s + (m.ingredients ? m.ingredients.reduce((a, i) => a + (parseFloat(i.estimated_cost) || 0), 0) : 0), 0);
+    return `<div class="totals-bar">
+      <div class="total-item">
+        <div class="t-val text-gradient">${plan.total_calories || '—'}</div>
+        <div class="t-lbl">Total Calories</div>
+      </div>
+      <div class="total-item">
+        <div class="t-val text-gradient">${plan.total_protein || '—'}g</div>
+        <div class="t-lbl">Total Protein</div>
+      </div>
+      <div class="total-item">
+        <div class="t-val text-gradient">${plan.total_carbs || '—'}g</div>
+        <div class="t-lbl">Total Carbs</div>
+      </div>
+      <div class="total-item">
+        <div class="t-val text-gradient">$${typeof plan.estimated_cost === 'number' ? plan.estimated_cost.toFixed(2) : (plan.estimated_cost || '—')}</div>
+        <div class="t-lbl">Est. Cost</div>
+      </div>
+    </div>`;
+  }
+
+  function render() {
+    const dateKey = toDateKey(currentDate);
+    document.getElementById('date-label').textContent = currentDate.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
+
+    const plan = loadMealPlan(dateKey);
+
+    if (!plan || !plan.meals) {
+      document.getElementById('planner-content').innerHTML = `
+        <div class="empty-state card" style="padding:3rem;text-align:center;">
+          <div class="empty-state-icon">✦</div>
+          <div class="empty-state-title">No meal plan for this day</div>
+          <div class="empty-state-text">Click "Generate AI Meal Plan" to create a personalized plan for ${currentDate.toLocaleDateString('en-US', { weekday: 'long' })}.</div>
+        </div>
+      `;
+    } else {
+      document.getElementById('planner-content').innerHTML = `
+        <div class="mp-grid">
+          ${plan.meals.map((m, i) => renderMealCard(m, i)).join('')}
+        </div>
+        ${renderTotalsBar(plan)}
+      `;
+    }
+  }
+
+  function toggleDetails(idx) {
+    const el = document.getElementById(`details-${idx}`);
+    el.classList.toggle('open');
+  }
+
+  function toggleComplete(idx, checked) {
+    const dateKey = toDateKey(currentDate);
+    const plan = loadMealPlan(dateKey);
+    if (!plan) return;
+    plan.meals[idx].completed = checked;
+    saveMealPlan(dateKey, plan);
+    showToast(checked ? 'Meal marked complete! ✓' : 'Meal unchecked', checked ? 'success' : 'default');
+  }
+
+  document.getElementById('btn-prev').addEventListener('click', () => {
+    currentDate.setDate(currentDate.getDate() - 1);
+    render();
+  });
+  document.getElementById('btn-next').addEventListener('click', () => {
+    currentDate.setDate(currentDate.getDate() + 1);
+    render();
+  });
+
+  document.getElementById('btn-generate').addEventListener('click', async () => {
+    const dateKey = toDateKey(currentDate);
+    const btn = document.getElementById('btn-generate');
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner"></span> Generating…';
+
+    document.getElementById('planner-content').innerHTML = `
+      <div class="gen-loading">
+        <div class="gen-spinner"></div>
+        <div style="font-weight:600;font-size:1rem;">Generating your meal plan…</div>
+        <div style="color:var(--clr-text-muted);font-size:.875rem;margin-top:.4rem;">This takes about 10–15 seconds</div>
+      </div>
+    `;
+
+    try {
+      const plan = await generateMealPlan(profile, dateKey);
+      // Add completed flag
+      plan.meals = plan.meals.map(m => ({ ...m, completed: false }));
+      saveMealPlan(dateKey, plan);
+      render();
+      showToast('Meal plan generated! 🎉', 'success');
+    } catch (err) {
+      showToast(err.message, 'error');
+      render();
+    } finally {
+      btn.disabled = false;
+      btn.innerHTML = '✦ Generate AI Meal Plan';
+    }
+  });
+
+  render();
+</script>
+</body>
+</html>
+                                                                                                                                                                                                                                       mealzy/package.json                                                                                 0000644 0000000 0000000 00000000477 15202356430 013353  0                                                                                                    ustar   root                            root                                                                                                                                                                                                                   {
+  "name": "mealzy",
+  "version": "1.0.0",
+  "description": "AI-Powered Nutrition Platform",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.18.2",
+    "openai": "^4.47.1"
+  }
+}
+                                                                                                                                                                                                 mealzy/.env.example                                                                                 0000644 0000000 0000000 00000000062 15202356432 013300  0                                                                                                    ustar   root                            root                                                                                                                                                                                                                   OPENAI_API_KEY=your_openai_api_key_here
+PORT=3000
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                              mealzy/server.js                                                                                    0000644 0000000 0000000 00000013146 15202356460 012731  0                                                                                                    ustar   root                            root                                                                                                                                                                                                                   require('dotenv').config();
+const express = require('express');
+const cors = require('cors');
+const path = require('path');
+const OpenAI = require('openai');
+
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY,
+});
+
+app.use(cors());
+app.use(express.json());
+app.use(express.static(path.join(__dirname, 'public')));
+
+// POST /api/generate-meal
+app.post('/api/generate-meal', async (req, res) => {
+  try {
+    const { profile, date } = req.body;
+
+    if (!profile) {
+      return res.status(400).json({ error: 'Profile is required' });
+    }
+
+    const prompt = `You are a professional nutritionist and chef. Generate a complete day meal plan for the following user profile:
+
+Profile:
+- Age: ${profile.age}
+- Weight: ${profile.weight}kg
+- Height: ${profile.height}cm
+- Gender: ${profile.gender}
+- Goal: ${profile.goal}
+- Activity Level: ${profile.activity_level}
+- Daily Calorie Target: ${profile.daily_calories || 2000} calories
+- Dietary Preferences: ${(profile.dietary_preferences || []).join(', ') || 'None'}
+- Allergies: ${(profile.allergies || []).join(', ') || 'None'}
+- Cooking Skill: ${profile.cooking_skill || 'Intermediate'}
+- Max Cook Time: ${profile.max_cook_time || 30} minutes
+- Weekly Budget: ${profile.weekly_budget || 100} ${profile.currency || 'USD'}
+- Date: ${date}
+
+Generate a full day meal plan with 4 meals (Breakfast, Lunch, Dinner, Snack). Return ONLY valid JSON in this exact format:
+{
+  "meals": [
+    {
+      "type": "Breakfast",
+      "recipe_name": "Recipe Name",
+      "calories": 450,
+      "protein": 25,
+      "carbs": 45,
+      "fat": 15,
+      "fiber": 8,
+      "prep_time_minutes": 10,
+      "cook_time_minutes": 15,
+      "ingredients": [
+        {"name": "ingredient name", "amount": "1 cup", "estimated_cost": 0.50}
+      ],
+      "instructions": [
+        "Step 1 instruction",
+        "Step 2 instruction"
+      ]
+    }
+  ],
+  "total_calories": 1800,
+  "total_protein": 120,
+  "total_carbs": 180,
+  "total_fat": 60,
+  "estimated_cost": 15.00
+}
+
+Make the meals delicious, practical, and aligned with the user's preferences and goals. Ensure nutritional values are accurate.`;
+
+    const completion = await openai.chat.completions.create({
+      model: 'gpt-4o-mini',
+      messages: [
+        {
+          role: 'system',
+          content: 'You are a professional nutritionist. Always respond with valid JSON only, no markdown, no explanation.',
+        },
+        {
+          role: 'user',
+          content: prompt,
+        },
+      ],
+      temperature: 0.7,
+      max_tokens: 3000,
+    });
+
+    const content = completion.choices[0].message.content;
+    let mealPlan;
+
+    try {
+      // Strip markdown code blocks if present
+      const cleaned = content.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
+      mealPlan = JSON.parse(cleaned);
+    } catch (parseError) {
+      console.error('Failed to parse meal plan JSON:', content);
+      return res.status(500).json({ error: 'Failed to parse meal plan from AI' });
+    }
+
+    res.json(mealPlan);
+  } catch (error) {
+    console.error('Error generating meal plan:', error);
+    res.status(500).json({ error: error.message || 'Failed to generate meal plan' });
+  }
+});
+
+// POST /api/generate-grocery-list
+app.post('/api/generate-grocery-list', async (req, res) => {
+  try {
+    const { meals, budget, currency } = req.body;
+
+    if (!meals || !meals.length) {
+      return res.status(400).json({ error: 'Meals are required' });
+    }
+
+    const mealSummary = meals
+      .map((m) => `${m.type}: ${m.recipe_name} (${m.ingredients?.map((i) => i.name).join(', ')})`)
+      .join('\n');
+
+    const prompt = `Based on these meals for the week, generate a consolidated grocery list:
+
+Meals:
+${mealSummary}
+
+Weekly Budget: ${budget || 100} ${currency || 'USD'}
+
+Consolidate ingredients, remove duplicates, and organize by category. Return ONLY valid JSON:
+{
+  "items": [
+    {
+      "name": "Item name",
+      "quantity": "2 lbs",
+      "category": "Produce",
+      "estimated_cost": 3.50,
+      "checked": false
+    }
+  ],
+  "total_estimated_cost": 75.00
+}
+
+Categories must be one of: Produce, Protein, Dairy, Grains, Pantry, Beverages, Frozen, Other`;
+
+    const completion = await openai.chat.completions.create({
+      model: 'gpt-4o-mini',
+      messages: [
+        {
+          role: 'system',
+          content: 'You are a professional meal planner. Always respond with valid JSON only, no markdown, no explanation.',
+        },
+        {
+          role: 'user',
+          content: prompt,
+        },
+      ],
+      temperature: 0.3,
+      max_tokens: 2000,
+    });
+
+    const content = completion.choices[0].message.content;
+    let groceryList;
+
+    try {
+      const cleaned = content.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
+      groceryList = JSON.parse(cleaned);
+    } catch (parseError) {
+      console.error('Failed to parse grocery list JSON:', content);
+      return res.status(500).json({ error: 'Failed to parse grocery list from AI' });
+    }
+
+    res.json(groceryList);
+  } catch (error) {
+    console.error('Error generating grocery list:', error);
+    res.status(500).json({ error: error.message || 'Failed to generate grocery list' });
+  }
+});
+
+// Serve index.html for root
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
+// Fallback — serve the requested html page
+app.get('/:page.html', (req, res) => {
+  const file = path.join(__dirname, 'public', `${req.params.page}.html`);
+  res.sendFile(file, (err) => {
+    if (err) res.status(404).send('Page not found');
+  });
+});
+
+app.listen(PORT, () => {
+  console.log(`🌿 Mealzy running at http://localhost:${PORT}`);
+});
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
