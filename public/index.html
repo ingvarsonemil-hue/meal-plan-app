@@ -3254,209 +3254,97 @@ function calculateStreak() {
 }
                                                                                                                                                                                                  mealzy/.env.example                                                                                 0000644 0000000 0000000 00000000062 15202356432 013300  0                                                                                                    ustar   root                            root                                                                                                                                                                                                                   OPENAI_API_KEY=your_openai_api_key_here
 PORT=3000
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                              mealzy/server.js                                                                                    0000644 0000000 0000000 00000014114 15202362143 012720  0                                                                                                    ustar   root                            root                                                                                                                                                                                                                   require('dotenv').config();
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                              mealzy/server.js                                                                                    0000644 0000000 0000000 00000010231 15202363270 012716  0                                                                                                    ustar   root                            root                                                                                                                                                                                                                   require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
-const OpenAI = require('openai');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-
-// Lazy-init so a missing key doesn't crash the server before it can bind a port.
-// Render (and other hosts) inject env vars at runtime — the server must start
-// successfully first so the platform can detect the open port.
-let _openai = null;
-function getOpenAI() {
-  if (!_openai) {
-    if (!process.env.OPENAI_API_KEY) {
-      throw new Error('OPENAI_API_KEY is not set. Add it as an environment variable in your hosting dashboard.');
-    }
-    _openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
-  }
-  return _openai;
-}
 
 app.use(cors());
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// POST /api/generate-meal
 app.post('/api/generate-meal', async (req, res) => {
   try {
     const { profile, date } = req.body;
+    if (!profile) return res.status(400).json({ error: 'Profile is required' });
+    if (!process.env.OPENAI_API_KEY) return res.status(500).json({ error: 'OPENAI_API_KEY not set on server' });
 
-    if (!profile) {
-      return res.status(400).json({ error: 'Profile is required' });
-    }
+    const { default: OpenAI } = await import('openai');
+    const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
-    const prompt = `You are a professional nutritionist and chef. Generate a complete day meal plan for the following user profile:
-
-Profile:
-- Age: ${profile.age}
-- Weight: ${profile.weight}kg
-- Height: ${profile.height}cm
-- Gender: ${profile.gender}
-- Goal: ${profile.goal}
-- Activity Level: ${profile.activity_level}
-- Daily Calorie Target: ${profile.daily_calories || 2000} calories
-- Dietary Preferences: ${(profile.dietary_preferences || []).join(', ') || 'None'}
+    const prompt = `You are a professional nutritionist and chef. Generate a complete day meal plan for:
+- Age: ${profile.age}, Weight: ${profile.weight}kg, Height: ${profile.height}cm, Gender: ${profile.gender}
+- Goal: ${profile.goal}, Activity: ${profile.activity_level}
+- Daily Calories: ${profile.daily_calories || 2000}
+- Dietary: ${(profile.dietary_preferences || []).join(', ') || 'None'}
 - Allergies: ${(profile.allergies || []).join(', ') || 'None'}
-- Cooking Skill: ${profile.cooking_skill || 'Intermediate'}
-- Max Cook Time: ${profile.max_cook_time || 30} minutes
-- Weekly Budget: ${profile.weekly_budget || 100} ${profile.currency || 'USD'}
+- Cooking Skill: ${profile.cooking_skill || 'Intermediate'}, Max Cook Time: ${profile.max_cook_time || 30} min
+- Budget: ${profile.weekly_budget || 100} ${profile.currency || 'USD'}/week
 - Date: ${date}
 
-Generate a full day meal plan with 4 meals (Breakfast, Lunch, Dinner, Snack). Return ONLY valid JSON in this exact format:
-{
-  "meals": [
-    {
-      "type": "Breakfast",
-      "recipe_name": "Recipe Name",
-      "calories": 450,
-      "protein": 25,
-      "carbs": 45,
-      "fat": 15,
-      "fiber": 8,
-      "prep_time_minutes": 10,
-      "cook_time_minutes": 15,
-      "ingredients": [
-        {"name": "ingredient name", "amount": "1 cup", "estimated_cost": 0.50}
-      ],
-      "instructions": [
-        "Step 1 instruction",
-        "Step 2 instruction"
-      ]
-    }
-  ],
-  "total_calories": 1800,
-  "total_protein": 120,
-  "total_carbs": 180,
-  "total_fat": 60,
-  "estimated_cost": 15.00
-}
+Return ONLY valid JSON, no markdown:
+{"meals":[{"type":"Breakfast","recipe_name":"","calories":0,"protein":0,"carbs":0,"fat":0,"fiber":0,"prep_time_minutes":0,"cook_time_minutes":0,"ingredients":[{"name":"","amount":"","estimated_cost":0}],"instructions":[""]}],"total_calories":0,"total_protein":0,"total_carbs":0,"total_fat":0,"estimated_cost":0}`;
 
-Make the meals delicious, practical, and aligned with the user's preferences and goals. Ensure nutritional values are accurate.`;
-
-    const completion = await getOpenAI().chat.completions.create({
+    const completion = await openai.chat.completions.create({
       model: 'gpt-4o-mini',
       messages: [
-        {
-          role: 'system',
-          content: 'You are a professional nutritionist. Always respond with valid JSON only, no markdown, no explanation.',
-        },
-        {
-          role: 'user',
-          content: prompt,
-        },
+        { role: 'system', content: 'You are a professional nutritionist. Respond with valid JSON only, no markdown, no explanation.' },
+        { role: 'user', content: prompt }
       ],
       temperature: 0.7,
       max_tokens: 3000,
     });
 
-    const content = completion.choices[0].message.content;
-    let mealPlan;
-
-    try {
-      // Strip markdown code blocks if present
-      const cleaned = content.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
-      mealPlan = JSON.parse(cleaned);
-    } catch (parseError) {
-      console.error('Failed to parse meal plan JSON:', content);
-      return res.status(500).json({ error: 'Failed to parse meal plan from AI' });
-    }
-
-    res.json(mealPlan);
-  } catch (error) {
-    console.error('Error generating meal plan:', error);
-    res.status(500).json({ error: error.message || 'Failed to generate meal plan' });
+    const raw = completion.choices[0].message.content.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
+    res.json(JSON.parse(raw));
+  } catch (err) {
+    console.error('generate-meal error:', err.message);
+    res.status(500).json({ error: err.message });
   }
 });
 
-// POST /api/generate-grocery-list
 app.post('/api/generate-grocery-list', async (req, res) => {
   try {
     const { meals, budget, currency } = req.body;
+    if (!meals || !meals.length) return res.status(400).json({ error: 'Meals are required' });
+    if (!process.env.OPENAI_API_KEY) return res.status(500).json({ error: 'OPENAI_API_KEY not set on server' });
 
-    if (!meals || !meals.length) {
-      return res.status(400).json({ error: 'Meals are required' });
-    }
+    const { default: OpenAI } = await import('openai');
+    const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
-    const mealSummary = meals
-      .map((m) => `${m.type}: ${m.recipe_name} (${m.ingredients?.map((i) => i.name).join(', ')})`)
-      .join('\n');
+    const mealSummary = meals.map(m => `${m.type}: ${m.recipe_name}`).join('\n');
 
-    const prompt = `Based on these meals for the week, generate a consolidated grocery list:
-
-Meals:
-${mealSummary}
-
-Weekly Budget: ${budget || 100} ${currency || 'USD'}
-
-Consolidate ingredients, remove duplicates, and organize by category. Return ONLY valid JSON:
-{
-  "items": [
-    {
-      "name": "Item name",
-      "quantity": "2 lbs",
-      "category": "Produce",
-      "estimated_cost": 3.50,
-      "checked": false
-    }
-  ],
-  "total_estimated_cost": 75.00
-}
-
-Categories must be one of: Produce, Protein, Dairy, Grains, Pantry, Beverages, Frozen, Other`;
-
-    const completion = await getOpenAI().chat.completions.create({
+    const completion = await openai.chat.completions.create({
       model: 'gpt-4o-mini',
       messages: [
-        {
-          role: 'system',
-          content: 'You are a professional meal planner. Always respond with valid JSON only, no markdown, no explanation.',
-        },
-        {
-          role: 'user',
-          content: prompt,
-        },
+        { role: 'system', content: 'You are a professional meal planner. Respond with valid JSON only, no markdown, no explanation.' },
+        { role: 'user', content: `Generate a consolidated grocery list for these meals:\n${mealSummary}\nBudget: ${budget || 100} ${currency || 'USD'}\nReturn ONLY valid JSON:\n{"items":[{"name":"","quantity":"","category":"Produce","estimated_cost":0,"checked":false}],"total_estimated_cost":0}\nCategories: Produce, Protein, Dairy, Grains, Pantry, Beverages, Frozen, Other` }
       ],
       temperature: 0.3,
       max_tokens: 2000,
     });
 
-    const content = completion.choices[0].message.content;
-    let groceryList;
-
-    try {
-      const cleaned = content.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
-      groceryList = JSON.parse(cleaned);
-    } catch (parseError) {
-      console.error('Failed to parse grocery list JSON:', content);
-      return res.status(500).json({ error: 'Failed to parse grocery list from AI' });
-    }
-
-    res.json(groceryList);
-  } catch (error) {
-    console.error('Error generating grocery list:', error);
-    res.status(500).json({ error: error.message || 'Failed to generate grocery list' });
+    const raw = completion.choices[0].message.content.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
+    res.json(JSON.parse(raw));
+  } catch (err) {
+    console.error('generate-grocery error:', err.message);
+    res.status(500).json({ error: err.message });
   }
 });
 
-// Serve index.html for root
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-// Fallback — serve the requested html page
 app.get('/:page.html', (req, res) => {
   const file = path.join(__dirname, 'public', `${req.params.page}.html`);
-  res.sendFile(file, (err) => {
-    if (err) res.status(404).send('Page not found');
-  });
+  res.sendFile(file, (err) => { if (err) res.status(404).send('Page not found'); });
 });
 
 app.listen(PORT, '0.0.0.0', () => {
-  console.log(`🌿 Mealzy running at http://0.0.0.0:${PORT}`);
+  console.log(`Mealzy running on port ${PORT}`);
 });
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
